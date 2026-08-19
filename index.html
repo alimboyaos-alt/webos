@@ -161,6 +161,8 @@
   .lb-title{ font-size:11px; font-weight:600; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .lb-meta{ font-size:10px; color:var(--dim); font-family:'JetBrains Mono', monospace; letter-spacing:.02em; }
   .lb-error{ grid-column:1/-1; font-size:12px; color:var(--dim); text-align:center; padding:24px 0; }
+  .lb-sync{ font-size:10px; color:var(--dim); font-family:'JetBrains Mono', monospace; margin:-4px 0 12px; min-height:1.2em; }
+  .lb-sync.is-error{ color:var(--coral); }
   @media(max-width:480px){ .lb-section{ padding:14px 14px 4px; } .lb-grid{ grid-template-columns:repeat(4,1fr); gap:8px; } .lb-title{ font-size:9.5px; } .lb-meta{ font-size:8.5px; } }
 
   /* dock — liquid glass */
@@ -211,7 +213,28 @@
       background-repeat: no-repeat, no-repeat;
       background-attachment: scroll, scroll;
     }
-    .icons{ display:none; }
+
+    /* iPhone-style homescreen grid — 4 columns, up to 6 rows, icons
+       target ~222x222px (design reference) and shrink to fit narrower
+       phones while always keeping exactly 4 per row */
+    .icons{
+      display:grid;
+      position:static;
+      grid-template-columns:repeat(4, 1fr);
+      grid-auto-rows:min-content;
+      gap:26px 14px;
+      width:100%;
+      max-width:920px;
+      margin:6px auto 22px;
+      padding:0 16px;
+      top:auto; left:auto;
+    }
+    .dicon{ width:100%; gap:8px; }
+    .dicon .glyph{
+      width:100%; height:auto; aspect-ratio:1/1; max-width:222px;
+      margin:0 auto; border-radius:22.37%; font-size:clamp(20px,7vw,34px);
+    }
+    .dicon span{ font-size:clamp(10.5px,3vw,13px); }
 
     .window{
       position:relative !important;
@@ -227,6 +250,7 @@
   @media(max-width:480px){
     .menubar{ font-size:11px; gap:10px; }
     .menubar .right span:first-child{ display:none; }
+    .icons{ gap:18px 10px; padding:0 12px; }
   }
 </style>
 </head>
@@ -387,6 +411,7 @@
       </div>
       <div class="lb-section">
         <div class="lb-section-title">Recently Watched</div>
+        <div class="lb-sync" id="lb-sync-status">Syncing feed…</div>
         <div class="lb-grid" id="lb-grid-recent">
           <div class="lb-error">Loading…</div>
         </div>
@@ -562,6 +587,7 @@ function getDockIcon(id){ return document.querySelector(`.dock .d-icon[data-targ
 
 function focusWindow(id){
   const win = document.getElementById(id);
+  if(id === 'win-letterboxd') refreshLetterboxdRecent({ reason:'open', force:true });
   document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
   win.style.zIndex = 20;
 
@@ -755,11 +781,23 @@ const CORS_PROXIES = [
   (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
 ];
 
+function withCacheBust(url){
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}_=${Date.now()}`;
+}
+
 async function fetchWithTimeout(url, timeoutMs = 8000){
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try{
-    return await fetch(url, { signal: controller.signal });
+    return await fetch(url, {
+      signal: controller.signal,
+      cache: 'no-store',
+      headers: {
+        'cache-control': 'no-cache, no-store, max-age=0',
+        pragma: 'no-cache'
+      }
+    });
   } finally {
     clearTimeout(timer);
   }
@@ -769,7 +807,7 @@ async function fetchViaProxy(targetUrl){
   let lastErr = new Error('No proxies configured');
   for(const buildProxyUrl of CORS_PROXIES){
     try{
-      const res = await fetchWithTimeout(buildProxyUrl(targetUrl));
+      const res = await fetchWithTimeout(buildProxyUrl(withCacheBust(targetUrl)));
       if(!res.ok) throw new Error('Proxy responded with ' + res.status);
       const text = await res.text();
       if(!text || !text.trim()) throw new Error('Proxy returned an empty response');
@@ -835,10 +873,20 @@ FAVORITE_FILMS.forEach(f => favoritesGrid.appendChild(renderLbCard(f)));
 // its own CORS support, so it's far more reliable here than a generic
 // CORS proxy. If it's ever down or rate-limited, we fall back to the
 // raw RSS feed pulled through the generic proxy chain below.
-const RSS2JSON_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(LB_RSS_URL)}`;
+function buildRss2JsonUrl(){
+  return withCacheBust(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(LB_RSS_URL)}`);
+}
+
+// Letterboxd's RSS mixes diary/review entries in with "list" items
+// (e.g. a ranked-films list). Only guids beginning with these prefixes
+// are actual watched-film entries — everything else should be skipped
+// so a list update can't bump a real film out of the recent grid.
+function isDiaryGuid(guid){
+  return /^letterboxd-(review|watch)-/.test(guid || '');
+}
 
 function parseLbEntriesFromRss2json(items){
-  return items.slice(0, 4).map(item=>{
+  return items.filter(item => isDiaryGuid(item.guid)).slice(0, 4).map(item=>{
     // Letterboxd diary titles look like "Film Title, 2024 - ★★★½"
     const titleMatch = (item.title || '').match(/^(.*),\s*(\d{4})(?:\s*-\s*(.*))?$/);
     const filmTitle = titleMatch ? titleMatch[1] : (item.title || 'Untitled');
@@ -856,7 +904,10 @@ function parseLbEntriesFromRss2json(items){
 }
 
 function parseLbEntriesFromRawRss(items){
-  return items.slice(0, 4).map(item=>{
+  return items.filter(item => {
+    const guidEl = item.getElementsByTagName('guid')[0];
+    return isDiaryGuid(guidEl ? guidEl.textContent : '');
+  }).slice(0, 4).map(item=>{
     const getTag = (name) => {
       const el = item.getElementsByTagName(name)[0];
       return el ? el.textContent : '';
@@ -878,40 +929,111 @@ function parseLbEntriesFromRawRss(items){
   });
 }
 
-async function fetchLetterboxdRecent(){
-  const grid = document.getElementById('lb-grid-recent');
-  let entries = null;
+const LETTERBOXD_REFRESH_MS = 60 * 1000;
+const LETTERBOXD_RETRY_MS = 20 * 1000;
+const lbGrid = document.getElementById('lb-grid-recent');
+const lbSyncStatus = document.getElementById('lb-sync-status');
+let lbRefreshTimer = null;
+let lbFetchInFlight = null;
+let lbLastSignature = '';
+let lbLastUpdatedAt = null;
 
-  try{
-    const res = await fetchWithTimeout(RSS2JSON_URL);
-    if(res.ok){
-      const data = await res.json();
-      if(data && data.status === 'ok' && Array.isArray(data.items) && data.items.length){
-        entries = parseLbEntriesFromRss2json(data.items);
-      }
-    }
-  } catch(err){ /* fall through to backup path */ }
-
-  if(!entries || !entries.length){
-    try{
-      const xmlText = await fetchViaProxy(LB_RSS_URL);
-      const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
-      const items = Array.from(doc.getElementsByTagName('item'));
-      if(items.length) entries = parseLbEntriesFromRawRss(items);
-    } catch(err){ /* both paths failed */ }
-  }
-
-  if(!entries || !entries.length){
-    grid.innerHTML = '<div class="lb-error">Couldn\'t load Letterboxd data.</div>';
-    return;
-  }
-
-  grid.innerHTML = '';
-  entries.forEach(f => grid.appendChild(renderLbCard(f)));
+function setLbSyncStatus(message, isError = false){
+  lbSyncStatus.textContent = message;
+  lbSyncStatus.classList.toggle('is-error', isError);
 }
 
-fetchLetterboxdRecent();
-setInterval(fetchLetterboxdRecent, 5 * 60 * 1000);
+function formatSyncTime(date){
+  return date.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+function scheduleLetterboxdRefresh(delay = LETTERBOXD_REFRESH_MS){
+  clearTimeout(lbRefreshTimer);
+  lbRefreshTimer = setTimeout(() => {
+    refreshLetterboxdRecent({ reason:'timer' });
+  }, delay);
+}
+
+// rss2json.com and the CORS-proxy chain are run at the same time rather
+// than one after the other. rss2json shares one rate-limit pool across
+// every site that uses it without its own API key, so it silently fails
+// for everyone whenever that shared quota is hit — if it were tried
+// first and only *then* the proxy chain, a bad rss2json moment would
+// stall or break every refresh even though the proxy path was fine.
+// Racing them means either path succeeding is enough, and whichever
+// responds first wins.
+async function fetchViaRss2Json(){
+  const res = await fetchWithTimeout(buildRss2JsonUrl());
+  if(!res.ok) throw new Error('rss2json responded with ' + res.status);
+  const data = await res.json();
+  if(!(data && data.status === 'ok' && Array.isArray(data.items) && data.items.length)){
+    throw new Error('rss2json returned no items');
+  }
+  const entries = parseLbEntriesFromRss2json(data.items);
+  if(!entries.length) throw new Error('rss2json returned no diary entries');
+  return entries;
+}
+
+async function fetchViaRawProxy(){
+  const xmlText = await fetchViaProxy(LB_RSS_URL);
+  const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+  const items = Array.from(doc.getElementsByTagName('item'));
+  if(!items.length) throw new Error('Proxy returned no items');
+  const entries = parseLbEntriesFromRawRss(items);
+  if(!entries.length) throw new Error('Proxy returned no diary entries');
+  return entries;
+}
+
+async function fetchLetterboxdRecent(){
+  setLbSyncStatus('Syncing feed…');
+
+  const results = await Promise.allSettled([
+    fetchViaRss2Json(),
+    fetchViaRawProxy()
+  ]);
+
+  const success = results.find(r => r.status === 'fulfilled');
+  if(success) return success.value;
+
+  throw new Error("Couldn't load Letterboxd data.");
+}
+
+async function refreshLetterboxdRecent({ force = false, reason = 'manual' } = {}){
+  if(lbFetchInFlight) return lbFetchInFlight;
+
+  lbFetchInFlight = (async () => {
+    try{
+      const entries = await fetchLetterboxdRecent();
+      const nextSignature = JSON.stringify(entries);
+      if(force || nextSignature !== lbLastSignature){
+        lbGrid.innerHTML = '';
+        entries.forEach(f => lbGrid.appendChild(renderLbCard(f)));
+        lbLastSignature = nextSignature;
+      }
+
+      lbLastUpdatedAt = new Date();
+      setLbSyncStatus(`Updated ${formatSyncTime(lbLastUpdatedAt)}`);
+      scheduleLetterboxdRefresh(LETTERBOXD_REFRESH_MS);
+    } catch(err){
+      if(!lbLastSignature){
+        lbGrid.innerHTML = '<div class="lb-error">Couldn\'t load Letterboxd data.</div>';
+      }
+      setLbSyncStatus('Retrying feed sync…', true);
+      scheduleLetterboxdRefresh(LETTERBOXD_RETRY_MS);
+    } finally {
+      lbFetchInFlight = null;
+    }
+  })();
+
+  return lbFetchInFlight;
+}
+
+refreshLetterboxdRecent({ force:true, reason:'initial' });
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') refreshLetterboxdRecent({ reason:'visible' });
+});
+window.addEventListener('focus', () => refreshLetterboxdRecent({ reason:'focus' }));
+window.addEventListener('online', () => refreshLetterboxdRecent({ reason:'online' }));
 
 // ---- READme.app: ported glitch-text effect ----
 function split(el) {
