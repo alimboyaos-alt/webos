@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Shane Paul Alimboyao</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -61,15 +62,25 @@
   /* desktop icons */
   .icons{ position:absolute; top:50px; left:20px; display:flex; flex-direction:column; gap:22px; z-index:10;}
   .dicon{ display:flex; flex-direction:column; align-items:center; gap:6px; width:76px; cursor:pointer;}
-  .dicon .glyph{ width:46px; height:46px; border-radius:22.37%; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 6px 14px rgba(0,0,0,.15); overflow:hidden; }
-  .dicon .glyph img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .dicon span{ font-size:10.5px; text-align:center; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.6), 0 0 8px rgba(0,0,0,.35); }
+  .dicon .glyph{ width:46px; height:46px; border-radius:22.37%; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 6px 14px rgba(0,0,0,.15); overflow:hidden; transition:transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .28s ease; }
+  .dicon .glyph img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .28s ease; }
+  .dicon span{ font-size:10.5px; text-align:center; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.6), 0 0 8px rgba(0,0,0,.35); transition:text-shadow .25s ease; }
+  .dicon:hover .glyph{ transform:translateY(-6px) scale(1.1); box-shadow:0 14px 22px rgba(0,0,0,.28); }
+  .dicon:hover .glyph img{ transform:scale(1.12); }
+  .dicon:hover span{ text-shadow:0 1px 3px rgba(0,0,0,.75), 0 0 10px rgba(0,0,0,.5); }
+  .dicon:active .glyph{ transform:translateY(-2px) scale(1.04); transition-duration:.12s; }
 
   /* windows */
   .window{
     position:absolute; background:var(--chrome); border-radius:12px; box-shadow:0 30px 60px rgba(30,20,60,.28), 0 4px 12px rgba(0,0,0,.08);
-    overflow:hidden; display:flex; flex-direction:column; min-width:240px;
+    overflow:hidden; display:flex; flex-direction:column; min-width:240px; min-height:120px;
   }
+  .resize-handle{
+    position:absolute; right:2px; bottom:2px; width:16px; height:16px; cursor:nwse-resize; z-index:6; touch-action:none;
+    color:var(--dim); opacity:.55; transition:opacity .15s ease;
+  }
+  .resize-handle:hover{ opacity:.9; }
+  .resize-handle svg{ width:100%; height:100%; display:block; }
   .titlebar{
     height:36px; background:linear-gradient(#fbfbfd, #f1f0f5); border-bottom:1px solid #e6e4ee;
     display:flex; align-items:center; padding:0 12px; gap:8px; cursor:grab; flex-shrink:0;
@@ -102,33 +113,86 @@
   /* Work.app */
   #win-work{ width:min(620px,90vw); top:120px; left:22vw;}
   .finder-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px;}
-  .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer;}
+  .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer; transition:background .2s ease;}
   .file:hover{ background:#f4f2fa;}
-  .file .thumb{ width:64px; height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; }
-  .file .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .file .thumb{ width:64px; height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+  .file .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
+  .file:hover .thumb{ transform:translateY(-4px) scale(1.06); box-shadow:0 10px 18px rgba(0,0,0,.18); }
+  .file:hover .thumb img{ transform:scale(1.1); }
   .file .fname{ font-size:11px;}
   .file .ftype{ font-size:9.5px; color:var(--dim);}
 
   /* Contact.app — terminal style */
   #win-contact{ width:min(440px,86vw); top:210px; left:56vw;}
-  .term{ background:#1c1b22; color:#c9f2d8; font-family:'JetBrains Mono', monospace; font-size:12px; padding:16px; border-radius:0 0 12px 12px; line-height:1.9;}
-  .term .p{ color:#7be0ad;}
-  .term a{ color:#9ecbff; text-decoration:none;}
+  .term{ background:var(--chrome); color:var(--ink); font-family:'JetBrains Mono', monospace; font-size:12px; padding:16px; border-radius:0 0 12px 12px; line-height:1.9;}
+  .term .p{ color:#3aa06b;}
+  .term a{ color:#3a6bc9; text-decoration:none;}
   .caret{ display:inline-block; width:7px; height:13px; background:#c9f2d8; vertical-align:middle; animation:blink 1s steps(1) infinite;}
   @keyframes blink{50%{opacity:0;}}
 
-  /* dock */
+  /* Now Playing.app */
+  #win-nowplaying{ width:min(380px,88vw); top:250px; left:40vw;}
+  .win-body.np-card{ display:flex; align-items:center; gap:16px; padding:18px 20px; }
+  .np-art{ width:84px; height:84px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#eae7f2; box-shadow:0 8px 18px rgba(30,20,60,.18); }
+  .np-art img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .np-info{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+  .np-status{ display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.09em; color:var(--dim); text-transform:uppercase; }
+  .np-bars{ display:flex; align-items:flex-end; gap:2px; height:10px; }
+  .np-bars span{ width:2.5px; background:var(--mint); border-radius:1px; animation:npbar 0.9s ease-in-out infinite; }
+  .np-bars span:nth-child(2){ animation-delay:.2s; }
+  .np-bars span:nth-child(3){ animation-delay:.4s; }
+  @keyframes npbar{ 0%,100%{ height:3px; } 50%{ height:10px; } }
+  .np-track{ font-size:14.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .np-artist{ font-size:12.5px; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .np-album{ font-size:11px; color:var(--dim); opacity:.75; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .np-when{ font-size:10.5px; color:var(--dim); opacity:.65; font-family:'JetBrains Mono', monospace; margin-top:2px; }
+
+  /* Letterboxd.app */
+  #win-letterboxd{ width:min(460px,88vw); top:300px; left:32vw;}
+  .lb-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#14181c; }
+  .lb-icon svg{ width:68%; height:auto; }
+  .lb-section{ padding:18px 22px 6px; }
+  .lb-section:last-child{ padding-bottom:20px; }
+  .lb-section-title{ font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); margin-bottom:12px; }
+  .lb-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:0; }
+  .lb-card{ text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px; cursor:pointer; min-width:0; }
+  .lb-poster{ width:100%; aspect-ratio:2/3; border-radius:8px; overflow:hidden; background-color:#eae7f2; background-size:cover; background-position:center; box-shadow:0 8px 16px rgba(30,20,60,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+  .lb-card:hover .lb-poster{ transform:translateY(-4px) scale(1.06); box-shadow:0 14px 22px rgba(0,0,0,.24); }
+  .lb-title{ font-size:11px; font-weight:600; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .lb-meta{ font-size:10px; color:var(--dim); font-family:'JetBrains Mono', monospace; letter-spacing:.02em; }
+  .lb-error{ grid-column:1/-1; font-size:12px; color:var(--dim); text-align:center; padding:24px 0; }
+  @media(max-width:480px){ .lb-section{ padding:14px 14px 4px; } .lb-grid{ grid-template-columns:repeat(4,1fr); gap:8px; } .lb-title{ font-size:9.5px; } .lb-meta{ font-size:8.5px; } }
+
+  /* dock — liquid glass */
   .dock{
     position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:100;
-    display:flex; gap:12px; padding:9px 14px; background:rgba(255,255,255,.55); backdrop-filter:blur(12px);
-    border-radius:20px; box-shadow:0 10px 30px rgba(30,20,60,.2);
+    display:flex; gap:12px; padding:9px 14px;
+    background:linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.12));
+    backdrop-filter:blur(22px) saturate(180%);
+    -webkit-backdrop-filter:blur(22px) saturate(180%);
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.45);
+    box-shadow:
+      0 14px 34px rgba(30,20,60,.22),
+      0 1px 1px rgba(255,255,255,.6) inset,
+      0 -6px 14px rgba(255,255,255,.18) inset,
+      0 0 0 1px rgba(255,255,255,.08) inset;
+    isolation:isolate;
+  }
+  .dock::before{
+    content:'';
+    position:absolute; inset:0; border-radius:22px; pointer-events:none;
+    background:linear-gradient(120deg, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 65%, rgba(255,255,255,.2) 100%);
+    mix-blend-mode:overlay; z-index:-1;
   }
   .dock .d-icon{
     width:42px; height:42px; border-radius:22.37%; display:flex; align-items:center; justify-content:center;
-    font-size:18px; cursor:pointer; transition:transform .15s ease; box-shadow:0 4px 10px rgba(0,0,0,.12); overflow:hidden;
+    font-size:18px; cursor:pointer; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; box-shadow:0 4px 10px rgba(0,0,0,.12); overflow:hidden;
   }
-  .dock .d-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .dock .d-icon:hover{ transform:translateY(-8px) scale(1.08);}
+  .dock .d-icon img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
+  .dock .d-icon:hover{ transform:translateY(-10px) scale(1.15); box-shadow:0 14px 20px rgba(0,0,0,.22);}
+  .dock .d-icon:hover img{ transform:scale(1.08); }
+  .dock .d-icon:active{ transform:translateY(-4px) scale(1.05); transition-duration:.12s; }
 
   @media(max-width:760px){
     .menubar{ position:fixed !important; }
@@ -156,6 +220,7 @@
       margin:0 auto 16px !important;
     }
     .win-body{ max-height:none; }
+    .resize-handle{ display:none; }
     .readme-block h1{ font-size:clamp(1.7rem, 8.5vw, 2.4rem); }
   }
 
@@ -199,6 +264,14 @@
       <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
       <span>Contact Me</span>
     </div>
+    <div class="dicon" data-target="win-nowplaying">
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Now Playing"></div>
+      <span>Now Playing</span>
+    </div>
+    <div class="dicon" data-target="win-letterboxd">
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Watched"></div>
+      <span>Watched</span>
+    </div>
   </div>
 
   <!-- READme window -->
@@ -235,6 +308,32 @@
     </div>
   </div>
 
+  <!-- 1DOLO folder window -->
+  <div class="window" id="win-1dolo" style="top:150px; left:30vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">1DOLO</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo"></div>
+    </div>
+  </div>
+
+  <!-- Irish Springs folder window -->
+  <div class="window" id="win-irish-springs" style="top:170px; left:34vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Irish Spring</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-irish-springs"></div>
+    </div>
+  </div>
+
   <!-- Contact window -->
   <div class="window" id="win-contact">
     <div class="titlebar">
@@ -250,10 +349,57 @@
     </div>
   </div>
 
+  <!-- Now Playing window -->
+  <div class="window" id="win-nowplaying">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Now Playing</div>
+    </div>
+    <div class="win-body np-card">
+      <div class="np-art"><img id="np-art" src="" alt=""></div>
+      <div class="np-info">
+        <div class="np-status">
+          <span id="np-status-text">Loading…</span>
+          <span class="np-bars" id="np-bars" style="display:none;"><span></span><span></span><span></span></span>
+        </div>
+        <div class="np-track" id="np-track">—</div>
+        <div class="np-artist" id="np-artist">—</div>
+        <div class="np-album" id="np-album"></div>
+        <div class="np-when" id="np-when"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Letterboxd window -->
+  <div class="window" id="win-letterboxd">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Watched</div>
+    </div>
+    <div class="win-body" style="padding:0;">
+      <div class="lb-section">
+        <div class="lb-section-title">Four Favorite Films</div>
+        <div class="lb-grid" id="lb-grid-favorites"></div>
+      </div>
+      <div class="lb-section">
+        <div class="lb-section-title">Recently Watched</div>
+        <div class="lb-grid" id="lb-grid-recent">
+          <div class="lb-error">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="dock">
     <div class="d-icon" data-target="win-readme"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt="About"></div>
     <div class="d-icon" data-target="win-work"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt="Works"></div>
     <div class="d-icon" data-target="win-contact"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
+    <div class="d-icon" data-target="win-nowplaying"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Now Playing"></div>
+    <div class="d-icon" data-target="win-letterboxd"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Watched"></div>
   </div>
 </div>
 
@@ -289,7 +435,8 @@ const cats = [
   {name:"UI/UX", color:"#ffcf6e"},
 ];
 const files = [
-  {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif"},
+  {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo"},
+  {name:"Irish Spring", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%20084350.png", target:"win-irish-springs"},
 ];
 const finder = document.getElementById('finder');
 files.forEach(f=>{
@@ -299,8 +446,46 @@ files.forEach(f=>{
     : (f.type || (cats[f.cat] && cats[f.cat].name) || '');
   const bg = f.gif ? 'transparent' : (cats[f.cat] ? cats[f.cat].color : '#c9c0e0');
   el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || (cats[f.cat] && cats[f.cat].name+' file') || ''}</div>`;
+  if(f.target){
+    el.dataset.target = f.target;
+    el.addEventListener('click', ()=> focusWindow(f.target));
+  }
   finder.appendChild(el);
 });
+
+// contents shown inside the 1DOLO folder window — edit this array to add your own files/images
+const dolo1Files = [
+  // {name:"example.jpg", type:"Image", gif:"https://link-to-image.jpg"},
+];
+const finder1dolo = document.getElementById('finder-1dolo');
+if(dolo1Files.length){
+  dolo1Files.forEach(f=>{
+    const el = document.createElement('div'); el.className='file';
+    const thumbInner = f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '');
+    const bg = f.gif ? 'transparent' : '#c9c0e0';
+    el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
+    finder1dolo.appendChild(el);
+  });
+} else {
+  finder1dolo.innerHTML = `<div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items to the dolo1Files array.</div>`;
+}
+
+// contents shown inside the Irish Springs folder window — edit this array to add your own files/images
+const irishSpringsFiles = [
+  // {name:"example.jpg", type:"Image", gif:"https://link-to-image.jpg"},
+];
+const finderIrishSprings = document.getElementById('finder-irish-springs');
+if(irishSpringsFiles.length){
+  irishSpringsFiles.forEach(f=>{
+    const el = document.createElement('div'); el.className='file';
+    const thumbInner = f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '');
+    const bg = f.gif ? 'transparent' : '#c9c0e0';
+    el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
+    finderIrishSprings.appendChild(el);
+  });
+} else {
+  finderIrishSprings.innerHTML = `<div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items to the irishSpringsFiles array.</div>`;
+}
 
 // draggable windows — clamped so the titlebar (and its buttons) can
 // never be dragged above the menu bar or off the sides/bottom
@@ -336,6 +521,41 @@ function makeDraggable(win){
   bar.addEventListener('pointerup', ()=> dragging=false);
 }
 document.querySelectorAll('.window').forEach(makeDraggable);
+
+// resizable windows — drag the corner grip to resize; disabled on
+// mobile where windows are stacked full-width instead
+function makeResizable(win){
+  const handle = document.createElement('div');
+  handle.className = 'resize-handle';
+  handle.innerHTML = '<svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L2 12 M12 6.5 L6.5 12 M12 11 L11 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>';
+  win.appendChild(handle);
+
+  let resizing = false, startX = 0, startY = 0, startW = 0, startH = 0;
+
+  handle.addEventListener('pointerdown', (e)=>{
+    if(window.matchMedia('(max-width:760px)').matches) return;
+    e.stopPropagation();
+    resizing = true;
+    const rect = win.getBoundingClientRect();
+    startX = e.clientX; startY = e.clientY;
+    startW = rect.width; startH = rect.height;
+    document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
+    win.style.zIndex = 20;
+    handle.setPointerCapture(e.pointerId);
+  });
+  handle.addEventListener('pointermove', (e)=>{
+    if(!resizing) return;
+    const minW = 240, minH = 160;
+    const maxW = window.innerWidth - win.offsetLeft - EDGE_MARGIN;
+    const maxH = window.innerHeight - win.offsetTop - EDGE_MARGIN;
+    const nw = Math.min(Math.max(startW + (e.clientX - startX), minW), Math.max(maxW, minW));
+    const nh = Math.min(Math.max(startH + (e.clientY - startY), minH), Math.max(maxH, minH));
+    win.style.width = nw + 'px';
+    win.style.height = nh + 'px';
+  });
+  handle.addEventListener('pointerup', ()=> resizing = false);
+}
+document.querySelectorAll('.window').forEach(makeResizable);
 
 // dock + desktop icons focus window
 function getDockIcon(id){ return document.querySelector(`.dock .d-icon[data-target="${id}"]`); }
@@ -458,6 +678,240 @@ function tick(){
   document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit'});
 }
 tick(); setInterval(tick, 1000*15);
+
+// ---- Now Playing (Last.fm) ----
+const LASTFM_API_KEY = '95118c86740b149c5e50952e56f9fde5';
+const LASTFM_USER = 'wwafawdwg';
+const npArt = document.getElementById('np-art');
+const npTrack = document.getElementById('np-track');
+const npArtist = document.getElementById('np-artist');
+const npAlbum = document.getElementById('np-album');
+const npWhen = document.getElementById('np-when');
+const npStatusText = document.getElementById('np-status-text');
+const npBars = document.getElementById('np-bars');
+
+function formatPlayedAt(uts){
+  if(!uts) return '';
+  const d = new Date(parseInt(uts, 10) * 1000);
+  const dateStr = d.toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
+  const timeStr = d.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit' });
+  return `${dateStr} · ${timeStr}`;
+}
+
+async function fetchNowPlaying(){
+  try{
+    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_API_KEY}&format=json&limit=1&nowplaying=true`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Last.fm request failed');
+    const data = await res.json();
+    const track = data && data.recenttracks && data.recenttracks.track && data.recenttracks.track[0];
+    if(!track){
+      npStatusText.textContent = 'Nothing found';
+      npBars.style.display = 'none';
+      npWhen.textContent = '';
+      return;
+    }
+    const isPlaying = !!(track['@attr'] && track['@attr'].nowplaying === 'true');
+    const images = track.image || [];
+    const art = (images.find(i => i.size === 'extralarge') || images[images.length-1] || {})['#text'];
+    const trackName = track.name || 'Unknown track';
+    const artistName = (track.artist && (track.artist['#text'] || track.artist.name)) || 'Unknown artist';
+    const albumName = (track.album && track.album['#text']) || '';
+
+    if(art) npArt.src = art;
+    npTrack.textContent = trackName;
+    npArtist.textContent = artistName;
+    npAlbum.textContent = albumName;
+
+    if(isPlaying){
+      npStatusText.textContent = 'Now Playing';
+      npBars.style.display = 'flex';
+      npWhen.textContent = '';
+    } else {
+      npStatusText.textContent = 'Last Played';
+      npBars.style.display = 'none';
+      const uts = track.date && track.date.uts;
+      npWhen.textContent = uts ? formatPlayedAt(uts) : '';
+    }
+  } catch(err){
+    npStatusText.textContent = 'Offline';
+    npBars.style.display = 'none';
+    npWhen.textContent = '';
+  }
+}
+fetchNowPlaying();
+setInterval(fetchNowPlaying, 15000);
+
+// ---- Recently Watched (Letterboxd) ----
+const LETTERBOXD_USER = 'cowboylikep';
+const LB_RSS_URL = `https://letterboxd.com/${LETTERBOXD_USER}/rss/`;
+
+// Free CORS proxies are flaky — allorigins.win in particular has
+// known intermittent outages. Try a short list in order and fall
+// back to the next one if a proxy is down or returns nothing.
+const CORS_PROXIES = [
+  (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+];
+
+async function fetchWithTimeout(url, timeoutMs = 8000){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try{
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchViaProxy(targetUrl){
+  let lastErr = new Error('No proxies configured');
+  for(const buildProxyUrl of CORS_PROXIES){
+    try{
+      const res = await fetchWithTimeout(buildProxyUrl(targetUrl));
+      if(!res.ok) throw new Error('Proxy responded with ' + res.status);
+      const text = await res.text();
+      if(!text || !text.trim()) throw new Error('Proxy returned an empty response');
+      return text;
+    } catch(err){
+      lastErr = err;
+    }
+  }
+  throw lastErr;
+}
+
+function formatWatchedDate(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  if(isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function ratingToStars(ratingRaw){
+  const r = parseFloat(ratingRaw);
+  if(isNaN(r)) return '';
+  const full = Math.floor(r);
+  const half = (r % 1) !== 0;
+  return '★'.repeat(full) + (half ? '½' : '');
+}
+
+function renderLbCard(f){
+  const card = document.createElement('a');
+  card.className = 'lb-card';
+  card.href = f.link || '#';
+  card.target = '_blank';
+  card.rel = 'noopener';
+
+  const poster = document.createElement('div');
+  poster.className = 'lb-poster';
+  poster.setAttribute('role', 'img');
+  poster.setAttribute('aria-label', f.title ? `${f.title} poster` : 'Film poster');
+  if(f.poster) poster.style.backgroundImage = `url("${f.poster}")`;
+  card.appendChild(poster);
+
+  const rest = document.createElement('div');
+  rest.innerHTML = `
+    <div class="lb-title">${f.title}${f.year ? ' (' + f.year + ')' : ''}</div>
+    ${f.meta ? `<div class="lb-meta">${f.meta}</div>` : ''}
+  `;
+  while(rest.firstChild) card.appendChild(rest.firstChild);
+
+  return card;
+}
+
+// Four Favorite Films — hand-picked, not pulled from Letterboxd, since
+// favorites aren't exposed via the RSS feed. Edit this array to change picks.
+const FAVORITE_FILMS = [
+  { title:'The Florida Project', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/floridaproject.jpg' },
+  { title:'Over the Garden Wall', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/gardenwall.jpg' },
+  { title:'Death Becomes Her', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/deathbecomesher.jpg' },
+  { title:'The Thing', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/thething.jpg' },
+];
+const favoritesGrid = document.getElementById('lb-grid-favorites');
+FAVORITE_FILMS.forEach(f => favoritesGrid.appendChild(renderLbCard(f)));
+
+// Primary path: rss2json.com is a purpose-built RSS→JSON proxy with
+// its own CORS support, so it's far more reliable here than a generic
+// CORS proxy. If it's ever down or rate-limited, we fall back to the
+// raw RSS feed pulled through the generic proxy chain below.
+const RSS2JSON_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(LB_RSS_URL)}`;
+
+function parseLbEntriesFromRss2json(items){
+  return items.slice(0, 4).map(item=>{
+    // Letterboxd diary titles look like "Film Title, 2024 - ★★★½"
+    const titleMatch = (item.title || '').match(/^(.*),\s*(\d{4})(?:\s*-\s*(.*))?$/);
+    const filmTitle = titleMatch ? titleMatch[1] : (item.title || 'Untitled');
+    const filmYear = titleMatch ? titleMatch[2] : '';
+    const stars = (titleMatch && titleMatch[3]) ? titleMatch[3] : '';
+    const descHtml = item.description || item.content || '';
+    const imgMatch = descHtml.match(/src="([^"]+)"/);
+    const poster = imgMatch ? imgMatch[1] : (item.thumbnail || '');
+    const dateLabel = formatWatchedDate((item.pubDate || '').slice(0, 10));
+    return {
+      title: filmTitle, year: filmYear, link: item.link, poster,
+      meta: `${dateLabel}${stars ? ' · ' + stars : ''}`
+    };
+  });
+}
+
+function parseLbEntriesFromRawRss(items){
+  return items.slice(0, 4).map(item=>{
+    const getTag = (name) => {
+      const el = item.getElementsByTagName(name)[0];
+      return el ? el.textContent : '';
+    };
+    const filmTitle = getTag('letterboxd:filmTitle');
+    const filmYear = getTag('letterboxd:filmYear');
+    const ratingRaw = getTag('letterboxd:memberRating');
+    const watchedDate = getTag('letterboxd:watchedDate');
+    const link = getTag('link');
+    const descHtml = getTag('description');
+    const imgMatch = descHtml.match(/src="([^"]+)"/);
+    const poster = imgMatch ? imgMatch[1] : '';
+    const stars = ratingToStars(ratingRaw);
+    const dateLabel = formatWatchedDate(watchedDate);
+    return {
+      title: filmTitle, year: filmYear, link, poster,
+      meta: `${dateLabel}${stars ? ' · ' + stars : ''}`
+    };
+  });
+}
+
+async function fetchLetterboxdRecent(){
+  const grid = document.getElementById('lb-grid-recent');
+  let entries = null;
+
+  try{
+    const res = await fetchWithTimeout(RSS2JSON_URL);
+    if(res.ok){
+      const data = await res.json();
+      if(data && data.status === 'ok' && Array.isArray(data.items) && data.items.length){
+        entries = parseLbEntriesFromRss2json(data.items);
+      }
+    }
+  } catch(err){ /* fall through to backup path */ }
+
+  if(!entries || !entries.length){
+    try{
+      const xmlText = await fetchViaProxy(LB_RSS_URL);
+      const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+      const items = Array.from(doc.getElementsByTagName('item'));
+      if(items.length) entries = parseLbEntriesFromRawRss(items);
+    } catch(err){ /* both paths failed */ }
+  }
+
+  if(!entries || !entries.length){
+    grid.innerHTML = '<div class="lb-error">Couldn\'t load Letterboxd data.</div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  entries.forEach(f => grid.appendChild(renderLbCard(f)));
+}
+
+fetchLetterboxdRecent();
+setInterval(fetchLetterboxdRecent, 5 * 60 * 1000);
 
 // ---- READme.app: ported glitch-text effect ----
 function split(el) {
