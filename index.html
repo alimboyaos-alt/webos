@@ -18,21 +18,118 @@
     --coral:#ff6f5e;
     --amber:#ffcf6e;
     --dim:#6b6878;
+    --dim-soft:#8f8ba0;
+
+    /* surfaces & chrome */
+    --surface:rgba(255,255,255,.55);
+    --surface-border:rgba(255,255,255,.6);
+    --surface-solid:#ffffff;
+    --surface-2:#f4f2f7;
+    --surface-3:#eae7f2;
+    --border:#e5e2eb;
+    --border-strong:#ddd9e5;
+    --divider:#eeeaf2;
+    --hover:#e9e6ef;
+    --input-bg:#ffffff;
+    --slider-bg:#d7d3df;
+    --tb-1:#fbfbfd;
+    --tb-2:#f1f0f5;
+
+    /* dock */
+    --dock-bg-1:rgba(255,255,255,.28);
+    --dock-bg-2:rgba(255,255,255,.12);
+    --dock-border:rgba(255,255,255,.45);
+
+    /* misc components */
+    --popup-img-bg:#ffffff;
+    --term-prompt:#3aa06b;
+    --term-link:#3a6bc9;
+    --caret:#c9f2d8;
+    --home-clock-bg:rgba(255,255,255,.72);
+    --home-clock-border:rgba(255,255,255,.55);
+
+    color-scheme:light;
   }
+
+  body.prefs-dark{
+    --desktop:#1d1b23;
+    --desktop-2:#151319;
+    --chrome:#24232b;
+    --titlebar:#18171d;
+    --ink:#f3f1f7;
+    --dim:#aaa6b8;
+    --dim-soft:#9b96ab;
+
+    --surface:rgba(30,29,36,.6);
+    --surface-border:rgba(255,255,255,.08);
+    --surface-solid:#24232b;
+    --surface-2:#2d2b34;
+    --surface-3:#3a3742;
+    --border:#46434e;
+    --border-strong:#514d5a;
+    --divider:#3e3b46;
+    --hover:#3a3742;
+    --input-bg:#35323d;
+    --slider-bg:#514d5a;
+    --tb-1:#34323c;
+    --tb-2:#2b2931;
+
+    --dock-bg-1:rgba(48,46,58,.55);
+    --dock-bg-2:rgba(24,23,29,.4);
+    --dock-border:rgba(255,255,255,.12);
+
+    --popup-img-bg:#1d1b23;
+    --term-prompt:#67d99c;
+    --term-link:#7fa8ff;
+    --caret:#3aa06b;
+    --home-clock-bg:rgba(30,29,36,.62);
+    --home-clock-border:rgba(255,255,255,.1);
+
+    color-scheme:dark;
+  }
+
   *{box-sizing:border-box;}
-  body{margin:0; font-family:'Inter',sans-serif; color:var(--ink); overflow:hidden; height:100vh; user-select:none;}
+  body{margin:0; font-family:'Inter',sans-serif; color:var(--ink); overflow:hidden; height:100vh; user-select:none; background:var(--desktop); transition:background-color .35s ease, color .35s ease;}
 
   /* ---- boot screen ---- */
   #boot{
-    position:fixed; inset:0; background:var(--titlebar); color:#fff; z-index:200;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+    position:fixed; inset:0; color:#fff; z-index:200;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
     font-family:'JetBrains Mono', monospace;
+    overflow:hidden;
+    background:var(--titlebar);
   }
+  #boot::before{
+    content:'';
+    position:absolute; inset:-24px;
+    background-image: var(--boot-bg-image,
+      linear-gradient(180deg, rgba(20,16,30,.5), rgba(20,16,30,.3) 18%, rgba(20,16,30,.55) 82%, rgba(20,16,30,.7)),
+      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg'));
+    background-position:center 28%, center 28%;
+    background-size:cover, cover;
+    background-repeat:no-repeat, no-repeat;
+    filter:blur(40px) saturate(1.05) brightness(.8);
+    transform:scale(1.15);
+    z-index:0;
+  }
+  #boot::after{
+    content:'';
+    position:absolute; inset:0;
+    background:rgba(10,8,16,.32);
+    z-index:0;
+  }
+  #boot > *{ position:relative; z-index:1; }
   #boot .logo{ font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:26px; letter-spacing:.02em; display:flex; align-items:center; gap:10px;}
-  #boot .logo img{ height:44px; width:auto; display:block; filter:invert(1);}
-  #boot .bar{ width:220px; height:6px; background:rgba(255,255,255,.15); border-radius:4px; overflow:hidden;}
-  #boot .fill{ height:100%; width:0%; background:var(--mint); border-radius:4px; }
-  #boot .txt{ font-size:11px; color:rgba(255,255,255,.6);}
+  #boot .logo img{ height:44px; width:auto; display:block; filter:invert(1) drop-shadow(0 2px 10px rgba(0,0,0,.35));}
+  #boot .spinner{
+    width:26px; height:26px; border-radius:50%;
+    border:2.5px solid rgba(255,255,255,.28);
+    border-top-color:#fff;
+    animation:boot-spin .85s linear infinite;
+  }
+  @keyframes boot-spin{ to{ transform:rotate(360deg); } }
+  #boot .label{ font-family:'Inter',sans-serif; font-size:13.5px; font-weight:500; color:#fff; letter-spacing:.01em; }
+  #boot .txt{ font-size:11px; color:rgba(255,255,255,.65);}
 
   /* ---- desktop ---- */
   #desktop{
@@ -45,16 +142,20 @@
     background-repeat: no-repeat, no-repeat;
     background-color: var(--desktop);
     opacity:0;
+    transition:background-color .35s ease;
   }
 
   /* menu bar */
   .menubar{
-    position:absolute; top:0; left:0; right:0; height:34px; background:rgba(255,255,255,.55); backdrop-filter:blur(10px);
+    position:absolute; top:0; left:0; right:0; height:34px; background:var(--surface); backdrop-filter:blur(10px);
     display:flex; align-items:center; padding:0 16px; gap:20px; font-size:12.5px; z-index:100;
-    border-bottom:1px solid rgba(255,255,255,.6);
+    border-bottom:1px solid var(--surface-border);
+    color:var(--ink);
+    transition:background-color .35s ease, border-color .35s ease, color .35s ease;
   }
   .menubar .brand{ font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight:600; display:flex; align-items:center; gap:6px;}
-  .menubar .brand img{ height:15px; width:auto; display:block;}
+  .menubar .brand img{ height:15px; width:auto; display:block; transition:filter .35s ease;}
+  body.prefs-dark .menubar .brand img{ filter:invert(1) brightness(1.15); }
   .menubar .sp{flex:1;}
   .menubar .item{ opacity:.75; }
   .menubar .right{ display:flex; gap:14px; font-family:'JetBrains Mono', monospace; font-size:11px; align-items:center;}
@@ -74,7 +175,10 @@
   .window{
     position:absolute; background:var(--chrome); border-radius:12px; box-shadow:0 30px 60px rgba(30,20,60,.28), 0 4px 12px rgba(0,0,0,.08);
     overflow:hidden; display:flex; flex-direction:column; min-width:240px; min-height:120px;
+    transition:background-color .35s ease, box-shadow .35s ease;
+    z-index:10;
   }
+  body.prefs-dark .window{ box-shadow:0 30px 60px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3); }
   .resize-handle{
     position:absolute; right:2px; bottom:2px; width:16px; height:16px; cursor:nwse-resize; z-index:6; touch-action:none;
     color:var(--dim); opacity:.55; transition:opacity .15s ease;
@@ -82,8 +186,9 @@
   .resize-handle:hover{ opacity:.9; }
   .resize-handle svg{ width:100%; height:100%; display:block; }
   .titlebar{
-    height:36px; background:linear-gradient(#fbfbfd, #f1f0f5); border-bottom:1px solid #e6e4ee;
+    height:36px; background:linear-gradient(var(--tb-1), var(--tb-2)); border-bottom:1px solid var(--border);
     display:flex; align-items:center; padding:0 12px; gap:8px; cursor:grab; flex-shrink:0;
+    transition:background-color .35s ease, border-color .35s ease;
   }
   .titlebar:active{cursor:grabbing;}
   .tl-btn{ width:12px; height:12px; border-radius:50%; border:none; padding:0; cursor:pointer; position:relative; }
@@ -105,7 +210,7 @@
     letter-spacing:-0.03em; line-height:1.04; text-align:left;
   }
   .readme-block h1.rm-name{ font-weight:600; margin-bottom:2px; }
-  .readme-block h1.rm-dim{ color:#8f8ba0; font-weight:400; }
+  .readme-block h1.rm-dim{ color:var(--dim-soft); font-weight:400; }
   .readme-block .rm-detail{
     position:absolute; bottom:0; width:100%; min-width:50px; height:1px; font-size:9px;
   }
@@ -114,7 +219,7 @@
   #win-work{ width:min(620px,90vw); top:120px; left:22vw;}
   .finder-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px;}
   .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer; transition:background .2s ease;}
-  .file:hover{ background:#f4f2fa;}
+  .file:hover{ background:var(--hover);}
   .file .thumb{ width:64px; height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
   .file .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
   .file:hover .thumb{ transform:translateY(-4px) scale(1.06); box-shadow:0 10px 18px rgba(0,0,0,.18); }
@@ -124,16 +229,17 @@
 
   /* Contact.app — terminal style */
   #win-contact{ width:min(440px,86vw); top:210px; left:56vw;}
-  .term{ background:var(--chrome); color:var(--ink); font-family:'JetBrains Mono', monospace; font-size:12px; padding:16px; border-radius:0 0 12px 12px; line-height:1.9;}
-  .term .p{ color:#3aa06b;}
-  .term a{ color:#3a6bc9; text-decoration:none;}
-  .caret{ display:inline-block; width:7px; height:13px; background:#c9f2d8; vertical-align:middle; animation:blink 1s steps(1) infinite;}
+  .term{ background:var(--chrome); color:var(--ink); font-family:'JetBrains Mono', monospace; font-size:12px; padding:16px; border-radius:0 0 12px 12px; line-height:1.9; transition:background-color .35s ease, color .35s ease;}
+  .term .p{ color:var(--term-prompt);}
+  .term a{ color:var(--term-link); text-decoration:none;}
+  .caret{ display:inline-block; width:7px; height:13px; background:var(--caret); vertical-align:middle; animation:blink 1s steps(1) infinite;}
   @keyframes blink{50%{opacity:0;}}
 
   /* Now Playing.app */
-  #win-nowplaying{ width:min(380px,88vw); top:250px; left:40vw;}
-  .win-body.np-card{ display:flex; align-items:center; gap:16px; padding:18px 20px; }
-  .np-art{ width:84px; height:84px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#eae7f2; box-shadow:0 8px 18px rgba(30,20,60,.18); }
+  #win-nowplaying{ width:min(420px,92vw); top:250px; left:38vw;}
+  .win-body.np-card{ display:flex; flex-direction:column; gap:0; padding:0; }
+  .np-top{ display:flex; align-items:center; gap:16px; padding:18px 20px; }
+  .np-art{ width:84px; height:84px; border-radius:10px; overflow:hidden; flex-shrink:0; background:var(--surface-3); box-shadow:0 8px 18px rgba(30,20,60,.18); }
   .np-art img{ width:100%; height:100%; object-fit:cover; display:block; }
   .np-info{ display:flex; flex-direction:column; gap:5px; min-width:0; }
   .np-status{ display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.09em; color:var(--dim); text-transform:uppercase; }
@@ -147,6 +253,23 @@
   .np-album{ font-size:11px; color:var(--dim); opacity:.75; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .np-when{ font-size:10.5px; color:var(--dim); opacity:.65; font-family:'JetBrains Mono', monospace; margin-top:2px; }
 
+  /* Now Playing.app — weekly stats */
+  .np-stats{ border-top:1px solid var(--divider); padding:16px 20px 18px; transition:border-color .35s ease; }
+  .np-stats-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
+  .np-stats-label{ font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mint); }
+  .np-week-count{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--dim); }
+  .np-stats-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px; }
+  @media(max-width:420px){ .np-stats-row{ grid-template-columns:1fr; } }
+  .np-stats-title{ font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--dim-soft); margin-bottom:7px; font-weight:600; }
+  .np-rank{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .np-rank li{ display:flex; align-items:baseline; gap:7px; font-size:11.5px; }
+  .np-rank-idx{ font-family:'JetBrains Mono', monospace; font-size:9.5px; color:var(--dim); flex:0 0 auto; }
+  .np-rank-name{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .np-rank-ct{ font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--mint); flex:0 0 auto; }
+  .np-rank-empty{ font-size:11px; color:var(--dim); opacity:.7; list-style:none; }
+  .np-genre-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .np-genre-chip{ font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.03em; color:var(--ink); background:var(--surface-3); border:1px solid var(--border); border-radius:20px; padding:4px 10px; text-transform:lowercase; transition:background-color .35s ease, border-color .35s ease; }
+
   /* Letterboxd.app */
   #win-letterboxd{ width:min(460px,88vw); top:300px; left:32vw;}
   .lb-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#14181c; }
@@ -156,7 +279,7 @@
   .lb-section-title{ font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); margin-bottom:12px; }
   .lb-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:0; }
   .lb-card{ text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px; cursor:pointer; min-width:0; }
-  .lb-poster{ width:100%; aspect-ratio:2/3; border-radius:8px; overflow:hidden; background-color:#eae7f2; background-size:cover; background-position:center; box-shadow:0 8px 16px rgba(30,20,60,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+  .lb-poster{ width:100%; aspect-ratio:2/3; border-radius:8px; overflow:hidden; background-color:var(--surface-3); background-size:cover; background-position:center; box-shadow:0 8px 16px rgba(30,20,60,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background-color .35s ease; }
   .lb-card:hover .lb-poster{ transform:translateY(-4px) scale(1.06); box-shadow:0 14px 22px rgba(0,0,0,.24); }
   .lb-title{ font-size:11px; font-weight:600; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .lb-meta{ font-size:10px; color:var(--dim); font-family:'JetBrains Mono', monospace; letter-spacing:.02em; }
@@ -169,17 +292,18 @@
   .dock{
     position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:100;
     display:flex; gap:12px; padding:9px 14px;
-    background:linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.12));
+    background:linear-gradient(180deg, var(--dock-bg-1), var(--dock-bg-2));
     backdrop-filter:blur(22px) saturate(180%);
     -webkit-backdrop-filter:blur(22px) saturate(180%);
     border-radius:22px;
-    border:1px solid rgba(255,255,255,.45);
+    border:1px solid var(--dock-border);
     box-shadow:
       0 14px 34px rgba(30,20,60,.22),
       0 1px 1px rgba(255,255,255,.6) inset,
       0 -6px 14px rgba(255,255,255,.18) inset,
       0 0 0 1px rgba(255,255,255,.08) inset;
     isolation:isolate;
+    transition:background-color .35s ease, border-color .35s ease;
   }
   .dock::before{
     content:'';
@@ -189,22 +313,40 @@
   }
   .dock .d-icon{
     width:42px; height:42px; border-radius:22.37%; display:flex; align-items:center; justify-content:center;
-    font-size:18px; cursor:pointer; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; box-shadow:0 4px 10px rgba(0,0,0,.12); overflow:hidden;
+    font-size:18px; cursor:pointer; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; box-shadow:0 4px 10px rgba(0,0,0,.12);
+    position:relative;
   }
-  .dock .d-icon img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
+  .dock .d-icon img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:inherit; transition:transform .25s ease; }
   .dock .d-icon:hover{ transform:translateY(-10px) scale(1.15); box-shadow:0 14px 20px rgba(0,0,0,.22);}
   .dock .d-icon:hover img{ transform:scale(1.08); }
   .dock .d-icon:active{ transform:translateY(-4px) scale(1.05); transition-duration:.12s; }
 
+  /* running indicator — a small dot under a dock icon whose app is
+     minimized (open in the background), like macOS's dock dots */
+  .dock .d-icon::after{
+    content:'';
+    position:absolute; left:50%; bottom:-8px;
+    width:4px; height:4px; border-radius:50%;
+    background:var(--ink);
+    opacity:0; transform:translateX(-50%) scale(.4);
+    transition:opacity .18s ease, transform .22s cubic-bezier(.34,1.56,.64,1);
+    pointer-events:none;
+  }
+  .dock .d-icon.is-running::after{
+    opacity:.9; transform:translateX(-50%) scale(1);
+  }
+
   @media(max-width:760px){
     .menubar{ position:fixed !important; }
     .menubar .item{ display:none; }
-    .dock{ position:fixed !important; bottom:10px; padding:8px 10px; gap:8px; }
-    .dock .d-icon{ width:40px; height:40px; font-size:17px; }
+    #home-clock-widget{ display:none !important; }
+    .dock{ position:fixed !important; bottom:16px; padding:12px 18px; gap:18px; }
+    .dock .d-icon{ width:60px; height:60px; font-size:27px; }
+    .dock .d-icon::after{ width:5px; height:5px; bottom:-9px; }
 
     #desktop{
       overflow-y:auto; -webkit-overflow-scrolling:touch;
-      padding-top:50px; padding-bottom:88px;
+      padding-top:50px; padding-bottom:112px;
       background-image:
         linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
         url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg');
@@ -214,37 +356,67 @@
       background-attachment: scroll, scroll;
     }
 
-    /* iPhone-style homescreen grid — 4 columns, up to 6 rows, icons
-       target ~222x222px (design reference) and shrink to fit narrower
-       phones while always keeping exactly 4 per row */
+    /* Now Playing, Watched, and Ball also live in the bottom dock —
+       drop them from the dock on mobile so they aren't duplicated now
+       that they're in the grid below */
+    .dock .d-icon[data-target="win-nowplaying"],
+    .dock .d-icon[data-target="win-letterboxd"],
+    .dock .d-icon[data-app="ball"]{ display:none !important; }
+
+    /* About, Works, and Contact Me already live in the bottom dock —
+       drop them from the home-screen grid on mobile so it only shows
+       the apps that aren't already reachable from the dock */
+    .icons .dicon[data-target="win-readme"],
+    .icons .dicon[data-target="win-work"],
+    .icons .dicon[data-target="win-contact"]{ display:none !important; }
+
+    /* iPhone-style homescreen grid — 4 columns; with About, Works, and
+       Contact Me kept dock-only, this now shows Now Playing, Watched,
+       Ball, and this was all for you — icons target ~140x140px (85%
+       of a ~165px cell) and shrink further on narrow phones */
     .icons{
       display:grid;
       position:static;
       grid-template-columns:repeat(4, 1fr);
       grid-auto-rows:min-content;
-      gap:26px 14px;
+      gap:22px 12px;
       width:100%;
-      max-width:920px;
+      max-width:760px;
       margin:6px auto 22px;
       padding:0 16px;
       top:auto; left:auto;
     }
     .dicon{ width:100%; gap:8px; }
     .dicon .glyph{
-      width:100%; height:auto; aspect-ratio:1/1; max-width:222px;
-      margin:0 auto; border-radius:22.37%; font-size:clamp(20px,7vw,34px);
+      width:85%; height:auto; aspect-ratio:1/1; max-width:140px;
+      margin:0 auto; border-radius:22.37%; font-size:clamp(17px,6vw,29px);
     }
-    .dicon span{ font-size:clamp(10.5px,3vw,13px); }
+    .dicon span{ font-size:clamp(9px,2.6vw,11px); }
 
+    /* windows become fullscreen "apps" that cover the home screen,
+       like tapping an app icon on an iPhone — not cards stacked on
+       the same scrolling page */
     .window{
-      position:relative !important;
-      left:auto !important; top:auto !important; right:auto !important;
-      width:92vw !important; max-width:460px !important; height:auto !important;
-      margin:0 auto 16px !important;
+      position:fixed !important;
+      inset:0 !important;
+      left:0 !important; top:0 !important; right:0 !important; bottom:0 !important;
+      width:100% !important; max-width:none !important; height:100% !important;
+      margin:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      padding-top:50px;
     }
-    .win-body{ max-height:none; }
+    .win-body{ max-height:none; flex:1; }
+    .window > .prefs{ flex:1; min-height:0; overflow:auto; }
     .resize-handle{ display:none; }
     .readme-block h1{ font-size:clamp(1.7rem, 8.5vw, 2.4rem); }
+
+    /* home screen (icons, dock, clock) hides while an app is open,
+       the way the iPhone home screen is covered by the open app */
+    body.app-open #desktop{ overflow:hidden; }
+    body.app-open .icons,
+    body.app-open .dock,
+    body.app-open #home-clock-widget{ display:none !important; }
   }
 
   @media(max-width:480px){
@@ -252,22 +424,331 @@
     .menubar .right span:first-child{ display:none; }
     .icons{ gap:18px 10px; padding:0 12px; }
   }
+
+/* 1DOLO folder contents: Monthly and Officers side-by-side */
+#finder-1dolo{
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  align-items:start;
+}
+#finder-1dolo .file{
+  min-width:0;
+}
+@media (max-width:760px){
+  #finder-1dolo{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* this was all for you♡ home-screen app */
+#finder .file[data-target="win-this-was-all-for-you"] .thumb{
+  overflow:hidden;
+  background:transparent !important;
+}
+#finder .file[data-target="win-this-was-all-for-you"] .thumb img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+
+
+
+/* this was all for you♡ — lower-right desktop position */
+.icons .dicon[data-target="win-this-was-all-for-you"]{
+  position:fixed;
+  left:auto;
+  top:auto;
+  right:34px;
+  bottom:34px;
+  z-index:10;
+}
+@media (max-width:700px){
+  .icons .dicon[data-target="win-this-was-all-for-you"]{
+    right:20px;
+    bottom:24px;
+  }
+}
+
+/* on mobile it should just sit in the grid like every other icon,
+   not float fixed at full grid-cell width (which blew it up huge) */
+@media (max-width:760px){
+  .icons .dicon[data-target="win-this-was-all-for-you"]{
+    position:static;
+    left:auto; top:auto; right:auto; bottom:auto;
+    z-index:auto;
+  }
+}
+
+
+/* Home-screen clock widget */
+#home-clock-widget{
+  position:fixed;
+  top:50px;
+  right:28px;
+  z-index:5;
+  min-width:190px;
+  padding:14px 18px 13px;
+  border-radius:18px;
+  background:var(--home-clock-bg);
+  border:1px solid var(--home-clock-border);
+  box-shadow:0 8px 28px rgba(0,0,0,.12);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  text-align:center;
+  font-family:inherit;
+  pointer-events:none;
+  color:var(--ink);
+  transition:background-color .35s ease, border-color .35s ease, color .35s ease;
+}
+#home-clock-time{
+  font-size:32px;
+  line-height:1;
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+#home-clock-date{
+  margin-top:7px;
+  font-size:12px;
+  opacity:.62;
+  letter-spacing:.02em;
+}
+@media(max-width:700px){
+  #home-clock-widget{
+    top:44px;
+    right:18px;
+    min-width:150px;
+    padding:11px 14px;
+  }
+  #home-clock-time{font-size:25px;}
+  #home-clock-date{font-size:10px;}
+}
+
+/* "Ball" app icon glyph — a little CSS sphere so it doesn't need an image asset */
+.ball-glyph{
+  background:radial-gradient(circle at 33% 28%, #ffcabf 0%, var(--coral) 46%, #d1493c 100%);
+  box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 4px 6px rgba(255,255,255,.35);
+}
+.dock .d-icon.ball-glyph{ width:42px; height:42px; }
+
+/* Full-screen bounce-physics overlay for the "Ball" app */
+#ball-app-canvas{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  z-index:150;
+  pointer-events:none;
+  display:none;
+}
+#ball-app-canvas.is-active{ display:block; }
+
+/* Prevent the clock widget from creating a backdrop/compositing glow in the
+   menu bar above it. */
+#home-clock-widget{
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  isolation:isolate;
+}
+
 </style>
+
+<style id="irish-spring-image-popup-css">
+#irish-spring-image-popup{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  padding:28px; opacity:0; visibility:hidden; pointer-events:none;
+  background:rgba(0,0,0,0); backdrop-filter:blur(0);
+  transition:opacity .28s cubic-bezier(.22,1,.36,1),
+             background .28s cubic-bezier(.22,1,.36,1),
+             backdrop-filter .28s cubic-bezier(.22,1,.36,1),
+             visibility 0s linear .28s;
+}
+#irish-spring-image-popup.is-open{
+  opacity:1; visibility:visible; pointer-events:auto;
+  background:rgba(0,0,0,.72); backdrop-filter:blur(5px);
+  transition:opacity .28s cubic-bezier(.22,1,.36,1),
+             background .28s cubic-bezier(.22,1,.36,1),
+             backdrop-filter .28s cubic-bezier(.22,1,.36,1),
+             visibility 0s linear 0s;
+}
+#irish-spring-image-popup .ispopup-panel{
+  position:relative; width:min(900px,92vw); height:min(900px,92vh);
+  display:flex; align-items:center; justify-content:center;
+  transform:scale(.92) translateY(10px); opacity:0;
+  transition:transform .34s cubic-bezier(.16,1,.3,1),opacity .22s ease;
+}
+#irish-spring-image-popup.is-open .ispopup-panel{
+  transform:scale(1) translateY(0); opacity:1;
+}
+#irish-spring-image-popup img{
+  display:block; max-width:100%; max-height:100%;
+  width:auto; height:auto; object-fit:contain; border-radius:10px;
+  box-shadow:0 18px 60px rgba(0,0,0,.5); background:var(--popup-img-bg);
+  transform:scale(.96);
+  transition:transform .38s cubic-bezier(.16,1,.3,1);
+}
+#irish-spring-image-popup.is-open img{transform:scale(1);}
+
+#irish-spring-image-popup .ispopup-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:46px;
+  height:46px;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:50%;
+  background:rgba(20,20,20,.85);
+  color:#fff;
+  font-size:30px;
+  line-height:40px;
+  cursor:pointer;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.9;
+  transition:background .2s ease, transform .2s ease, opacity .2s ease;
+}
+
+#irish-spring-image-popup .ispopup-nav.is-disabled{
+  opacity:.28;
+  cursor:default;
+  pointer-events:none;
+  background:rgba(20,20,20,.55);
+}
+
+#irish-spring-image-popup .ispopup-nav:hover{
+  background:#000;
+  opacity:1;
+}
+#irish-spring-image-popup .ispopup-nav.prev{left:-70px;}
+#irish-spring-image-popup .ispopup-nav.next{right:-70px;}
+@media (max-width:760px){
+  #irish-spring-image-popup .ispopup-nav{
+    width:40px;
+    height:40px;
+    font-size:26px;
+    line-height:34px;
+  }
+  #irish-spring-image-popup .ispopup-nav.prev{left:8px;}
+  #irish-spring-image-popup .ispopup-nav.next{right:8px;}
+}
+
+#irish-spring-image-popup .ispopup-close{
+  position:absolute; top:-14px; right:-14px; width:36px; height:36px;
+  border:1px solid rgba(255,255,255,.5); border-radius:50%;
+  background:rgba(20,20,20,.9); color:#fff; font-size:24px;
+  line-height:32px; cursor:pointer; z-index:2; opacity:0;
+  transform:scale(.8);
+  transition:opacity .2s ease .08s,transform .28s cubic-bezier(.16,1,.3,1);
+}
+#irish-spring-image-popup.is-open .ispopup-close{
+  opacity:1; transform:scale(1);
+}
+#irish-spring-image-popup .ispopup-close:hover{background:#000;}
+#finder-irish-springs .file.image-file{cursor:pointer;}
+#finder-irish-springs .file.image-file .thumb img{pointer-events:none;}
+@media (prefers-reduced-motion:reduce){
+  #irish-spring-image-popup,#irish-spring-image-popup .ispopup-panel,
+  #irish-spring-image-popup img,#irish-spring-image-popup .ispopup-close{transition:none;}
+}
+@media (max-width:760px){
+  #irish-spring-image-popup{padding:18px;}
+  #irish-spring-image-popup .ispopup-panel{width:94vw;height:86vh;}
+  #irish-spring-image-popup .ispopup-close{top:-10px;right:-6px;}
+}
+
+  /* Preferences.app */
+  #win-preferences{ width:min(560px,90vw); top:120px; left:38vw; }
+  .prefs{ display:grid; grid-template-columns:150px 1fr; }
+  .prefs-side{ background:var(--surface-2); border-right:1px solid var(--border); padding:10px; transition:background-color .35s ease, border-color .35s ease; }
+  .prefs-tab{ width:100%; border:0; background:transparent; border-radius:8px; padding:9px 10px; text-align:left; font:500 11px Inter,sans-serif; color:var(--ink); cursor:pointer; }
+  .prefs-tab:hover{ background:var(--hover); }
+  .prefs-tab.active{ background:var(--mint); color:#173426; }
+  .prefs-content{ padding:18px 20px; overflow:auto; }
+  .prefs-pane{ display:none; }
+  .prefs-pane.active{ display:block; }
+  .prefs-heading{ font-size:17px; font-weight:600; margin:0 0 4px; letter-spacing:-.02em; }
+  .prefs-sub{ font-size:10.5px; color:var(--dim); margin:0 0 18px; line-height:1.45; }
+  .prefs-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px solid var(--divider); transition:border-color .35s ease; }
+  .prefs-row:last-child{ border-bottom:0; }
+  .prefs-label{ font-size:11.5px; font-weight:500; }
+  .prefs-desc{ font-size:9.5px; color:var(--dim); margin-top:2px; }
+  .prefs-select,.prefs-input{ border:1px solid var(--border-strong); background:var(--input-bg); border-radius:7px; padding:7px 9px; font:10.5px Inter,sans-serif; color:var(--ink); outline:none; transition:background-color .35s ease, border-color .35s ease, color .35s ease; }
+  .prefs-select:focus,.prefs-input:focus{ border-color:var(--mint); }
+  .prefs-colors{ display:flex; gap:7px; }
+  .prefs-color{ width:24px; height:24px; border-radius:7px; border:2px solid transparent; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.12); }
+  .prefs-color.active{ border-color:var(--ink); transform:scale(1.08); }
+  .prefs-wallpapers{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
+  .prefs-wall{ height:62px; border-radius:8px; border:2px solid transparent; cursor:pointer; background-size:cover; background-position:center; box-shadow:0 4px 10px rgba(0,0,0,.12); }
+  .prefs-wall.active{ border-color:var(--ink); }
+  .prefs-wall.solid{ background:linear-gradient(135deg,#dcd6e8,#7be0ad); }
+  .prefs-toggle{ position:relative; width:38px; height:22px; flex:0 0 auto; }
+  .prefs-toggle input{ opacity:0; width:0; height:0; }
+  .prefs-slider{ position:absolute; inset:0; border-radius:20px; background:var(--slider-bg); cursor:pointer; transition:background-color .2s ease; }
+  .prefs-slider:before{ content:''; position:absolute; width:18px; height:18px; left:2px; top:2px; border-radius:50%; background:white; box-shadow:0 1px 4px rgba(0,0,0,.18); transition:.2s; }
+  .prefs-toggle input:checked + .prefs-slider{ background:var(--mint); }
+  .prefs-toggle input:checked + .prefs-slider:before{ transform:translateX(16px); }
+  .prefs-footer{ grid-column:1/-1; padding:8px 14px; border-top:1px solid var(--border); font:9px 'JetBrains Mono',monospace; color:var(--dim); text-align:right; transition:border-color .35s ease; }
+  .prefs-reset{ border:1px solid var(--border-strong); background:var(--input-bg); border-radius:7px; padding:7px 10px; font:10px Inter,sans-serif; color:var(--ink); cursor:pointer; transition:background-color .35s ease, border-color .35s ease, color .35s ease; }
+  .prefs-reset:hover{ background:var(--surface-2); }
+  #desktop.reduce-motion *, #desktop.reduce-motion *::before, #desktop.reduce-motion *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+  #desktop.no-shadows .window{ box-shadow:none; }
+  #desktop.no-shadows .dicon .glyph{ overflow:hidden; box-shadow:none; }
+  #desktop.no-shadows .dock .d-icon{ box-shadow:none; }
+  @media(max-width:600px){
+    #win-preferences{ width:94vw; left:3vw; top:80px; }
+    .prefs{ grid-template-columns:112px 1fr; }
+    .prefs-wallpapers{ grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+
+
+<style id="this-was-all-for-you-icon-css">
+.dicon[data-target="win-this-was-all-for-you"] .glyph{
+  overflow:hidden;
+}
+.dicon[data-target="win-this-was-all-for-you"] .glyph img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:inherit;
+}
+</style>
+
+
+<style id="this-was-all-for-you-final-css">
+.dicon[data-target="win-this-was-all-for-you"] .glyph{
+  overflow:hidden;
+}
+.dicon[data-target="win-this-was-all-for-you"] .glyph img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:inherit;
+}
+</style>
+
 </head>
 <body>
 
 <div id="boot">
   <div class="logo"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt="Shane Paul Alimboyao"></div>
-  <div class="bar"><div class="fill" id="bootfill"></div></div>
+  <div class="spinner" aria-hidden="true"></div>
+  <div class="label">Logging user in…</div>
   <div class="txt" id="boottxt">Starting up…</div>
 </div>
 
 <div id="desktop">
   <div class="menubar">
     <div class="brand"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt=""> Shane Paul Alimboyao</div>
-    <div class="item">File</div>
-    <div class="item">Edit</div>
-    <div class="item">View</div>
+    <div class="item">Apps</div>
+    <div class="item">Search</div>
+    <div class="item">Window</div>
     <div class="sp"></div>
     <div class="right">
       <span>Metro Manila, PH</span>
@@ -295,6 +776,14 @@
     <div class="dicon" data-target="win-letterboxd">
       <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Watched"></div>
       <span>Watched</span>
+    </div>
+    <div class="dicon" data-target="win-this-was-all-for-you">
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/images.jpg" alt="this was all for you♡"></div>
+      <span>this was all for you♡</span>
+    </div>
+    <div class="dicon" id="app-ball-icon" data-app="ball" role="button" tabindex="0" aria-pressed="false" aria-label="Ball">
+      <div class="glyph ball-glyph"></div>
+      <span>Ball</span>
     </div>
   </div>
 
@@ -333,7 +822,7 @@
   </div>
 
   <!-- 1DOLO folder window -->
-  <div class="window" id="win-1dolo" style="top:150px; left:30vw;">
+  <div class="window" id="win-1dolo" style="  width:760px; max-width:90vw; top:170px; left:34vw; width:760px; max-width:90vw;">
     <div class="titlebar">
       <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
       <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
@@ -346,7 +835,7 @@
   </div>
 
   <!-- Irish Springs folder window -->
-  <div class="window" id="win-irish-springs" style="top:170px; left:34vw;">
+  <div class="window" id="win-irish-springs" style="top:170px; left:34vw; width: 760px; max-width: 90vw;">
     <div class="titlebar">
       <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
       <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
@@ -356,6 +845,37 @@
     <div class="win-body">
       <div class="finder-grid" id="finder-irish-springs"></div>
     </div>
+  </div>
+
+
+  <!-- 1DOLO Monthly folder -->
+  <div class="window" id="win-1dolo-monthly" style="width:600px; max-width:90vw;">
+    <div class="titlebar">
+      <span>Monthly</span>
+      <button class="window-close" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="finder" id="finder-1dolo-monthly"></div>
+  </div>
+
+  <!-- 1DOLO Officers folder -->
+  <div class="window" id="win-1dolo-officers" style="width:600px; max-width:90vw;">
+    <div class="titlebar">
+      <span>Officers</span>
+      <button class="window-close" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="finder" id="finder-1dolo-officers"></div>
+  </div>
+
+
+  <!-- this was all for you♡ app -->
+  <div class="window" id="win-this-was-all-for-you" style="width:760px; max-width:90vw; top:170px; left:34vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">this was all for you♡</div>
+    </div>
+    <div class="finder" id="finder-this-was-all-for-you"></div>
   </div>
 
   <!-- Contact window -->
@@ -382,16 +902,38 @@
       <div class="tl-title">Now Playing</div>
     </div>
     <div class="win-body np-card">
-      <div class="np-art"><img id="np-art" src="" alt=""></div>
-      <div class="np-info">
-        <div class="np-status">
-          <span id="np-status-text">Loading…</span>
-          <span class="np-bars" id="np-bars" style="display:none;"><span></span><span></span><span></span></span>
+      <div class="np-top">
+        <div class="np-art"><img id="np-art" src="" alt=""></div>
+        <div class="np-info">
+          <div class="np-status">
+            <span id="np-status-text">Loading…</span>
+            <span class="np-bars" id="np-bars" style="display:none;"><span></span><span></span><span></span></span>
+          </div>
+          <div class="np-track" id="np-track">—</div>
+          <div class="np-artist" id="np-artist">—</div>
+          <div class="np-album" id="np-album"></div>
+          <div class="np-when" id="np-when"></div>
         </div>
-        <div class="np-track" id="np-track">—</div>
-        <div class="np-artist" id="np-artist">—</div>
-        <div class="np-album" id="np-album"></div>
-        <div class="np-when" id="np-when"></div>
+      </div>
+      <div class="np-stats">
+        <div class="np-stats-head">
+          <span class="np-stats-label">Last 7 days</span>
+          <span class="np-week-count" id="np-week-count">—</span>
+        </div>
+        <div class="np-stats-row">
+          <div>
+            <div class="np-stats-title">Top artists</div>
+            <ul class="np-rank" id="np-top-artists"><li class="np-rank-empty">Loading…</li></ul>
+          </div>
+          <div>
+            <div class="np-stats-title">Top albums</div>
+            <ul class="np-rank" id="np-top-albums"><li class="np-rank-empty">Loading…</li></ul>
+          </div>
+        </div>
+        <div>
+          <div class="np-stats-title">Genres</div>
+          <div class="np-genre-chips" id="np-genres"><span class="np-rank-empty">Loading…</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -419,38 +961,154 @@
     </div>
   </div>
 
+  <!-- Preferences.app -->
+  <div class="window" id="win-preferences" style="width:min(560px,90vw);">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Preferences</div>
+    </div>
+    <div class="prefs">
+      <aside class="prefs-side" aria-label="Preference categories">
+        <button class="prefs-tab active" data-pref-tab="appearance">Appearance</button>
+        <button class="prefs-tab" data-pref-tab="desktop">Desktop</button>
+        <button class="prefs-tab" data-pref-tab="interface">Interface</button>
+        <button class="prefs-tab" data-pref-tab="about">About This Mac</button>
+      </aside>
+      <main class="prefs-content">
+        <section class="prefs-pane active" data-pref-pane="appearance">
+          <h2 class="prefs-heading">Appearance</h2>
+          <p class="prefs-sub">Make the desktop feel a little more like yours.</p>
+          <div class="prefs-row"><div><div class="prefs-label">Theme</div><div class="prefs-desc">Change the look of the windows.</div></div><select class="prefs-select" id="pref-theme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+          <div class="prefs-row"><div><div class="prefs-label">Accent color</div><div class="prefs-desc">Used for active controls and little details.</div></div><div class="prefs-colors"><button class="prefs-color active" data-accent="mint" style="background:#7be0ad" aria-label="Mint"></button><button class="prefs-color" data-accent="coral" style="background:#ff6f5e" aria-label="Coral"></button><button class="prefs-color" data-accent="amber" style="background:#ffcf6e" aria-label="Amber"></button><button class="prefs-color" data-accent="lilac" style="background:#8f8bd6" aria-label="Lilac"></button></div></div>
+          <div class="prefs-row"><div><div class="prefs-label">Wallpaper</div><div class="prefs-desc">Pick the desktop background.</div></div></div>
+          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
+        </section>
+        <section class="prefs-pane" data-pref-pane="desktop">
+          <h2 class="prefs-heading">Desktop</h2>
+          <p class="prefs-sub">A few switches for how the desktop behaves.</p>
+          <div class="prefs-row"><div><div class="prefs-label">Show desktop icons</div><div class="prefs-desc">Hide the icons without closing their apps.</div></div><label class="prefs-toggle"><input type="checkbox" id="pref-icons" checked><span class="prefs-slider"></span></label></div>
+        </section>
+        <section class="prefs-pane" data-pref-pane="interface">
+          <h2 class="prefs-heading">Interface</h2>
+          <p class="prefs-sub">Tweak the little interactions.</p>
+          <div class="prefs-row"><div><div class="prefs-label">Window animations</div><div class="prefs-desc">Open, close, minimize and restore with motion.</div></div><label class="prefs-toggle"><input type="checkbox" id="pref-motion" checked><span class="prefs-slider"></span></label></div>
+          <div class="prefs-row"><div><div class="prefs-label">Reduce motion</div><div class="prefs-desc">Turns most interface animation off.</div></div><label class="prefs-toggle"><input type="checkbox" id="pref-reduced"><span class="prefs-slider"></span></label></div>
+          <div class="prefs-row"><div><div class="prefs-label">Interface scale</div><div class="prefs-desc">Affects the whole desktop.</div></div><select class="prefs-select" id="pref-scale"><option value="1">100%</option><option value="0.95">95%</option><option value="1.05">105%</option><option value="1.1">110%</option></select></div>
+        </section>
+        <section class="prefs-pane" data-pref-pane="about">
+          <h2 class="prefs-heading">About This Mac</h2>
+          <p class="prefs-sub">webOS — Shane Paul Alimboyao edition.</p>
+          <div class="prefs-row"><div><div class="prefs-label">System</div><div class="prefs-desc">Personal portfolio / interactive desktop</div></div><strong style="font-size:11px;">webOS 1.0</strong></div>
+          <div class="prefs-row"><div><div class="prefs-label">Built with</div><div class="prefs-desc">HTML · CSS · JavaScript · GSAP</div></div><span style="font:9px 'JetBrains Mono';color:var(--dim);">mostly handmade</span></div>
+          <div class="prefs-row"><div><div class="prefs-label">Developer mode</div><div class="prefs-desc">There is probably nothing interesting here.</div></div><button class="prefs-reset" id="pref-reset">Reset preferences</button></div>
+        </section>
+      </main>
+      <div class="prefs-footer" id="prefs-status">Preferences saved automatically</div>
+    </div>
+  </div>
+
   <div class="dock">
     <div class="d-icon" data-target="win-readme"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt="About"></div>
     <div class="d-icon" data-target="win-work"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt="Works"></div>
     <div class="d-icon" data-target="win-contact"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
     <div class="d-icon" data-target="win-nowplaying"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Now Playing"></div>
     <div class="d-icon" data-target="win-letterboxd"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Watched"></div>
+    <div class="d-icon ball-glyph" id="app-ball-dock-icon" data-app="ball" role="button" tabindex="0" aria-pressed="false" title="Ball" aria-label="Ball"></div>
+    <div class="d-icon" data-target="win-preferences" title="Preferences" aria-label="Preferences">
+      <img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="Preferences" style="width:100%;height:100%;object-fit:contain;">
+    </div>
   </div>
-</div>
+
+  <!-- Home-screen clock widget (kept inside #desktop so it shares its
+       stacking context — #desktop gets a transform during the boot
+       fade-in, which otherwise traps window z-index changes and stops
+       them from ever appearing above a clock rendered as a sibling) -->
+  <div id="home-clock-widget" aria-label="Current time">
+    <div id="home-clock-time">--:--</div>
+    <div id="home-clock-date">Loading…</div>
+  </div>
+  </div>
 
 <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 <script src="https://unpkg.com/gsap@3/dist/SplitText.min.js"></script>
 <script>
+// Preferences (loaded early so boot screen can use the saved wallpaper)
+const PREF_KEY = 'shane-webos-preferences-v1';
+const PREF_DEFAULTS = { theme:'light', accent:'mint', wall:'newvegas', icons:true, dock:true, shadows:true, motion:true, reduced:false, scale:'1' };
+const prefAccent = {
+  mint:{mint:'#7be0ad', coral:'#ff6f5e'},
+  coral:{mint:'#ff6f5e', coral:'#ff6f5e'},
+  amber:{mint:'#ffcf6e', coral:'#ff9b5e'},
+  lilac:{mint:'#8f8bd6', coral:'#ff6f9d'}
+};
+const prefWalls = {
+  newvegas:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')",
+  photo:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')",
+  solid:"linear-gradient(135deg, var(--desktop), var(--desktop-2))"
+};
+let prefs = {...PREF_DEFAULTS};
+try { prefs = {...PREF_DEFAULTS, ...JSON.parse(localStorage.getItem(PREF_KEY) || '{}')}; } catch(e) {}
+
 // boot sequence
-const steps = ["Starting up…","Loading design tools…","Mounting Works…","Rendering desktop…"];
+// match the blurred boot background to whichever wallpaper the user last picked
+document.documentElement.style.setProperty('--boot-bg-image', prefWalls[prefs.wall] || prefWalls.newvegas);
+
+const steps = ["Starting up…","Verifying credentials…","Loading user profile…","Preparing desktop…"];
 let si = 0;
 const boottxt = document.getElementById('boottxt');
-const fillEl = document.getElementById('bootfill');
+const BOOT_DURATION = 1700;
 const bootInterval = setInterval(()=>{
   si++;
   if(si < steps.length) boottxt.textContent = steps[si];
-}, 420);
-gsap.to(fillEl, { width:"100%", duration:1.7, ease:"power1.inOut", onComplete:()=>{
+}, BOOT_DURATION / steps.length);
+setTimeout(()=>{
   clearInterval(bootInterval);
   gsap.to('#boot', { opacity:0, duration:.5, onComplete:()=> document.getElementById('boot').style.display='none' });
   gsap.to('#desktop', { opacity:1, duration:.6 });
-}});
+}, BOOT_DURATION);
 
 // no app opens automatically — the desktop starts clean, apps launch on click
 document.querySelectorAll('.window').forEach(win=>{
   win.style.display = 'none';
   win.dataset.closed = "1";
 });
+
+// Preferences.app
+function savePrefs(){ localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); const s=document.getElementById('prefs-status'); if(s){s.textContent='Preferences saved automatically'; setTimeout(()=>s.textContent='Changes saved',600);} }
+function applyPrefs(){
+  const root=document.documentElement, body=document.body, desktop=document.getElementById('desktop');
+  const a=prefAccent[prefs.accent] || prefAccent.mint; root.style.setProperty('--mint',a.mint); root.style.setProperty('--coral',a.coral);
+  body.classList.toggle('prefs-dark', prefs.theme==='dark');
+  desktop.style.backgroundImage = prefWalls[prefs.wall] || prefWalls.newvegas;
+  document.documentElement.style.setProperty('--boot-bg-image', prefWalls[prefs.wall] || prefWalls.newvegas);
+  document.querySelector('.icons').style.display = prefs.icons ? '' : 'none';
+  document.querySelector('.dock').style.display = prefs.dock ? '' : 'none';
+  desktop.classList.toggle('no-shadows', !prefs.shadows);
+  desktop.classList.toggle('reduce-motion', prefs.reduced || !prefs.motion);
+  desktop.style.transform = `scale(${prefs.scale})`; desktop.style.transformOrigin='center center';
+  const theme=document.getElementById('pref-theme'); if(theme) theme.value=prefs.theme;
+  const scale=document.getElementById('pref-scale'); if(scale) scale.value=prefs.scale;
+  ['icons','dock','shadows','motion','reduced'].forEach(k=>{const el=document.getElementById('pref-'+k); if(el) el.checked=!!prefs[k];});
+  document.querySelectorAll('.prefs-color').forEach(b=>b.classList.toggle('active',b.dataset.accent===prefs.accent));
+  document.querySelectorAll('.prefs-wall').forEach(b=>b.classList.toggle('active',b.dataset.wall===prefs.wall));
+}
+function bindPreferences(){
+  document.querySelectorAll('[data-pref-tab]').forEach(tab=>tab.addEventListener('click',()=>{
+    document.querySelectorAll('[data-pref-tab]').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('[data-pref-pane]').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active'); document.querySelector(`[data-pref-pane="${tab.dataset.prefTab}"]`).classList.add('active');
+  }));
+  document.getElementById('pref-theme').addEventListener('change',e=>{prefs.theme=e.target.value;applyPrefs();savePrefs();});
+  document.getElementById('pref-scale').addEventListener('change',e=>{prefs.scale=e.target.value;applyPrefs();savePrefs();});
+  ['icons','dock','shadows','motion','reduced'].forEach(k=>{ const el=document.getElementById('pref-'+k); if(el) el.addEventListener('change',e=>{prefs[k]=e.target.checked;applyPrefs();savePrefs();}); });
+  document.querySelectorAll('.prefs-color').forEach(b=>b.addEventListener('click',()=>{prefs.accent=b.dataset.accent;applyPrefs();savePrefs();}));
+  document.querySelectorAll('.prefs-wall').forEach(b=>b.addEventListener('click',()=>{prefs.wall=b.dataset.wall;applyPrefs();savePrefs();}));
+  document.getElementById('pref-reset').addEventListener('click',()=>{prefs={...PREF_DEFAULTS};applyPrefs();savePrefs();});
+}
+bindPreferences();
+applyPrefs();
 
 // finder grid
 const cats = [
@@ -461,7 +1119,11 @@ const cats = [
 ];
 const files = [
   {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo"},
-  {name:"Irish Spring", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%20084350.png", target:"win-irish-springs"},
+  {name:"Irish Spring", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%2008335011111111111111111.png", target:"win-irish-springs"},
+];
+const oneDoloFiles = [
+  {name:"Monthly", type:"Folder", target:"win-1dolo-monthly"},
+  {name:"Officers", type:"Folder", target:"win-1dolo-officers"},
 ];
 const finder = document.getElementById('finder');
 files.forEach(f=>{
@@ -497,20 +1159,189 @@ if(dolo1Files.length){
 
 // contents shown inside the Irish Springs folder window — edit this array to add your own files/images
 const irishSpringsFiles = [
-  // {name:"example.jpg", type:"Image", gif:"https://link-to-image.jpg"},
+  {name:"irish spring 1.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%201.png"},
+  {name:"irish spring 2.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%202.png"},
+  {name:"irish spring 3.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%203.png"},
+  {name:"irish spring 4.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%204.png"},
+  {name:"irish spring 5.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%205.png"}
 ];
 const finderIrishSprings = document.getElementById('finder-irish-springs');
 if(irishSpringsFiles.length){
   irishSpringsFiles.forEach(f=>{
-    const el = document.createElement('div'); el.className='file';
-    const thumbInner = f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '');
+    const el = document.createElement('div');
+    el.className='file';
+
+    const thumbInner = f.gif
+      ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">`
+      : (f.type || '');
+
     const bg = f.gif ? 'transparent' : '#c9c0e0';
     el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
+
+    // Clicking an image opens the full-size popup instead of navigating away.
+    if(f.gif){
+      el.classList.add('image-file');
+      el.addEventListener('click', (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        openIrishSpringImagePopup(f.gif, f.name);
+      });
+    }
+
     finderIrishSprings.appendChild(el);
   });
-} else {
-  finderIrishSprings.innerHTML = `<div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items to the irishSpringsFiles array.</div>`;
 }
+
+
+// Irish Spring full-image popup with previous/next navigation
+let irishSpringPopupCloseTimer = null;
+let irishSpringPopupIndex = 0;
+
+function getIrishSpringImagePopup(){
+  return document.getElementById('irish-spring-image-popup');
+}
+
+function getIrishSpringImagePopupImg(){
+  return document.getElementById('irish-spring-image-popup-img');
+}
+
+function updateIrishSpringPopupNav(){
+  const popup = getIrishSpringImagePopup();
+  if(!popup) return;
+
+  const prev = popup.querySelector('.ispopup-nav.prev');
+  const next = popup.querySelector('.ispopup-nav.next');
+  const lastIndex = irishSpringsFiles.length - 1;
+
+  if(prev){
+    const disabled = irishSpringPopupIndex <= 0;
+    prev.classList.toggle('is-disabled', disabled);
+    prev.disabled = disabled;
+    prev.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+  }
+
+  if(next){
+    const disabled = irishSpringPopupIndex >= lastIndex;
+    next.classList.toggle('is-disabled', disabled);
+    next.disabled = disabled;
+    next.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+  }
+}
+
+function showIrishSpringPopupImage(index){
+  const popup = getIrishSpringImagePopup();
+  const img = getIrishSpringImagePopupImg();
+  if(!popup || !img || !irishSpringsFiles.length) return;
+
+  // No looping: stop at the first and last image.
+  irishSpringPopupIndex = Math.max(
+    0,
+    Math.min(index, irishSpringsFiles.length - 1)
+  );
+
+  const file = irishSpringsFiles[irishSpringPopupIndex];
+  img.src = file.gif;
+  img.alt = file.name || 'Irish Spring image';
+  updateIrishSpringPopupNav();
+}
+
+function openIrishSpringImagePopup(src, name){
+  const index = irishSpringsFiles.findIndex(f => f.gif === src);
+  irishSpringPopupIndex = index >= 0 ? index : 0;
+
+  const popup = getIrishSpringImagePopup();
+  if(!popup) return;
+
+  showIrishSpringPopupImage(irishSpringPopupIndex);
+  popup.classList.add('is-open');
+  popup.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeIrishSpringImagePopup(){
+  const popup = getIrishSpringImagePopup();
+  const img = getIrishSpringImagePopupImg();
+  if(!popup || !img) return;
+
+  popup.classList.remove('is-open');
+  popup.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+
+  clearTimeout(irishSpringPopupCloseTimer);
+  irishSpringPopupCloseTimer = setTimeout(()=>{
+    if(!popup.classList.contains('is-open')) img.src = '';
+  }, 380);
+}
+
+function showPreviousIrishSpringImage(){
+  if(irishSpringPopupIndex <= 0) return;
+  showIrishSpringPopupImage(irishSpringPopupIndex - 1);
+}
+
+function showNextIrishSpringImage(){
+  if(irishSpringPopupIndex >= irishSpringsFiles.length - 1) return;
+  showIrishSpringPopupImage(irishSpringPopupIndex + 1);
+}
+
+document.addEventListener('click', (e)=>{
+  const popup = getIrishSpringImagePopup();
+  if(!popup) return;
+
+  if(e.target.closest('.ispopup-close')){
+    e.preventDefault();
+    closeIrishSpringImagePopup();
+    return;
+  }
+
+  if(e.target.closest('.ispopup-nav.prev')){
+    e.preventDefault();
+    e.stopPropagation();
+    showPreviousIrishSpringImage();
+    return;
+  }
+
+  if(e.target.closest('.ispopup-nav.next')){
+    e.preventDefault();
+    e.stopPropagation();
+    showNextIrishSpringImage();
+    return;
+  }
+
+  if(e.target === popup){
+    closeIrishSpringImagePopup();
+  }
+});
+
+document.addEventListener('keydown', (e)=>{
+  const popup = getIrishSpringImagePopup();
+  if(!popup?.classList.contains('is-open')) return;
+
+  if(e.key === 'Escape') closeIrishSpringImagePopup();
+  if(e.key === 'ArrowLeft') showPreviousIrishSpringImage();
+  if(e.key === 'ArrowRight') showNextIrishSpringImage();
+});
+
+
+// 1DOLO subfolders
+
+
+function renderOneDoloFolders(){
+  const finder = document.getElementById('finder-1dolo');
+  if(!finder) return;
+  finder.innerHTML = '';
+  oneDoloFiles.forEach(f=>{
+    const el = document.createElement('div');
+    el.className = 'file';
+    el.innerHTML = `<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">${f.name}</div><div class="ftype">Folder</div>`;
+    el.addEventListener('dblclick', ()=>{
+      const win = document.getElementById(f.target);
+      if(win) win.style.display = 'block';
+    });
+    finder.appendChild(el);
+  });
+}
+renderOneDoloFolders();
+
 
 // draggable windows — clamped so the titlebar (and its buttons) can
 // never be dragged above the menu bar or off the sides/bottom
@@ -585,26 +1416,91 @@ document.querySelectorAll('.window').forEach(makeResizable);
 // dock + desktop icons focus window
 function getDockIcon(id){ return document.querySelector(`.dock .d-icon[data-target="${id}"]`); }
 
+// on mobile, only one "app" is on screen at a time — opening one covers
+// the home screen (icons/dock/clock), closing it returns to the home screen
+function isMobileViewport(){ return window.matchMedia('(max-width:760px)').matches; }
+function setMobileAppOpen(isOpen){
+  if(!isMobileViewport()) return;
+  document.body.classList.toggle('app-open', isOpen);
+  if(isOpen) document.getElementById('desktop').scrollTop = 0;
+}
+
+// classic "genie" minimize/restore (desktop only) — the window necks
+// down into a narrow funnel and pours into the dock icon, and reverses
+// on restore. Driven with a curved clip-path (cubic-bezier sides, not
+// straight polygon edges) so the taper actually bows like fabric.
+function genieClipPath(w, h, topL, topR, botL, botR){
+  const my = h / 2; // curve control points sit at half height for a soft S-taper
+  return `path('M ${topL} 0 L ${topR} 0 C ${topR} ${my} ${botR} ${my} ${botR} ${h} L ${botL} ${h} C ${botL} ${my} ${topL} ${my} ${topL} 0 Z')`;
+}
+
+function genieToDock(win, dockIcon, { reverse = false, onComplete } = {}){
+  const wr = win.getBoundingClientRect();
+  const dr = dockIcon.getBoundingClientRect();
+  const w = wr.width, h = wr.height;
+  const originX = Math.min(w * 0.94, Math.max(w * 0.06, dr.left + dr.width / 2 - wr.left));
+  const neck = w * 0.11, tiny = w * 0.02;
+
+  const full     = genieClipPath(w, h, 0, w, 0, w);
+  const necked   = genieClipPath(w, h, 0, w, originX - neck, originX + neck);
+  const tinyClip = genieClipPath(w, h, originX - tiny, originX + tiny, originX - tiny, originX + tiny);
+
+  const dx = dr.left + dr.width / 2 - (wr.left + originX);
+  const dy = dr.top - wr.top;
+
+  win.style.transformOrigin = `${(originX / w) * 100}% 100%`;
+  const tl = gsap.timeline({ onComplete });
+
+  if(!reverse){
+    tl.set(win, { clipPath: full, x:0, y:0, scaleX:1, scaleY:1, opacity:1 })
+      .to(win, { clipPath: necked, y: h * 0.22, scaleY:1.06, duration:.26, ease:"power2.inOut" })
+      .to(win, { clipPath: tinyClip, x: dx, y: dy, scaleX:.1, scaleY:.28, opacity:.25, duration:.3, ease:"power2.in" });
+  } else {
+    tl.set(win, { clipPath: tinyClip, x: dx, y: dy, scaleX:.1, scaleY:.28, opacity:.25 })
+      .to(win, { clipPath: necked, x:0, y: h * 0.22, scaleX:1, scaleY:1.06, opacity:1, duration:.26, ease:"power2.out" })
+      .to(win, { clipPath: full, y:0, scaleY:1, duration:.24, ease:"power3.out" });
+  }
+  return tl;
+}
+
 function focusWindow(id){
   const win = document.getElementById(id);
   if(id === 'win-letterboxd') refreshLetterboxdRecent({ reason:'open', force:true });
+
+  if(isMobileViewport()){
+    // close any other open "app" so only one fills the screen at a time
+    document.querySelectorAll('.window').forEach(w=>{
+      if(w.id !== id && w.style.display !== 'none' && w.dataset.closed !== '1'){
+        w.style.display = 'none';
+        w.style.opacity = 1;
+        w.style.transform = '';
+        w.dataset.closed = '1';
+        w.dataset.minimized = '0';
+        w.classList.remove('is-minimized');
+      }
+    });
+    setMobileAppOpen(true);
+  }
+
   document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
   win.style.zIndex = 20;
 
   if(win.dataset.minimized === "1"){
-    // restore from the dock: pop back up to its last known position
+    // restore from the dock: genie back up to its last known position
     win.dataset.minimized = "0";
     win.classList.remove('is-minimized');
     win.style.display = 'flex';
-    const restoreLeft = win.dataset.restoreLeft || win.style.left;
-    const restoreTop = win.dataset.restoreTop || win.style.top;
     const dockIcon = getDockIcon(id);
-    if(dockIcon){
-      const dr = dockIcon.getBoundingClientRect();
-      const wr = win.getBoundingClientRect();
-      gsap.fromTo(win,
-        { x: dr.left - wr.left + (dr.width/2 - wr.width/2), y: dr.top - wr.top, scale:.15, opacity:.3, transformOrigin:"top left" },
-        { x:0, y:0, scale:1, opacity:1, duration:.4, ease:"power3.out" });
+    if(dockIcon) dockIcon.classList.remove('is-running');
+    if(dockIcon && !isMobileViewport()){
+      genieToDock(win, dockIcon, {
+        reverse:true,
+        onComplete:()=>{
+          win.style.clipPath = '';
+          win.style.transform = '';
+          win.style.transformOrigin = '';
+        }
+      });
     } else {
       gsap.fromTo(win, {scale:.9, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)"});
     }
@@ -631,33 +1527,37 @@ function closeWindow(win){
     win.style.opacity = 1;
     win.style.transform = '';
     win.dataset.closed = "1";
+    const dockIcon = getDockIcon(win.id);
+    if(dockIcon) dockIcon.classList.remove('is-running');
+    setMobileAppOpen(false);
   }});
 }
 
 function minimizeWindow(win){
+  if(isMobileViewport()){ closeWindow(win); return; }
   const id = win.id;
   const dockIcon = getDockIcon(id);
   win.dataset.restoreLeft = win.style.left;
   win.dataset.restoreTop = win.style.top;
   if(dockIcon){
-    const dr = dockIcon.getBoundingClientRect();
-    const wr = win.getBoundingClientRect();
-    gsap.to(win, {
-      x: dr.left - wr.left + (dr.width/2 - wr.width/2),
-      y: dr.top - wr.top,
-      scale:.15, opacity:.3, duration:.42, ease:"power2.in", transformOrigin:"top left",
+    genieToDock(win, dockIcon, {
       onComplete:()=>{
         win.style.display = 'none';
         win.style.opacity = 1;
         win.style.transform = '';
+        win.style.clipPath = '';
+        win.style.transformOrigin = '';
         win.dataset.minimized = "1";
         win.classList.add('is-minimized');
+        dockIcon.classList.add('is-running');
+        setMobileAppOpen(false);
       }
     });
   } else {
     gsap.to(win, { scale:.2, opacity:0, duration:.3, onComplete:()=>{
       win.style.display = 'none';
       win.dataset.minimized = "1";
+      setMobileAppOpen(false);
     }});
   }
 }
@@ -768,17 +1668,91 @@ async function fetchNowPlaying(){
 fetchNowPlaying();
 setInterval(fetchNowPlaying, 15000);
 
+// ---- Now Playing: weekly stats (top artists / albums / genres / scrobble count) ----
+const npWeekCount = document.getElementById('np-week-count');
+const npTopArtistsEl = document.getElementById('np-top-artists');
+const npTopAlbumsEl = document.getElementById('np-top-albums');
+const npGenresEl = document.getElementById('np-genres');
+
+async function lastfmFetch(params){
+  const qs = new URLSearchParams({ api_key:LASTFM_API_KEY, user:LASTFM_USER, format:'json', ...params });
+  const res = await fetch(`https://ws.audioscrobbler.com/2.0/?${qs.toString()}`);
+  if(!res.ok) throw new Error('http ' + res.status);
+  const data = await res.json();
+  if(data.error) throw new Error(data.message || 'Last.fm error');
+  return data;
+}
+
+function renderNpRank(el, items, nameFn){
+  el.innerHTML = '';
+  if(!items || !items.length){ el.innerHTML = '<li class="np-rank-empty">Nothing yet</li>'; return; }
+  items.forEach((it, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="np-rank-idx">${i+1}</span><span class="np-rank-name">${nameFn(it)}</span><span class="np-rank-ct">${Number(it.playcount).toLocaleString()}</span>`;
+    el.appendChild(li);
+  });
+}
+
+async function fetchWeeklyStats(){
+  try{
+    const weekAgo = Math.floor(Date.now()/1000) - 7*24*60*60;
+    const [artistsData, albumsData, countData] = await Promise.all([
+      lastfmFetch({ method:'user.gettopartists', period:'7day', limit:5 }),
+      lastfmFetch({ method:'user.gettopalbums', period:'7day', limit:5 }),
+      lastfmFetch({ method:'user.getrecenttracks', limit:1, from:weekAgo })
+    ]);
+
+    const artists = (artistsData.topartists && artistsData.topartists.artist) || [];
+    const albums = (albumsData.topalbums && albumsData.topalbums.album) || [];
+    const total = countData.recenttracks && countData.recenttracks['@attr'] && countData.recenttracks['@attr'].total;
+
+    npWeekCount.textContent = total ? `${Number(total).toLocaleString()} scrobbles` : '0 scrobbles';
+    renderNpRank(npTopArtistsEl, artists, a => a.name);
+    renderNpRank(npTopAlbumsEl, albums, a => `${a.name}${a.artist ? ' — ' + a.artist.name : ''}`);
+
+    // genres: aggregate each top artist's own tags, weighted by that artist's playcount this week
+    const topForTags = artists.slice(0, 6);
+    const tagResults = await Promise.all(
+      topForTags.map(a => lastfmFetch({ method:'artist.gettoptags', artist:a.name }).catch(() => null))
+    );
+    const tagScores = {};
+    tagResults.forEach((res, i) => {
+      const weight = Number(topForTags[i].playcount) || 1;
+      const tags = (res && res.toptags && res.toptags.tag) || [];
+      tags.slice(0, 5).forEach(t => {
+        const name = (t.name || '').toLowerCase();
+        if(!name) return;
+        tagScores[name] = (tagScores[name] || 0) + weight;
+      });
+    });
+    const topGenres = Object.entries(tagScores).sort((a,b) => b[1]-a[1]).slice(0,6).map(([name]) => name);
+    npGenresEl.innerHTML = topGenres.length
+      ? topGenres.map(g => `<span class="np-genre-chip">${g}</span>`).join('')
+      : '<span class="np-rank-empty">Nothing yet</span>';
+  } catch(err){
+    npWeekCount.textContent = 'offline';
+    npTopArtistsEl.innerHTML = '<li class="np-rank-empty">Couldn\u2019t load</li>';
+    npTopAlbumsEl.innerHTML = '<li class="np-rank-empty">Couldn\u2019t load</li>';
+    npGenresEl.innerHTML = '<span class="np-rank-empty">Couldn\u2019t load</span>';
+  }
+}
+fetchWeeklyStats();
+setInterval(fetchWeeklyStats, 5 * 60 * 1000);
+
 // ---- Recently Watched (Letterboxd) ----
 const LETTERBOXD_USER = 'cowboylikep';
 const LB_RSS_URL = `https://letterboxd.com/${LETTERBOXD_USER}/rss/`;
 
-// Free CORS proxies are flaky — allorigins.win in particular has
-// known intermittent outages. Try a short list in order and fall
-// back to the next one if a proxy is down or returns nothing.
+// Free CORS proxies are flaky. corsproxy.io in particular now restricts
+// its no-account tier to localhost/sandbox origins only (it 403s on a
+// real deployed domain), so it's excluded here — it would never work
+// for this site. The rest are all raced in parallel (see firstSuccessful
+// below) rather than tried in order, so it no longer matters which of
+// these is "most reliable" on a given day — whichever answers first wins.
 const CORS_PROXIES = [
-  (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-  (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
 ];
 
 function withCacheBust(url){
@@ -786,37 +1760,59 @@ function withCacheBust(url){
   return `${url}${separator}_=${Date.now()}`;
 }
 
-async function fetchWithTimeout(url, timeoutMs = 8000){
+async function fetchWithTimeout(url, timeoutMs = 10000){
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try{
+    // Deliberately no custom headers here: adding headers like
+    // cache-control/pragma turns this into a "non-simple" request,
+    // which forces the browser to send a CORS preflight (OPTIONS)
+    // first. Most of these free proxies only implement GET and never
+    // answer the preflight, so the real request silently never fires.
+    // cache:'no-store' plus the cache-busting query param is enough
+    // to avoid stale responses without triggering that preflight.
     return await fetch(url, {
       signal: controller.signal,
-      cache: 'no-store',
-      headers: {
-        'cache-control': 'no-cache, no-store, max-age=0',
-        pragma: 'no-cache'
-      }
+      cache: 'no-store'
     });
   } finally {
     clearTimeout(timer);
   }
 }
 
-async function fetchViaProxy(targetUrl){
-  let lastErr = new Error('No proxies configured');
-  for(const buildProxyUrl of CORS_PROXIES){
-    try{
-      const res = await fetchWithTimeout(buildProxyUrl(withCacheBust(targetUrl)));
-      if(!res.ok) throw new Error('Proxy responded with ' + res.status);
-      const text = await res.text();
-      if(!text || !text.trim()) throw new Error('Proxy returned an empty response');
-      return text;
-    } catch(err){
-      lastErr = err;
-    }
-  }
-  throw lastErr;
+async function fetchViaSingleProxy(buildProxyUrl, targetUrl){
+  const res = await fetchWithTimeout(buildProxyUrl(withCacheBust(targetUrl)));
+  if(!res.ok) throw new Error('Proxy responded with ' + res.status);
+  const text = await res.text();
+  if(!text || !text.trim()) throw new Error('Proxy returned an empty response');
+  // A down/blocked proxy often still answers 200 with its own HTML
+  // error page instead of the RSS it was asked to fetch. Catch that
+  // here rather than letting a bad-content "success" short-circuit
+  // the rest of the sources.
+  if(!/<rss[\s>]|<feed[\s>]/i.test(text)) throw new Error('Proxy did not return RSS/XML');
+  return text;
+}
+
+// Resolve with whichever attempt succeeds first, instead of waiting for
+// every attempt to settle. This used to be Promise.allSettled() over two
+// branches — rss2json vs. a sequential proxy chain — which meant a fast,
+// successful rss2json response still sat waiting on the proxy chain to
+// exhaust all of its own sequential timeouts before the UI ever updated.
+// Racing every source at once, and returning the instant one works, is
+// what actually keeps "Syncing feed…" from hanging.
+function firstSuccessful(factories){
+  return new Promise((resolve, reject) => {
+    let remaining = factories.length;
+    let lastErr = new Error('No sources configured');
+    if(!remaining){ reject(lastErr); return; }
+    factories.forEach(factory => {
+      Promise.resolve().then(factory).then(resolve, err => {
+        lastErr = err;
+        remaining--;
+        if(remaining === 0) reject(lastErr);
+      });
+    });
+  });
 }
 
 function formatWatchedDate(dateStr){
@@ -954,14 +1950,13 @@ function scheduleLetterboxdRefresh(delay = LETTERBOXD_REFRESH_MS){
   }, delay);
 }
 
-// rss2json.com and the CORS-proxy chain are run at the same time rather
-// than one after the other. rss2json shares one rate-limit pool across
-// every site that uses it without its own API key, so it silently fails
-// for everyone whenever that shared quota is hit — if it were tried
-// first and only *then* the proxy chain, a bad rss2json moment would
-// stall or break every refresh even though the proxy path was fine.
-// Racing them means either path succeeding is enough, and whichever
-// responds first wins.
+// rss2json.com and each CORS proxy are all fired at once rather than
+// tried one after another. Free keyless services like these are heavily
+// rate-limited and fail unpredictably — sometimes with a fast error,
+// sometimes by just sitting there until their timeout — so waiting on
+// them in sequence (or waiting for all of them via allSettled) is what
+// made the sync feel "stuck." Racing them means whichever responds
+// first wins, and one flaky source can't hold up a working one.
 async function fetchViaRss2Json(){
   const res = await fetchWithTimeout(buildRss2JsonUrl());
   if(!res.ok) throw new Error('rss2json responded with ' + res.status);
@@ -974,8 +1969,8 @@ async function fetchViaRss2Json(){
   return entries;
 }
 
-async function fetchViaRawProxy(){
-  const xmlText = await fetchViaProxy(LB_RSS_URL);
+async function fetchViaProxyEntries(buildProxyUrl){
+  const xmlText = await fetchViaSingleProxy(buildProxyUrl, LB_RSS_URL);
   const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
   const items = Array.from(doc.getElementsByTagName('item'));
   if(!items.length) throw new Error('Proxy returned no items');
@@ -984,18 +1979,31 @@ async function fetchViaRawProxy(){
   return entries;
 }
 
+function withWatchdog(promise, timeoutMs, message){
+  let timer;
+  const watchdog = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(message)), timeoutMs);
+  });
+  return Promise.race([promise, watchdog]).finally(() => clearTimeout(timer));
+}
+
 async function fetchLetterboxdRecent(){
   setLbSyncStatus('Syncing feed…');
 
-  const results = await Promise.allSettled([
-    fetchViaRss2Json(),
-    fetchViaRawProxy()
-  ]);
+  const attempts = [
+    fetchViaRss2Json,
+    ...CORS_PROXIES.map(buildProxyUrl => () => fetchViaProxyEntries(buildProxyUrl))
+  ];
 
-  const success = results.find(r => r.status === 'fulfilled');
-  if(success) return success.value;
-
-  throw new Error("Couldn't load Letterboxd data.");
+  try{
+    // Every attempt already carries its own ~10s per-request timeout;
+    // this outer watchdog is just a hard ceiling so the UI can never
+    // sit on "Syncing feed…" indefinitely even if something upstream
+    // misbehaves in a way the per-request timeout doesn't catch.
+    return await withWatchdog(firstSuccessful(attempts), 12000, "Couldn't load Letterboxd data.");
+  } catch(err){
+    throw new Error("Couldn't load Letterboxd data.");
+  }
 }
 
 async function refreshLetterboxdRecent({ force = false, reason = 'manual' } = {}){
@@ -1124,5 +2132,423 @@ if(rmTexts.length){
   document.addEventListener("touchend", () => { lastRmTouchedLine = null; }, { passive: true });
 }
 </script>
+
+<div id="irish-spring-image-popup" aria-hidden="true">
+  <div class="ispopup-panel" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="ispopup-nav prev" type="button" aria-label="Previous image">&#8249;</button>
+    <button class="ispopup-nav next" type="button" aria-label="Next image">&#8250;</button>
+    <button class="ispopup-close" type="button" aria-label="Close image preview">&times;</button>
+    <img id="irish-spring-image-popup-img" src="" alt="">
+  </div>
+</div>
+
+<script id="home-clock-widget-script">
+(function(){
+  function updateHomeClock(){
+    const time = document.getElementById('home-clock-time');
+    const date = document.getElementById('home-clock-date');
+    if(!time || !date) return;
+
+    const now = new Date();
+
+    time.textContent = now.toLocaleTimeString('en-PH', {
+      hour:'numeric',
+      minute:'2-digit'
+    });
+
+    date.textContent = now.toLocaleDateString('en-PH', {
+      weekday:'long',
+      month:'long',
+      day:'numeric'
+    });
+  }
+
+  updateHomeClock();
+  setInterval(updateHomeClock, 1000);
+})();
+</script>
+
+<!-- "Ball" app: a full-screen bouncing ball, toggled on/off from its icon -->
+<canvas id="ball-app-canvas" aria-hidden="true"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script id="ball-app-script">
+(function(){
+  const canvas = document.getElementById('ball-app-canvas');
+  const launchers = Array.from(document.querySelectorAll('[data-app="ball"]'));
+  if(!canvas || typeof THREE === 'undefined' || !launchers.length) return;
+
+  // ---- renderer / scene (orthographic camera mapped 1:1 to viewport pixels) ----
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(0,0,0,0, 1, 2000);
+  camera.position.z = 500;
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  const key = new THREE.DirectionalLight(0xffffff, 0.9);
+  key.position.set(-150, 260, 260);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xfff3e8, 0.35);
+  fill.position.set(180, -80, 160);
+  scene.add(fill);
+
+  const RADIUS = 24;
+  const ball = new THREE.Mesh(
+    new THREE.SphereGeometry(RADIUS, 40, 40),
+    new THREE.MeshStandardMaterial({ color:0xff6f5e, roughness:0.35, metalness:0.12 })
+  );
+  scene.add(ball);
+
+  const shadow = new THREE.Mesh(
+    new THREE.CircleGeometry(RADIUS, 32),
+    new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.22 })
+  );
+  scene.add(shadow);
+
+  // ---- viewport sizing (screen-pixel space, y-down, like getBoundingClientRect) ----
+  let VW = 0, VH = 0;
+  function resize(){
+    VW = window.innerWidth;
+    VH = window.innerHeight;
+    renderer.setSize(VW, VH, false);
+    camera.left = -VW/2; camera.right = VW/2;
+    camera.top = VH/2; camera.bottom = -VH/2;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // world-space render helpers: screen (x,y, y-down) -> three.js world (y-up, centered)
+  function toWorldX(px){ return px - VW/2; }
+  function toWorldY(py){ return VH/2 - py; }
+
+  // ---- obstacle colliders: desktop icons + the dock + open windows act as solid objects ----
+  function collectObstacles(){
+    const els = document.querySelectorAll('.icons .dicon, .dock, .window');
+    const rects = [];
+    els.forEach(el=>{
+      if(el.offsetParent === null) return; // hidden (display:none / off mobile view)
+      if(el.classList.contains('window')){
+        if(el.dataset.minimized === '1' || el.dataset.closed === '1') return;
+        if(el.classList.contains('is-minimized')) return;
+      }
+      const r = el.getBoundingClientRect();
+      if(r.width < 2 || r.height < 2) return;
+      rects.push({ left:r.left, top:r.top, right:r.right, bottom:r.bottom });
+    });
+    return rects;
+  }
+
+  // ---- physics state (screen-pixel space) ----
+  let x = 0, y = 0, vx = 0, vy = 0;
+  const GRAVITY = 1700;
+  const RESTITUTION = 0.68;
+  const AIR_DRAG = 0.25;
+  let squash = 0;
+  let active = false;
+  let rafId = null;
+  let isDragging = false;
+  let permitAboveScreen = false; // true right after spawn, until the ball fully enters view
+
+  function resolveObstacle(rect){
+    const cx = Math.max(rect.left, Math.min(x, rect.right));
+    const cy = Math.max(rect.top, Math.min(y, rect.bottom));
+    const dx = x - cx, dy = y - cy;
+    const distSq = dx*dx + dy*dy;
+    if(distSq >= RADIUS*RADIUS) return;
+    const dist = Math.sqrt(distSq);
+    let nx, ny;
+    if(dist < 0.001){
+      // center is inside the rect (rare) — push straight up
+      nx = 0; ny = -1;
+    } else {
+      nx = dx / dist; ny = dy / dist;
+    }
+    const overlap = RADIUS - dist;
+    x += nx * overlap;
+    y += ny * overlap;
+    const dot = vx*nx + vy*ny;
+    if(dot < 0){
+      vx -= (1 + RESTITUTION) * dot * nx;
+      vy -= (1 + RESTITUTION) * dot * ny;
+      squash = Math.min(1, Math.abs(dot) / 1000);
+    }
+  }
+
+  function step(dt){
+    if(isDragging) return;
+
+    vy += GRAVITY * dt;
+    x += vx * dt;
+    y += vy * dt;
+    vx *= Math.max(0, 1 - AIR_DRAG * dt);
+
+    // hard screen boundaries — the ball may never leave the viewport
+    if(x - RADIUS < 0){ x = RADIUS; vx = Math.abs(vx) * RESTITUTION; squash = Math.min(1, Math.abs(vx)/900); }
+    if(x + RADIUS > VW){ x = VW - RADIUS; vx = -Math.abs(vx) * RESTITUTION; squash = Math.min(1, Math.abs(vx)/900); }
+
+    if(permitAboveScreen){
+      // still dropping in from above the top edge — once it fully enters
+      // the viewport, switch back to normal ceiling-bounce behavior
+      if(y - RADIUS >= 0) permitAboveScreen = false;
+    } else if(y - RADIUS < 0){
+      y = RADIUS; vy = Math.abs(vy) * RESTITUTION;
+    }
+
+    if(y + RADIUS > VH){
+      y = VH - RADIUS;
+      if(Math.abs(vy) > 30){
+        squash = Math.min(1, Math.abs(vy) / 1200);
+        vy = -Math.abs(vy) * RESTITUTION;
+      } else {
+        vy = 0;
+      }
+      vx *= 0.985;
+    }
+
+    // icons + dock as hitable rectangular obstacles
+    collectObstacles().forEach(resolveObstacle);
+
+    squash = Math.max(0, squash - dt * 4.2);
+  }
+
+  // ---- drag & throw interaction ----
+  // The canvas itself is pointer-events:none (so it never blocks icons,
+  // windows, or the dock), so we hit-test the ball manually against
+  // document-level pointer events and only react when the pointer is
+  // actually over it.
+  let dragDX = 0, dragDY = 0;
+  let samples = [];
+  let suppressNextClick = false;
+
+  function hitBall(px, py){
+    const dx = px - x, dy = py - y;
+    return Math.sqrt(dx*dx + dy*dy) <= RADIUS * 1.4;
+  }
+
+  document.addEventListener('pointerdown', (e)=>{
+    if(!active || isDragging) return;
+    if(!hitBall(e.clientX, e.clientY)) return;
+    // claim this interaction before it can start a window drag, focus a
+    // window, or activate an icon underneath the ball
+    e.preventDefault();
+    e.stopPropagation();
+    isDragging = true;
+    suppressNextClick = true;
+    dragDX = x - e.clientX;
+    dragDY = y - e.clientY;
+    vx = 0; vy = 0;
+    samples = [{ x, y, t:performance.now() }];
+    document.body.style.cursor = 'grabbing';
+  }, { capture:true, passive:false });
+
+  document.addEventListener('pointermove', (e)=>{
+    if(!active) return;
+    if(isDragging){
+      const nx = Math.max(RADIUS, Math.min(VW - RADIUS, e.clientX + dragDX));
+      const ny = Math.max(RADIUS, Math.min(VH - RADIUS, e.clientY + dragDY));
+      x = nx; y = ny;
+      const now = performance.now();
+      samples.push({ x:nx, y:ny, t:now });
+      while(samples.length > 8) samples.shift();
+    } else {
+      document.body.style.cursor = hitBall(e.clientX, e.clientY) ? 'grab' : '';
+    }
+  });
+
+  function endDrag(){
+    if(!isDragging) return;
+    isDragging = false;
+    document.body.style.cursor = '';
+    const now = performance.now();
+    const recent = samples.filter(s => now - s.t <= 120);
+    if(recent.length >= 2){
+      const a = recent[0], b = recent[recent.length - 1];
+      const dt = Math.max((b.t - a.t) / 1000, 1/60);
+      vx = (b.x - a.x) / dt;
+      vy = (b.y - a.y) / dt;
+    } else {
+      // treat as a tap: give it a playful little pop upward
+      vx = (Math.random() - 0.5) * 220;
+      vy = -420;
+    }
+    const maxSpeed = 1700;
+    vx = Math.max(-maxSpeed, Math.min(maxSpeed, vx));
+    vy = Math.max(-maxSpeed, Math.min(maxSpeed, vy));
+  }
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+
+  // swallow the click that follows a drag so it doesn't also open/focus
+  // whatever icon or window happened to be sitting under the ball
+  document.addEventListener('click', (e)=>{
+    if(!suppressNextClick) return;
+    suppressNextClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  let lastT = 0;
+  function animate(now){
+    if(!active) return;
+    rafId = requestAnimationFrame(animate);
+    let dt = (now - lastT) / 1000;
+    lastT = now;
+    dt = Math.min(dt, 1/30);
+
+    step(dt);
+
+    ball.position.set(toWorldX(x), toWorldY(y), 0);
+    const sy = 1 - squash * 0.32;
+    const sx = 1 + squash * 0.18;
+    ball.scale.set(sx, sy, sx);
+    ball.rotation.z -= (vx / RADIUS) * dt;
+
+    const heightRatio = Math.max(0, Math.min(1, 1 - (VH - y) / (VH || 1)));
+    const shadowScale = Math.max(0.35, 1 - heightRatio * 0.55);
+    shadow.position.set(toWorldX(x), toWorldY(VH - 4), -RADIUS * 0.9);
+    shadow.scale.set(shadowScale, shadowScale, 1);
+    shadow.material.opacity = 0.24 * (1 - heightRatio * 0.6);
+
+    renderer.render(scene, camera);
+  }
+
+  // ---- shatter animation, played when the Ball app is closed ----
+  let shatterFrags = [];
+  let shatterRafId = null;
+
+  function clearShatter(){
+    if(shatterRafId){ cancelAnimationFrame(shatterRafId); shatterRafId = null; }
+    shatterFrags.forEach(f=>{
+      scene.remove(f.mesh);
+      f.mesh.geometry.dispose();
+      f.mesh.material.dispose();
+    });
+    shatterFrags = [];
+  }
+
+  function startShatter(){
+    clearShatter();
+
+    const originWorld = new THREE.Vector3(toWorldX(x), toWorldY(y), 0);
+    const FRAG_COUNT = 16;
+    for(let i = 0; i < FRAG_COUNT; i++){
+      const size = RADIUS * (0.16 + Math.random() * 0.26);
+      const geo = (i % 2 === 0)
+        ? new THREE.TetrahedronGeometry(size)
+        : new THREE.BoxGeometry(size, size, size);
+      const mat = new THREE.MeshStandardMaterial({
+        color:0xff6f5e, roughness:0.4, metalness:0.1, transparent:true, opacity:1
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.copy(originWorld);
+      mesh.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
+      scene.add(mesh);
+
+      // burst outward in a rough sphere, biased slightly upward, plus a
+      // share of the ball's own momentum at the moment it broke
+      const dir = new THREE.Vector3(
+        (Math.random() - 0.5),
+        Math.random() * 0.7 + 0.25,
+        (Math.random() - 0.5)
+      ).normalize();
+      const speed = 160 + Math.random() * 320;
+      shatterFrags.push({
+        mesh,
+        vel: new THREE.Vector3(
+          dir.x * speed + vx * 0.4,
+          dir.y * speed + (-vy * 0.4),
+          dir.z * speed
+        ),
+        spin: new THREE.Vector3(
+          (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8
+        )
+      });
+    }
+
+    ball.visible = false;
+    shadow.visible = false;
+
+    const FRAG_GRAVITY = 900;
+    const DURATION = 750;
+    const start = performance.now();
+    let last = start;
+
+    function tick(now){
+      const dt = Math.min(0.032, (now - last) / 1000);
+      last = now;
+      const progress = Math.min(1, (now - start) / DURATION);
+
+      shatterFrags.forEach(f=>{
+        f.vel.y -= FRAG_GRAVITY * dt;
+        f.mesh.position.addScaledVector(f.vel, dt);
+        f.mesh.rotation.x += f.spin.x * dt;
+        f.mesh.rotation.y += f.spin.y * dt;
+        f.mesh.rotation.z += f.spin.z * dt;
+        f.mesh.material.opacity = 1 - progress;
+        const s = 1 - progress * 0.4;
+        f.mesh.scale.set(s, s, s);
+      });
+
+      renderer.render(scene, camera);
+
+      if(progress < 1){
+        shatterRafId = requestAnimationFrame(tick);
+      } else {
+        shatterRafId = null;
+        clearShatter();
+        ball.visible = true;
+        shadow.visible = true;
+        canvas.classList.remove('is-active');
+      }
+    }
+    shatterRafId = requestAnimationFrame(tick);
+  }
+
+  function setActive(isActive, spawnEl){
+    active = isActive;
+    launchers.forEach(el=>{
+      el.classList.toggle('is-running', isActive);
+      el.setAttribute('aria-pressed', String(isActive));
+    });
+
+    if(isActive){
+      clearShatter(); // if it was mid-shatter, cut straight to the new drop
+      ball.visible = true;
+      shadow.visible = true;
+      canvas.classList.add('is-active');
+      resize();
+      x = VW / 2;
+      y = -RADIUS * 2;
+      vx = (Math.random() - 0.5) * 260;
+      vy = 0;
+      squash = 0;
+      permitAboveScreen = true;
+      lastT = performance.now();
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(animate);
+    } else if(rafId){
+      cancelAnimationFrame(rafId);
+      rafId = null;
+      isDragging = false;
+      document.body.style.cursor = '';
+      startShatter(); // canvas stays visible until the shatter animation finishes
+    }
+  }
+
+  launchers.forEach(el=>{
+    el.addEventListener('click', ()=> setActive(!active, el));
+    el.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        setActive(!active, el);
+      }
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
