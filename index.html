@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shane Paul Alimboyao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --desktop:#dcd6e8;
+    --desktop-2:#c9c0e0;
+    --chrome:#ffffff;
+    --titlebar:#2b2b36;
+    --ink:#23222b;
+    --mint:#7be0ad;
+    --coral:#ff6f5e;
+    --amber:#ffcf6e;
+    --dim:#6b6878;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:'Inter',sans-serif; color:var(--ink); overflow:hidden; height:100vh; user-select:none;}
+
+  /* ---- boot screen ---- */
+  #boot{
+    position:fixed; inset:0; background:var(--titlebar); color:#fff; z-index:200;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+    font-family:'JetBrains Mono', monospace;
+  }
+  #boot .logo{ font-family:'Fredoka'; font-size:26px; letter-spacing:.02em;}
+  #boot .bar{ width:220px; height:6px; background:rgba(255,255,255,.15); border-radius:4px; overflow:hidden;}
+  #boot .fill{ height:100%; width:0%; background:var(--mint); border-radius:4px; }
+  #boot .txt{ font-size:11px; color:rgba(255,255,255,.6);}
+
+  /* ---- desktop ---- */
+  #desktop{
+    position:fixed; inset:0;
+    background:
+      linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
+      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg') center 28% / cover no-repeat,
+      var(--desktop);
+    opacity:0;
+  }
+
+  /* menu bar */
+  .menubar{
+    position:absolute; top:0; left:0; right:0; height:34px; background:rgba(255,255,255,.55); backdrop-filter:blur(10px);
+    display:flex; align-items:center; padding:0 16px; gap:20px; font-size:12.5px; z-index:100;
+    border-bottom:1px solid rgba(255,255,255,.6);
+  }
+  .menubar .brand{ font-family:'Fredoka'; font-weight:600; display:flex; align-items:center; gap:6px;}
+  .menubar .sp{flex:1;}
+  .menubar .item{ opacity:.75; }
+  .menubar .right{ display:flex; gap:14px; font-family:'JetBrains Mono', monospace; font-size:11px; align-items:center;}
+
+  /* desktop icons */
+  .icons{ position:absolute; top:50px; left:20px; display:flex; flex-direction:column; gap:22px; z-index:10;}
+  .dicon{ display:flex; flex-direction:column; align-items:center; gap:6px; width:76px; cursor:pointer;}
+  .dicon .glyph{ width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 6px 14px rgba(0,0,0,.15);}
+  .dicon span{ font-size:10.5px; text-align:center; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.6), 0 0 8px rgba(0,0,0,.35); }
+
+  /* windows */
+  .window{
+    position:absolute; background:var(--chrome); border-radius:12px; box-shadow:0 30px 60px rgba(30,20,60,.28), 0 4px 12px rgba(0,0,0,.08);
+    overflow:hidden; display:flex; flex-direction:column; min-width:240px;
+  }
+  .titlebar{
+    height:36px; background:linear-gradient(#fbfbfd, #f1f0f5); border-bottom:1px solid #e6e4ee;
+    display:flex; align-items:center; padding:0 12px; gap:8px; cursor:grab; flex-shrink:0;
+  }
+  .titlebar:active{cursor:grabbing;}
+  .tl-btn{ width:12px; height:12px; border-radius:50%; border:none; padding:0; cursor:pointer; position:relative; }
+  .tl-btn:focus-visible{ outline:2px solid #2b2b36; outline-offset:2px; }
+  .tl-btn::after{ content:''; position:absolute; inset:-6px; }
+  .window.is-minimized{ pointer-events:none; }
+  .tl-title{ flex:1; text-align:center; font-size:12px; font-weight:500; color:var(--dim); margin-right:40px;}
+  .win-body{ padding:20px 22px; overflow:auto; font-size:13.5px; line-height:1.6;}
+
+  /* READme.app */
+  #win-readme{ width:min(560px,86vw); top:70px; left:6vw;}
+  .readme-body{ padding:0; }
+  .readme-block{
+    padding:22px 22px 26px; cursor:crosshair; touch-action:pan-y;
+  }
+  .readme-block h1{
+    margin:0; padding:0; font-family:'Inter'; font-weight:500;
+    font-size:clamp(1.5rem, 5.4vw, 2.55rem);
+    letter-spacing:-0.03em; line-height:1.04; text-align:left;
+  }
+  .readme-block h1.rm-name{ font-weight:600; margin-bottom:2px; }
+  .readme-block h1.rm-dim{ color:#8f8ba0; font-weight:400; }
+  .readme-block .rm-detail{
+    position:absolute; bottom:0; width:100%; min-width:50px; height:1px; font-size:9px;
+  }
+
+  /* Work.app */
+  #win-work{ width:min(620px,90vw); top:120px; left:22vw;}
+  .finder-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px;}
+  .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer;}
+  .file:hover{ background:#f4f2fa;}
+  .file .thumb{ width:64px; height:52px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono';}
+  .file .fname{ font-size:11px;}
+  .file .ftype{ font-size:9.5px; color:var(--dim);}
+
+  /* Contact.app — terminal style */
+  #win-contact{ width:min(440px,86vw); top:210px; left:56vw;}
+  .term{ background:#1c1b22; color:#c9f2d8; font-family:'JetBrains Mono', monospace; font-size:12px; padding:16px; border-radius:0 0 12px 12px; line-height:1.9;}
+  .term .p{ color:#7be0ad;}
+  .term a{ color:#9ecbff; text-decoration:none;}
+  .caret{ display:inline-block; width:7px; height:13px; background:#c9f2d8; vertical-align:middle; animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* dock */
+  .dock{
+    position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:100;
+    display:flex; gap:12px; padding:9px 14px; background:rgba(255,255,255,.55); backdrop-filter:blur(12px);
+    border-radius:20px; box-shadow:0 10px 30px rgba(30,20,60,.2);
+  }
+  .dock .d-icon{
+    width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    font-size:18px; cursor:pointer; transition:transform .15s ease; box-shadow:0 4px 10px rgba(0,0,0,.12);
+  }
+  .dock .d-icon:hover{ transform:translateY(-8px) scale(1.08);}
+
+  @media(max-width:760px){
+    .menubar{ position:fixed !important; }
+    .menubar .item{ display:none; }
+    .dock{ position:fixed !important; bottom:10px; padding:8px 10px; gap:8px; }
+    .dock .d-icon{ width:40px; height:40px; font-size:17px; }
+
+    #desktop{
+      overflow-y:auto; -webkit-overflow-scrolling:touch;
+      padding-top:50px; padding-bottom:88px;
+    }
+    .icons{ display:none; }
+
+    .window{
+      position:relative !important;
+      left:auto !important; top:auto !important; right:auto !important;
+      width:92vw !important; max-width:460px !important; height:auto !important;
+      margin:0 auto 16px !important;
+    }
+    .win-body{ max-height:none; }
+    .readme-block h1{ font-size:clamp(1.7rem, 8.5vw, 2.4rem); }
+  }
+
+  @media(max-width:480px){
+    .menubar{ font-size:11px; gap:10px; }
+    .menubar .right span:first-child{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div class="logo">◐ Shane Paul Alimboyao</div>
+  <div class="bar"><div class="fill" id="bootfill"></div></div>
+  <div class="txt" id="boottxt">Starting up…</div>
+</div>
+
+<div id="desktop">
+  <div class="menubar">
+    <div class="brand">◐ Shane Paul Alimboyao</div>
+    <div class="item">File</div>
+    <div class="item">Edit</div>
+    <div class="item">View</div>
+    <div class="sp"></div>
+    <div class="right">
+      <span>Metro Manila, PH</span>
+      <span id="clock">--:--</span>
+    </div>
+  </div>
+
+  <div class="icons">
+    <div class="dicon" data-target="win-readme">
+      <div class="glyph" style="background:var(--mint);">📄</div>
+      <span>READme.app</span>
+    </div>
+    <div class="dicon" data-target="win-work">
+      <div class="glyph" style="background:var(--amber);">🗂</div>
+      <span>Work.app</span>
+    </div>
+    <div class="dicon" data-target="win-contact">
+      <div class="glyph" style="background:var(--coral);">✉</div>
+      <span>Contact.app</span>
+    </div>
+  </div>
+
+  <!-- READme window -->
+  <div class="window" id="win-readme">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">READme.app</div>
+    </div>
+    <div class="win-body readme-body">
+      <section class="readme-block">
+        <h1 class="rm-name">Shane Paul Alimboyao</h1>
+        <h1 class="rm-dim">20 years old</h1>
+        <h1 class="rm-dim">Metro Manila, PH</h1>
+        <h1>Graphic &amp; Motion Designer</h1>
+        <h1>Video Editor</h1>
+        <h1>Digital Artist</h1>
+        <h1>Web &amp; UI/UX Designer</h1>
+      </section>
+    </div>
+  </div>
+
+  <!-- Work window -->
+  <div class="window" id="win-work">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Work.app — Finder</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder"></div>
+    </div>
+  </div>
+
+  <!-- Contact window -->
+  <div class="window" id="win-contact">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Contact.app — zsh</div>
+    </div>
+    <div class="term">
+      <div><span class="p">shane@alimboyao</span> ~ % whoami</div>
+      <div>Shane Paul Alimboyao — designer</div>
+      <div style="margin-top:8px;"><span class="p">shane@alimboyao</span> ~ % cat contact.txt</div>
+      <div>email: <a href="mailto:alimboyaos@gmail.com">alimboyaos@gmail.com</a></div>
+      <div>ig: <a href="https://instagram.com/punctuation.use" target="_blank" rel="noopener">@punctuation.use</a></div>
+      <div>behance: <a href="#">/shanepaulalimboyao</a></div>
+      <div>linkedin: <a href="#">/in/shanepaulalimboyao</a></div>
+      <div style="margin-top:8px;"><span class="p">shane@alimboyao</span> ~ % <span class="caret"></span></div>
+    </div>
+  </div>
+
+  <div class="dock">
+    <div class="d-icon" style="background:var(--mint);" data-target="win-readme">📄</div>
+    <div class="d-icon" style="background:var(--amber);" data-target="win-work">🗂</div>
+    <div class="d-icon" style="background:var(--coral);" data-target="win-contact">✉</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/SplitText.min.js"></script>
+<script>
+// boot sequence
+const steps = ["Starting up…","Loading design tools…","Mounting Work.app…","Rendering desktop…"];
+let si = 0;
+const boottxt = document.getElementById('boottxt');
+const fillEl = document.getElementById('bootfill');
+const bootInterval = setInterval(()=>{
+  si++;
+  if(si < steps.length) boottxt.textContent = steps[si];
+}, 420);
+gsap.to(fillEl, { width:"100%", duration:1.7, ease:"power1.inOut", onComplete:()=>{
+  clearInterval(bootInterval);
+  gsap.to('#boot', { opacity:0, duration:.5, onComplete:()=> document.getElementById('boot').style.display='none' });
+  gsap.to('#desktop', { opacity:1, duration:.6 });
+  gsap.from('.window', { y:24, opacity:0, duration:.6, stagger:.12, ease:"power3.out" });
+}});
+
+// finder grid
+const cats = [
+  {name:"Motion", color:"#ff6f5e"},
+  {name:"Video", color:"#8f8bd6"},
+  {name:"Design", color:"#7be0ad"},
+  {name:"UI/UX", color:"#ffcf6e"},
+];
+const files = [
+  {name:"brand_reel.mp4", cat:0},
+  {name:"launch_cutdown.mov", cat:1},
+  {name:"neon_posters.ai", cat:2},
+  {name:"studio_ui.fig", cat:3},
+  {name:"idle_loop.gif", cat:0},
+  {name:"zine_template.indd", cat:2},
+  {name:"docu_short.mp4", cat:1},
+  {name:"prototype.fig", cat:3},
+];
+const finder = document.getElementById('finder');
+files.forEach(f=>{
+  const c = cats[f.cat];
+  const el = document.createElement('div'); el.className='file';
+  el.innerHTML = `<div class="thumb" style="background:${c.color};">${c.name}</div><div class="fname">${f.name}</div><div class="ftype">${c.name} file</div>`;
+  finder.appendChild(el);
+});
+
+// draggable windows — clamped so the titlebar (and its buttons) can
+// never be dragged above the menu bar or off the sides/bottom
+const MENUBAR_H = 34;
+const EDGE_MARGIN = 10;
+
+function makeDraggable(win){
+  const bar = win.querySelector('.titlebar');
+  let ox=0, oy=0, dragging=false;
+  function bringToFront(){
+    document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
+    win.style.zIndex = 20;
+  }
+  win.addEventListener('mousedown', bringToFront);
+  bar.addEventListener('pointerdown', (e)=>{
+    if(window.matchMedia('(max-width:760px)').matches) return; // windows are stacked, not dragged, on mobile
+    dragging = true; bringToFront();
+    const rect = win.getBoundingClientRect();
+    ox = e.clientX - rect.left; oy = e.clientY - rect.top;
+    bar.setPointerCapture(e.pointerId);
+  });
+  bar.addEventListener('pointermove', (e)=>{
+    if(!dragging) return;
+    const w = win.offsetWidth, h = win.offsetHeight;
+    let nx = e.clientX - ox;
+    let ny = e.clientY - oy;
+    // clamp: titlebar never above the menu bar, and window stays reachable on all sides
+    nx = Math.min(Math.max(nx, EDGE_MARGIN - w + 120), window.innerWidth - EDGE_MARGIN - 120);
+    ny = Math.min(Math.max(ny, MENUBAR_H + EDGE_MARGIN), window.innerHeight - 40);
+    win.style.left = nx + 'px';
+    win.style.top = ny + 'px';
+  });
+  bar.addEventListener('pointerup', ()=> dragging=false);
+}
+document.querySelectorAll('.window').forEach(makeDraggable);
+
+// dock + desktop icons focus window
+function getDockIcon(id){ return document.querySelector(`.dock .d-icon[data-target="${id}"]`); }
+
+function focusWindow(id){
+  const win = document.getElementById(id);
+  document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
+  win.style.zIndex = 20;
+
+  if(win.dataset.minimized === "1"){
+    // restore from the dock: pop back up to its last known position
+    win.dataset.minimized = "0";
+    win.classList.remove('is-minimized');
+    win.style.display = 'flex';
+    const restoreLeft = win.dataset.restoreLeft || win.style.left;
+    const restoreTop = win.dataset.restoreTop || win.style.top;
+    const dockIcon = getDockIcon(id);
+    if(dockIcon){
+      const dr = dockIcon.getBoundingClientRect();
+      const wr = win.getBoundingClientRect();
+      gsap.fromTo(win,
+        { x: dr.left - wr.left + (dr.width/2 - wr.width/2), y: dr.top - wr.top, scale:.15, opacity:.3, transformOrigin:"top left" },
+        { x:0, y:0, scale:1, opacity:1, duration:.4, ease:"power3.out" });
+    } else {
+      gsap.fromTo(win, {scale:.9, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)"});
+    }
+    return;
+  }
+
+  if(win.style.display === 'none' || win.dataset.closed === "1"){
+    win.dataset.closed = "0";
+    win.style.display = 'flex';
+    gsap.fromTo(win, {scale:.9, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)"});
+    return;
+  }
+
+  gsap.fromTo(win, {scale:.97}, {scale:1, duration:.22, ease:"back.out(2)"});
+}
+document.querySelectorAll('[data-target]').forEach(el=>{
+  el.addEventListener('click', ()=> focusWindow(el.dataset.target));
+});
+
+// traffic-light buttons: real close / minimize / maximize
+function closeWindow(win){
+  gsap.to(win, { scale:.85, opacity:0, duration:.22, ease:"power2.in", onComplete:()=>{
+    win.style.display = 'none';
+    win.style.opacity = 1;
+    win.style.transform = '';
+    win.dataset.closed = "1";
+  }});
+}
+
+function minimizeWindow(win){
+  const id = win.id;
+  const dockIcon = getDockIcon(id);
+  win.dataset.restoreLeft = win.style.left;
+  win.dataset.restoreTop = win.style.top;
+  if(dockIcon){
+    const dr = dockIcon.getBoundingClientRect();
+    const wr = win.getBoundingClientRect();
+    gsap.to(win, {
+      x: dr.left - wr.left + (dr.width/2 - wr.width/2),
+      y: dr.top - wr.top,
+      scale:.15, opacity:.3, duration:.42, ease:"power2.in", transformOrigin:"top left",
+      onComplete:()=>{
+        win.style.display = 'none';
+        win.style.opacity = 1;
+        win.style.transform = '';
+        win.dataset.minimized = "1";
+        win.classList.add('is-minimized');
+      }
+    });
+  } else {
+    gsap.to(win, { scale:.2, opacity:0, duration:.3, onComplete:()=>{
+      win.style.display = 'none';
+      win.dataset.minimized = "1";
+    }});
+  }
+}
+
+function maximizeWindow(win){
+  const menubarH = 34, dockClearance = 90, margin = 18;
+  if(win.dataset.maximized === "1"){
+    // restore previous bounds
+    const l = win.dataset.prevLeft, t = win.dataset.prevTop, w = win.dataset.prevWidth, h = win.dataset.prevHeight;
+    gsap.to(win, {
+      left: l, top: t, width: w, height: h, duration:.32, ease:"power3.inOut",
+      onComplete:()=>{ win.dataset.maximized = "0"; win.style.height = ''; }
+    });
+  } else {
+    const rect = win.getBoundingClientRect();
+    win.dataset.prevLeft = win.style.left;
+    win.dataset.prevTop = win.style.top;
+    win.dataset.prevWidth = rect.width + 'px';
+    win.dataset.prevHeight = rect.height + 'px';
+    gsap.to(win, {
+      left: margin, top: menubarH + margin,
+      width: window.innerWidth - margin*2,
+      height: window.innerHeight - menubarH - margin - dockClearance,
+      duration:.32, ease:"power3.inOut",
+      onComplete:()=>{ win.dataset.maximized = "1"; }
+    });
+  }
+}
+
+document.querySelectorAll('.tl-btn').forEach(btn=>{
+  btn.addEventListener('pointerdown', (e)=> e.stopPropagation());
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const win = btn.closest('.window');
+    const action = btn.dataset.action;
+    if(action === 'close') closeWindow(win);
+    else if(action === 'minimize') minimizeWindow(win);
+    else if(action === 'maximize') maximizeWindow(win);
+  });
+});
+
+// clock
+function tick(){
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit'});
+}
+tick(); setInterval(tick, 1000*15);
+
+// ---- READme.app: ported glitch-text effect ----
+function split(el) {
+  return new SplitText(el, { type: "lines, chars" });
+}
+
+const rmTexts = gsap.utils.toArray("#win-readme h1");
+const rmLines = [];
+
+function rmTriggerEffect(charsInLine) {
+  const totalChars = charsInLine.length;
+  const middleIndex = (totalChars - 1) / 2;
+
+  charsInLine.forEach((char, index) => {
+    if (!char.dataset.orig) char.dataset.orig = char.textContent;
+    const distanceFromCenter = Math.abs(index - middleIndex);
+
+    gsap.fromTo(char, {color:"#000"}, {
+      color: gsap.utils.random(["#85AF00","#FFCC00","#FB9CFD","#A19BFF","#FF4C00"]),
+      ease:"power3.out", duration:0.3, delay: distanceFromCenter*0.03,
+      repeat:1, yoyo:true, overwrite:"auto",
+      onStart: () => {
+        const oldDetail = char.querySelector(".rm-detail");
+        if (oldDetail) oldDetail.remove();
+        const randomNum = gsap.utils.random(["0","1"]);
+        const randomNumThree = gsap.utils.random(["0","1","2"]);
+        if(randomNum == 1){
+          char.textContent = gsap.utils.random([
+            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+            "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+            "0","1","2","3","4","5","6","7","8","9",
+            "<",">","%","&","@","!","#","$","^","*","(",")","-","_","+","=","{","}","[","]","|","\\",":",";","\"","?","/","~","`"
+          ]);
+        }
+        if(randomNumThree == 1){
+          const detail = document.createElement("span");
+          detail.classList.add("rm-detail");
+          detail.textContent = `△x = ${char.clientWidth}px`;
+          char.appendChild(detail);
+        }
+        if(randomNumThree == 1){
+          char.style.border = `1px solid ${gsap.utils.random(["#85AF00","#FFCC00","#FB9CFD","#A19BFF","#FF4C00"])}`;
+        }
+      },
+      onComplete: () => {
+        char.textContent = char.dataset.orig;
+        char.style.border = "none";
+        const detail = char.querySelector(".rm-detail");
+        if (detail) detail.remove();
+      }
+    });
+  });
+}
+
+if(rmTexts.length){
+  rmTexts.forEach((txt) => {
+    const lineArray = split(txt);
+    lineArray.lines.forEach((line) => {
+      line.style.position = "relative";
+      const charsInLine = lineArray.chars.filter((char) => line.contains(char));
+      rmLines.push({ element: line, chars: charsInLine });
+      line.addEventListener("mouseenter", () => rmTriggerEffect(charsInLine));
+    });
+  });
+
+  function findRmLineAtPoint(x, y) {
+    const el = document.elementFromPoint(x, y);
+    if (!el) return null;
+    return rmLines.find(({ element }) => element === el || element.contains(el)) || null;
+  }
+  let lastRmTouchedLine = null;
+  function handleRmTouchPoint(x, y) {
+    const hit = findRmLineAtPoint(x, y);
+    const el = hit ? hit.element : null;
+    if (el !== lastRmTouchedLine) {
+      lastRmTouchedLine = el;
+      if (hit) rmTriggerEffect(hit.chars);
+    }
+  }
+  document.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    if (touch) handleRmTouchPoint(touch.clientX, touch.clientY);
+  }, { passive: true });
+  document.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    if (touch) handleRmTouchPoint(touch.clientX, touch.clientY);
+  }, { passive: true });
+  document.addEventListener("touchend", () => { lastRmTouchedLine = null; }, { passive: true });
+}
+</script>
+</body>
+</html>
