@@ -273,8 +273,13 @@ gsap.to(fillEl, { width:"100%", duration:1.7, ease:"power1.inOut", onComplete:()
   clearInterval(bootInterval);
   gsap.to('#boot', { opacity:0, duration:.5, onComplete:()=> document.getElementById('boot').style.display='none' });
   gsap.to('#desktop', { opacity:1, duration:.6 });
-  gsap.from('.window', { y:24, opacity:0, duration:.6, stagger:.12, ease:"power3.out" });
 }});
+
+// no app opens automatically — the desktop starts clean, apps launch on click
+document.querySelectorAll('.window').forEach(win=>{
+  win.style.display = 'none';
+  win.dataset.closed = "1";
+});
 
 // finder grid
 const cats = [
