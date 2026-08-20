@@ -45,8 +45,8 @@
     --term-prompt:#3aa06b;
     --term-link:#3a6bc9;
     --caret:#c9f2d8;
-    --home-clock-bg:rgba(255,255,255,.72);
-    --home-clock-border:rgba(255,255,255,.55);
+    --home-clock-bg:rgba(255,255,255,.42);
+    --home-clock-border:rgba(255,255,255,.32);
 
     color-scheme:light;
   }
@@ -82,8 +82,8 @@
     --term-prompt:#67d99c;
     --term-link:#7fa8ff;
     --caret:#3aa06b;
-    --home-clock-bg:rgba(30,29,36,.62);
-    --home-clock-border:rgba(255,255,255,.1);
+    --home-clock-bg:rgba(30,29,36,.34);
+    --home-clock-border:rgba(255,255,255,.07);
 
     color-scheme:dark;
   }
@@ -158,18 +158,153 @@
   body.prefs-dark .menubar .brand img{ filter:invert(1) brightness(1.15); }
   .menubar .sp{flex:1;}
   .menubar .item{ opacity:.75; }
-  .menubar .right{ display:flex; gap:14px; font-family:'JetBrains Mono', monospace; font-size:11px; align-items:center;}
+  .menubar .right{ display:flex; gap:6px; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px; font-weight:600; align-items:center;}
+  .menubar .item{ cursor:pointer; border-radius:5px; padding:2px 6px; margin:0 -6px; transition:opacity .15s ease, background-color .15s ease; }
+  .menubar .item:hover{ opacity:1; background:var(--hover); }
+  .menubar .item.is-active{ opacity:1; background:var(--hover); }
+
+  /* native-style dropdown menu, used by the "Window" menu-bar item */
+  .menu-dropdown{
+    position:fixed; z-index:120; min-width:190px;
+    background:var(--surface-solid); border-radius:9px;
+    box-shadow:0 16px 34px rgba(0,0,0,.28), 0 0 0 1px var(--surface-border);
+    padding:5px; overflow:hidden;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transform:translateY(-6px) scale(.98); transform-origin:top left;
+    transition:opacity .15s ease, transform .15s ease, visibility 0s linear .15s;
+  }
+  .menu-dropdown.is-open{
+    opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) scale(1);
+    transition:opacity .15s ease, transform .15s ease, visibility 0s linear 0s;
+  }
+  .menu-dropdown-item{
+    display:flex; align-items:center; gap:8px;
+    padding:6px 10px; border-radius:6px; cursor:pointer;
+    font-size:12.5px; color:var(--ink); white-space:nowrap;
+  }
+  .menu-dropdown-item:hover{ background:var(--hover); }
+  .menu-dropdown-item .mdi-dot{
+    width:5px; height:5px; border-radius:50%; background:var(--mint); flex-shrink:0; opacity:0;
+  }
+  .menu-dropdown-item.is-minimized .mdi-dot{ opacity:1; background:var(--dim-soft); }
+
+  /* Launchpad-style app drawer */
+  #app-drawer{
+    position:fixed; inset:0; z-index:150;
+    display:flex; flex-direction:column; align-items:center;
+    padding:9vh 6vw 6vh;
+    background:rgba(20,16,30,.38);
+    backdrop-filter:blur(38px) saturate(1.1);
+    -webkit-backdrop-filter:blur(38px) saturate(1.1);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transform:scale(1.04);
+    transition:opacity .28s ease, transform .28s ease, visibility 0s linear .28s;
+  }
+  #app-drawer.is-open{
+    opacity:1; visibility:visible; pointer-events:auto; transform:scale(1);
+    transition:opacity .28s ease, transform .28s ease, visibility 0s linear 0s;
+  }
+  .drawer-search{ margin-bottom:5vh; }
+  .drawer-search input{
+    width:220px; text-align:center; font-size:13px; font-family:'Inter',sans-serif;
+    color:#fff; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.22);
+    border-radius:9px; padding:7px 12px; outline:none;
+  }
+  .drawer-search input::placeholder{ color:rgba(255,255,255,.65); }
+  .drawer-search input:focus{ background:rgba(255,255,255,.2); }
+  .drawer-grid{
+    display:grid; grid-template-columns:repeat(7, 92px); gap:34px 18px;
+    justify-content:center; max-width:920px; width:100%;
+  }
+  .drawer-app{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:pointer; width:92px;
+  }
+  .drawer-glyph{
+    width:64px; height:64px; border-radius:22.37%; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 18px rgba(0,0,0,.28);
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .drawer-glyph img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .drawer-app span{
+    font-size:11.5px; color:#fff; text-align:center; line-height:1.25;
+    text-shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  .drawer-app:hover .drawer-glyph{ transform:scale(1.1); }
+  .drawer-app:active .drawer-glyph{ transform:scale(1.02); transition-duration:.1s; }
+  .drawer-app.is-hidden{ display:none; }
+  @media(max-width:760px){ #app-drawer{ display:none !important; } }
+
+  /* Spotlight-style search */
+  #spotlight{
+    position:fixed; inset:0; z-index:151;
+    display:flex; justify-content:center;
+    padding-top:14vh;
+    background:rgba(20,16,30,.22);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .2s ease, visibility 0s linear .2s;
+  }
+  #spotlight.is-open{
+    opacity:1; visibility:visible; pointer-events:auto;
+    transition:opacity .2s ease, visibility 0s linear 0s;
+  }
+  .spotlight-panel{
+    width:min(560px, 88vw); height:fit-content; max-height:64vh;
+    background:var(--surface-solid); border-radius:13px;
+    box-shadow:0 30px 70px rgba(0,0,0,.4), 0 0 0 1px var(--surface-border);
+    overflow:hidden; display:flex; flex-direction:column;
+    transform:translateY(-14px) scale(.97); opacity:0;
+    transition:transform .22s cubic-bezier(.22,1,.36,1), opacity .22s ease;
+  }
+  #spotlight.is-open .spotlight-panel{ transform:translateY(0) scale(1); opacity:1; }
+  .spotlight-bar{
+    display:flex; align-items:center; gap:10px;
+    padding:14px 16px; border-bottom:1px solid var(--divider);
+    flex-shrink:0;
+  }
+  .spotlight-icon{ color:var(--dim-soft); flex-shrink:0; }
+  #spotlight-input{
+    flex:1; border:none; outline:none; background:transparent;
+    font-family:'Inter',sans-serif; font-size:19px; font-weight:400;
+    color:var(--ink);
+  }
+  #spotlight-input::placeholder{ color:var(--dim-soft); }
+  .spotlight-results{
+    overflow-y:auto; padding:6px;
+  }
+  .spotlight-result{
+    display:flex; align-items:center; gap:12px;
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+  }
+  .spotlight-result .sr-glyph{
+    width:32px; height:32px; border-radius:22.37%; overflow:hidden; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .spotlight-result .sr-glyph img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .spotlight-result .sr-name{ font-size:13.5px; color:var(--ink); }
+  .spotlight-result .sr-hint{ margin-left:auto; font-size:11px; color:var(--dim-soft); font-family:'JetBrains Mono',monospace; }
+  .spotlight-result.is-selected{ background:var(--hover); }
+  .spotlight-empty{ padding:22px 16px; text-align:center; font-size:13px; color:var(--dim-soft); }
+  @media(max-width:760px){ #spotlight{ display:none !important; } }
 
   /* desktop icons */
   .icons{ position:absolute; top:50px; left:20px; display:flex; flex-direction:column; gap:22px; z-index:10;}
   .dicon{ display:flex; flex-direction:column; align-items:center; gap:6px; width:76px; cursor:pointer;}
   .dicon .glyph{ width:46px; height:46px; border-radius:22.37%; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 6px 14px rgba(0,0,0,.15); overflow:hidden; transition:transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .28s ease; }
-  .dicon .glyph img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .28s ease; }
+  .dicon .glyph img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .28s ease; -webkit-user-drag:none; user-drag:none; }
   .dicon span{ font-size:10.5px; text-align:center; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.6), 0 0 8px rgba(0,0,0,.35); transition:text-shadow .25s ease; }
   .dicon:hover .glyph{ transform:translateY(-6px) scale(1.1); box-shadow:0 14px 22px rgba(0,0,0,.28); }
   .dicon:hover .glyph img{ transform:scale(1.12); }
   .dicon:hover span{ text-shadow:0 1px 3px rgba(0,0,0,.75), 0 0 10px rgba(0,0,0,.5); }
   .dicon:active .glyph{ transform:translateY(-2px) scale(1.04); transition-duration:.12s; }
+
+  /* draggable desktop icons — snap-to-grid live mode (JS-driven) */
+  .icons.icons-live{ position:absolute; top:50px; left:20px; display:block; }
+  .icons.icons-live .dicon{ position:absolute; margin:0; touch-action:none; cursor:grab; }
+  .icons.icons-live .dicon.is-dragging{ cursor:grabbing; z-index:50; }
+  .icons.icons-live .dicon.is-dragging .glyph{ transform:scale(1.08); box-shadow:0 18px 30px rgba(0,0,0,.32); }
+  .icons.icons-live .dicon.is-dragging span{ opacity:.85; }
 
   /* windows */
   .window{
@@ -339,7 +474,7 @@
   @media(max-width:760px){
     .menubar{ position:fixed !important; }
     .menubar .item{ display:none; }
-    #home-clock-widget{ display:none !important; }
+    #home-calendar-widget{ display:none !important; }
     .dock{ position:fixed !important; bottom:16px; padding:12px 18px; gap:18px; }
     .dock .d-icon{ width:60px; height:60px; font-size:27px; }
     .dock .d-icon::after{ width:5px; height:5px; bottom:-9px; }
@@ -386,6 +521,14 @@
       padding:0 16px;
       top:auto; left:auto;
     }
+    /* once JS switches the grid into live drag mode, keep it in normal
+       flow (so the dock below doesn't jump up) instead of the desktop's
+       floating position:absolute panel — children still go absolute,
+       height is set inline by the script to match the content */
+    .icons.icons-live{
+      display:block; position:relative; top:auto; left:auto;
+      width:100%; max-width:760px; margin:6px auto 22px; padding:0 16px;
+    }
     .dicon{ width:100%; gap:8px; }
     .dicon .glyph{
       width:85%; height:auto; aspect-ratio:1/1; max-width:140px;
@@ -416,7 +559,7 @@
     body.app-open #desktop{ overflow:hidden; }
     body.app-open .icons,
     body.app-open .dock,
-    body.app-open #home-clock-widget{ display:none !important; }
+    body.app-open #home-calendar-widget{ display:none !important; }
   }
 
   @media(max-width:480px){
@@ -482,15 +625,15 @@
 }
 
 
-/* Home-screen clock widget */
-#home-clock-widget{
+/* Home-screen calendar widget */
+#home-calendar-widget{
   position:fixed;
-  top:50px;
-  right:28px;
+  top:46px;
+  right:22px;
   z-index:5;
-  min-width:190px;
-  padding:14px 18px 13px;
-  border-radius:18px;
+  width:164px;
+  padding:10px 10px 9px;
+  border-radius:14px;
   background:var(--home-clock-bg);
   border:1px solid var(--home-clock-border);
   box-shadow:0 8px 28px rgba(0,0,0,.12);
@@ -502,27 +645,50 @@
   color:var(--ink);
   transition:background-color .35s ease, border-color .35s ease, color .35s ease;
 }
-#home-clock-time{
-  font-size:32px;
-  line-height:1;
+#home-cal-month{
+  font-size:10.5px;
   font-weight:600;
-  letter-spacing:-.04em;
+  letter-spacing:-.01em;
+  margin-bottom:6px;
 }
-#home-clock-date{
-  margin-top:7px;
-  font-size:12px;
-  opacity:.62;
+#home-cal-grid{
+  display:grid;
+  grid-template-columns:repeat(7, 1fr);
+  gap:1px 0;
+}
+.home-cal-dow{
+  font-size:7px;
+  font-weight:500;
+  opacity:.5;
+  text-transform:uppercase;
   letter-spacing:.02em;
+  padding-bottom:2px;
+}
+.home-cal-day{
+  font-size:9px;
+  font-weight:700;
+  line-height:18px;
+  height:18px;
+  border-radius:5px;
+}
+.home-cal-day.is-today{
+  background:var(--coral);
+  color:#fff;
+  font-weight:800;
+}
+.home-cal-day.is-muted{
+  opacity:.3;
 }
 @media(max-width:700px){
-  #home-clock-widget{
-    top:44px;
-    right:18px;
-    min-width:150px;
-    padding:11px 14px;
+  #home-calendar-widget{
+    top:40px;
+    right:14px;
+    width:136px;
+    padding:8px 8px 7px;
   }
-  #home-clock-time{font-size:25px;}
-  #home-clock-date{font-size:10px;}
+  #home-cal-month{font-size:9px; margin-bottom:4px;}
+  .home-cal-dow{font-size:6px;}
+  .home-cal-day{font-size:7.5px; line-height:15px; height:15px;}
 }
 
 /* "Ball" app icon glyph — a little CSS sphere so it doesn't need an image asset */
@@ -544,9 +710,9 @@
 }
 #ball-app-canvas.is-active{ display:block; }
 
-/* Prevent the clock widget from creating a backdrop/compositing glow in the
+/* Prevent the calendar widget from creating a backdrop/compositing glow in the
    menu bar above it. */
-#home-clock-widget{
+#home-calendar-widget{
   backdrop-filter:none !important;
   -webkit-backdrop-filter:none !important;
   isolation:isolate;
@@ -746,15 +912,17 @@
 <div id="desktop">
   <div class="menubar">
     <div class="brand"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt=""> Shane Paul Alimboyao</div>
-    <div class="item">Apps</div>
-    <div class="item">Search</div>
-    <div class="item">Window</div>
+    <div class="item" id="menubar-apps-item">Apps</div>
+    <div class="item" id="menubar-search-item">Search</div>
+    <div class="item" id="menubar-window-item">Window</div>
     <div class="sp"></div>
     <div class="right">
-      <span>Metro Manila, PH</span>
+      <span id="menubar-date">--</span>
       <span id="clock">--:--</span>
     </div>
   </div>
+
+  <div class="menu-dropdown" id="windows-menu" aria-hidden="true"></div>
 
   <div class="icons">
     <div class="dicon" data-target="win-readme">
@@ -1021,13 +1189,63 @@
     </div>
   </div>
 
-  <!-- Home-screen clock widget (kept inside #desktop so it shares its
+  <!-- Home-screen calendar widget (kept inside #desktop so it shares its
        stacking context — #desktop gets a transform during the boot
        fade-in, which otherwise traps window z-index changes and stops
-       them from ever appearing above a clock rendered as a sibling) -->
-  <div id="home-clock-widget" aria-label="Current time">
-    <div id="home-clock-time">--:--</div>
-    <div id="home-clock-date">Loading…</div>
+       them from ever appearing above a widget rendered as a sibling) -->
+  <div id="home-calendar-widget" aria-label="Calendar">
+    <div id="home-cal-month">Loading…</div>
+    <div id="home-cal-grid"></div>
+  </div>
+
+  <!-- Launchpad-style app drawer, opened from the "Apps" menu-bar item -->
+  <div id="app-drawer" aria-hidden="true">
+    <div class="drawer-search"><input type="text" id="drawer-search-input" placeholder="Search" autocomplete="off" spellcheck="false"></div>
+    <div class="drawer-grid" id="drawer-grid">
+      <div class="drawer-app" data-target="win-readme">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt=""></div>
+        <span>About</span>
+      </div>
+      <div class="drawer-app" data-target="win-work">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt=""></div>
+        <span>Works</span>
+      </div>
+      <div class="drawer-app" data-target="win-contact">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt=""></div>
+        <span>Contact Me</span>
+      </div>
+      <div class="drawer-app" data-target="win-nowplaying">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt=""></div>
+        <span>Now Playing</span>
+      </div>
+      <div class="drawer-app" data-target="win-letterboxd">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt=""></div>
+        <span>Watched</span>
+      </div>
+      <div class="drawer-app" data-target="win-this-was-all-for-you">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/images.jpg" alt=""></div>
+        <span>this was all for you♡</span>
+      </div>
+      <div class="drawer-app" data-app="ball">
+        <div class="drawer-glyph ball-glyph"></div>
+        <span>Ball</span>
+      </div>
+      <div class="drawer-app" data-target="win-preferences">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="" style="object-fit:contain;"></div>
+        <span>Preferences</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spotlight-style search, opened from the "Search" menu-bar item -->
+  <div id="spotlight" aria-hidden="true">
+    <div class="spotlight-panel" role="dialog" aria-modal="true" aria-label="Search">
+      <div class="spotlight-bar">
+        <svg class="spotlight-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="spotlight-input" placeholder="Spotlight Search" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="spotlight-results" id="spotlight-results"></div>
+    </div>
   </div>
   </div>
 
@@ -1601,7 +1819,10 @@ document.querySelectorAll('.tl-btn').forEach(btn=>{
 
 // clock
 function tick(){
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit'});
+  const now = new Date();
+  const dateEl = document.getElementById('menubar-date');
+  if(dateEl) dateEl.textContent = now.toLocaleDateString('en-PH', {weekday:'short', month:'short', day:'numeric'}).replace(',', '');
+  document.getElementById('clock').textContent = now.toLocaleTimeString('en-PH', {hour:'numeric', minute:'2-digit', hour12:true});
 }
 tick(); setInterval(tick, 1000*15);
 
@@ -2059,7 +2280,11 @@ function rmTriggerEffect(charsInLine) {
     if (!char.dataset.orig) char.dataset.orig = char.textContent;
     const distanceFromCenter = Math.abs(index - middleIndex);
 
-    gsap.fromTo(char, {color:"#000"}, {
+    // animate from the char's current (theme-correct) color, and on
+    // finish clear the inline color entirely rather than resetting to a
+    // hardcoded black — otherwise the char gets stuck black in dark
+    // mode instead of returning to the CSS-driven white/ink color
+    gsap.fromTo(char, {color: getComputedStyle(char).color}, {
       color: gsap.utils.random(["#85AF00","#FFCC00","#FB9CFD","#A19BFF","#FF4C00"]),
       ease:"power3.out", duration:0.3, delay: distanceFromCenter*0.03,
       repeat:1, yoyo:true, overwrite:"auto",
@@ -2089,6 +2314,16 @@ function rmTriggerEffect(charsInLine) {
       onComplete: () => {
         char.textContent = char.dataset.orig;
         char.style.border = "none";
+        char.style.removeProperty("color"); // fall back to CSS (respects light/dark mode)
+        const detail = char.querySelector(".rm-detail");
+        if (detail) detail.remove();
+      },
+      onInterrupt: () => {
+        // a fast re-hover killed this tween before it finished — still
+        // clean up so the char never gets stuck on a non-theme color
+        char.textContent = char.dataset.orig;
+        char.style.border = "none";
+        char.style.removeProperty("color");
         const detail = char.querySelector(".rm-detail");
         if (detail) detail.remove();
       }
@@ -2133,6 +2368,574 @@ if(rmTexts.length){
 }
 </script>
 
+<script id="icon-grid-drag-script">
+// ---- draggable desktop icons, snapping to an invisible grid ----
+// (like a real desktop/home screen: drag an icon, it snaps into the
+// nearest free cell when you let go; positions persist across visits)
+(function(){
+  const iconsEl = document.querySelector('.icons');
+  if(!iconsEl) return;
+
+  // desktop metrics are fixed pixel values; mobile metrics are measured
+  // live from the responsive CSS grid so the drag system matches
+  // whatever size/columns that breakpoint is currently rendering
+  const DESKTOP = { gridW:92, gridH:96, topMargin:50, bottomMargin:118, sideMargin:20, cols:null, offsetX:0, offsetY:0 };
+  let GRID_W, GRID_H, TOP_MARGIN, BOTTOM_MARGIN, SIDE_MARGIN, COLS, OFFSET_X, OFFSET_Y;
+
+  const DRAG_THRESHOLD = 6;     // px of movement before a press counts as a drag
+
+  let dicons = [];
+  const occupied = new Map(); // "col,row" -> dicon element
+  let dragInfo = null;
+  let justDragged = false;
+  let mode = null; // 'desktop' | 'mobile'
+  let boundDrag = false;
+
+  function isMobile(){ return window.matchMedia('(max-width:760px)').matches; }
+  function key(c,r){ return c + ',' + r; }
+  function iconKey(el){ return el.dataset.target || el.dataset.app || el.id || ''; }
+  function storageKey(){ return isMobile() ? 'webos-icon-grid-mobile-v1' : 'webos-icon-grid-v1'; }
+
+  function loadSaved(){
+    try{ return JSON.parse(localStorage.getItem(storageKey()) || '{}'); }
+    catch(e){ return {}; }
+  }
+  function savePositions(){
+    const data = {};
+    dicons.forEach(el=>{
+      const k = iconKey(el);
+      if(!k) return;
+      data[k] = { col: +el.dataset.col, row: +el.dataset.row };
+    });
+    try{ localStorage.setItem(storageKey(), JSON.stringify(data)); }catch(e){}
+  }
+
+  // measure the mobile grid's real rendered cell size + column count
+  // before we take over positioning, so dragging matches the existing
+  // responsive layout instead of a guessed pixel grid
+  function measureMobileMetrics(){
+    const cs = getComputedStyle(iconsEl);
+    const cols = 4; // matches the CSS grid-template-columns:repeat(4,1fr)
+    const padL = parseFloat(cs.paddingLeft) || 0;
+    const padR = parseFloat(cs.paddingRight) || 0;
+    const gapX = parseFloat(cs.columnGap) || 12;
+    const gapY = parseFloat(cs.rowGap) || 22;
+    const contentW = iconsEl.clientWidth - padL - padR;
+    const cellW = (contentW - gapX * (cols - 1)) / cols;
+    const firstIcon = dicons[0];
+    const cellH = firstIcon ? firstIcon.getBoundingClientRect().height : cellW + 20;
+    return {
+      gridW: Math.round(cellW + gapX),
+      gridH: Math.round(cellH + gapY),
+      cellW: Math.round(cellW),
+      topMargin: 0, bottomMargin: 0, sideMargin: 0,
+      cols, offsetX: padL, offsetY: 0
+    };
+  }
+
+  let CELL_W = null; // fixed pixel width to force on icons in mobile live mode (null = leave CSS width alone)
+
+  function applyMetrics(m){
+    GRID_W = m.gridW; GRID_H = m.gridH;
+    TOP_MARGIN = m.topMargin; BOTTOM_MARGIN = m.bottomMargin; SIDE_MARGIN = m.sideMargin;
+    COLS = m.cols; OFFSET_X = m.offsetX; OFFSET_Y = m.offsetY;
+    CELL_W = m.cellW || null;
+    if(dicons.length){
+      dicons.forEach(el=> el.style.width = CELL_W ? CELL_W + 'px' : '');
+    }
+  }
+
+  function bounds(){
+    if(COLS){
+      // mobile: fixed column count, generous row count (the container
+      // grows to fit and #desktop scrolls, so there's no hard row cap)
+      const maxRow = Math.max(3, Math.ceil(dicons.length / COLS) + 3);
+      return { maxCol: COLS - 1, maxRow };
+    }
+    const iconW = 76, iconH = 84;
+    const maxCol = Math.max(0, Math.floor((window.innerWidth - SIDE_MARGIN * 2 - iconW) / GRID_W));
+    const maxRow = Math.max(0, Math.floor((window.innerHeight - TOP_MARGIN - BOTTOM_MARGIN - iconH) / GRID_H));
+    return { maxCol, maxRow };
+  }
+
+  function clampCell(col, row){
+    const { maxCol, maxRow } = bounds();
+    return { col: Math.min(Math.max(0, col), maxCol), row: Math.min(Math.max(0, row), maxRow) };
+  }
+
+  // find the nearest free cell to (col,row), spiralling outward
+  function nearestFreeCell(col, row, skipEl){
+    const { maxCol, maxRow } = bounds();
+    const start = clampCell(col, row);
+    const isFree = (c,r)=>{
+      const occ = occupied.get(key(c,r));
+      return !occ || occ === skipEl;
+    };
+    if(isFree(start.col, start.row)) return start;
+    for(let radius = 1; radius < (maxCol + maxRow + 4); radius++){
+      for(let dc = -radius; dc <= radius; dc++){
+        for(let dr = -radius; dr <= radius; dr++){
+          if(Math.max(Math.abs(dc), Math.abs(dr)) !== radius) continue;
+          const c = start.col + dc, r = start.row + dr;
+          if(c < 0 || r < 0 || c > maxCol || r > maxRow) continue;
+          if(isFree(c, r)) return { col:c, row:r };
+        }
+      }
+    }
+    return start; // grid is completely full — fall back
+  }
+
+  function xyFromCell(col, row){
+    return { x: OFFSET_X + col * GRID_W, y: OFFSET_Y + row * GRID_H };
+  }
+
+  function setCell(el, col, row, animate){
+    const prevKey = key(el.dataset.col, el.dataset.row);
+    if(occupied.get(prevKey) === el) occupied.delete(prevKey);
+    occupied.set(key(col, row), el);
+    el.dataset.col = col;
+    el.dataset.row = row;
+    const { x, y } = xyFromCell(col, row);
+    if(animate && window.gsap){
+      gsap.to(el, { left:x, top:y, duration:.32, ease:'back.out(1.7)' });
+    } else {
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+    }
+    updateContainerHeight();
+  }
+
+  // absolutely-positioned children don't push the (position:relative)
+  // container's height on mobile, so size it manually or the dock/
+  // content below would collapse upward
+  function updateContainerHeight(){
+    if(!COLS) { iconsEl.style.height = ''; return; }
+    let maxRowUsed = 0;
+    dicons.forEach(el=> maxRowUsed = Math.max(maxRowUsed, +el.dataset.row || 0));
+    iconsEl.style.height = (OFFSET_Y + (maxRowUsed + 1) * GRID_H) + 'px';
+  }
+
+  function init(){
+    // skip icons hidden by CSS at this breakpoint (e.g. About/Works/
+    // Contact Me are dock-only on mobile) — they take no grid slot
+    dicons = Array.from(iconsEl.querySelectorAll('.dicon'))
+      .filter(el => getComputedStyle(el).display !== 'none');
+    if(!dicons.length) return;
+
+    mode = isMobile() ? 'mobile' : 'desktop';
+    applyMetrics(mode === 'mobile' ? measureMobileMetrics() : DESKTOP);
+
+    const saved = loadSaved();
+    const iconsRect = iconsEl.getBoundingClientRect();
+
+    // measure each icon's current on-screen slot BEFORE touching any
+    // layout styles, so the default arrangement matches what's already
+    // on screen (including the specially-placed "for you" icon)
+    const defaults = dicons.map(el=>{
+      const r = el.getBoundingClientRect();
+      const localX = r.left - iconsRect.left - OFFSET_X;
+      const localY = r.top - iconsRect.top - OFFSET_Y;
+      return clampCell(Math.round(localX / GRID_W), Math.round(localY / GRID_H));
+    });
+
+    iconsEl.classList.add('icons-live');
+    occupied.clear();
+
+    dicons.forEach((el, i)=>{
+      // clear any CSS-driven fixed/positioned placement so our inline
+      // left/top take full control
+      el.style.position = 'absolute';
+      el.style.right = 'auto';
+      el.style.bottom = 'auto';
+      el.dataset.col = ''; el.dataset.row = '';
+
+      const k = iconKey(el);
+      const want = (saved[k] && Number.isFinite(saved[k].col) && Number.isFinite(saved[k].row))
+        ? clampCell(saved[k].col, saved[k].row)
+        : defaults[i];
+
+      const free = nearestFreeCell(want.col, want.row, el);
+      setCell(el, free.col, free.row, false);
+    });
+
+    if(!boundDrag){ bindDrag(); boundDrag = true; }
+    window.addEventListener('resize', onResize);
+  }
+
+  function onResize(){
+    const nowMobile = isMobile() ? 'mobile' : 'desktop';
+    if(nowMobile !== mode){
+      // crossed the breakpoint — remeasure everything for the new layout
+      init();
+      return;
+    }
+    if(mode === 'mobile'){
+      // width can still change within the mobile range (rotation, resize)
+      applyMetrics(measureMobileMetrics());
+    }
+    dicons.forEach(el=>{
+      // reapply the clamped cell every time: on mobile the pixel size
+      // of a cell can itself have changed even when col/row didn't
+      const { col, row } = clampCell(+el.dataset.col, +el.dataset.row);
+      setCell(el, col, row, false);
+    });
+  }
+
+  function bindDrag(){
+    dicons.forEach(el=>{
+      el.querySelectorAll('img').forEach(img=> img.draggable = false);
+      el.addEventListener('pointerdown', (e)=>{
+        if(e.button !== undefined && e.button !== 0) return;
+        const rect = el.getBoundingClientRect();
+        dragInfo = {
+          el,
+          pointerId: e.pointerId,
+          offsetX: e.clientX - rect.left,
+          offsetY: e.clientY - rect.top,
+          startX: e.clientX,
+          startY: e.clientY,
+          moved: false
+        };
+        el.setPointerCapture(e.pointerId);
+      });
+
+      el.addEventListener('pointermove', (e)=>{
+        if(!dragInfo || dragInfo.el !== el || dragInfo.pointerId !== e.pointerId) return;
+        const dx = e.clientX - dragInfo.startX, dy = e.clientY - dragInfo.startY;
+        if(!dragInfo.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+        if(!dragInfo.moved){
+          dragInfo.moved = true;
+          el.classList.add('is-dragging');
+        }
+        const iconsRect = iconsEl.getBoundingClientRect();
+        const localX = e.clientX - iconsRect.left - dragInfo.offsetX;
+        const localY = e.clientY - iconsRect.top - dragInfo.offsetY;
+        el.style.left = localX + 'px';
+        el.style.top = localY + 'px';
+      });
+
+      const finishDrag = (e)=>{
+        if(!dragInfo || dragInfo.el !== el) return;
+        const wasDrag = dragInfo.moved;
+        el.classList.remove('is-dragging');
+        if(wasDrag){
+          const localX = (parseFloat(el.style.left) || 0) - OFFSET_X;
+          const localY = (parseFloat(el.style.top) || 0) - OFFSET_Y;
+          const target = clampCell(Math.round(localX / GRID_W), Math.round(localY / GRID_H));
+          const free = nearestFreeCell(target.col, target.row, el);
+          setCell(el, free.col, free.row, true);
+          savePositions();
+          justDragged = true;
+        }
+        dragInfo = null;
+      };
+      el.addEventListener('pointerup', finishDrag);
+      el.addEventListener('pointercancel', finishDrag);
+    });
+
+    // swallow the click that follows an actual drag, so it doesn't
+    // also open the window / toggle the app underneath the icon
+    document.addEventListener('click', (e)=>{
+      if(!justDragged) return;
+      justDragged = false;
+      if(e.target.closest('.dicon')){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+  }
+
+  init();
+})();
+</script>
+
+<script id="app-drawer-script">
+// ---- Launchpad-style app drawer, opened from the "Apps" menu-bar item ----
+(function(){
+  const drawer = document.getElementById('app-drawer');
+  const appsItem = document.getElementById('menubar-apps-item');
+  const searchInput = document.getElementById('drawer-search-input');
+  if(!drawer || !appsItem) return;
+
+  const apps = Array.from(drawer.querySelectorAll('.drawer-app'));
+
+  function isMobile(){ return window.matchMedia('(max-width:760px)').matches; }
+
+  function openDrawer(){
+    if(isMobile()) return;
+    const spotlight = document.getElementById('spotlight');
+    if(spotlight) spotlight.classList.remove('is-open');
+    const windowsMenu = document.getElementById('windows-menu');
+    if(windowsMenu) windowsMenu.classList.remove('is-open');
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    appsItem.classList.add('is-active');
+    if(searchInput){ searchInput.value = ''; filterApps(''); setTimeout(()=> searchInput.focus(), 50); }
+  }
+
+  function closeDrawer(instant){
+    if(instant){
+      drawer.style.transition = 'none';
+      drawer.classList.remove('is-open');
+      void drawer.offsetWidth; // force reflow before restoring the transition
+      drawer.style.transition = '';
+    } else {
+      drawer.classList.remove('is-open');
+    }
+    drawer.setAttribute('aria-hidden', 'true');
+    appsItem.classList.remove('is-active');
+  }
+
+  function toggleDrawer(){
+    drawer.classList.contains('is-open') ? closeDrawer(false) : openDrawer();
+  }
+
+  function filterApps(query){
+    const q = query.trim().toLowerCase();
+    apps.forEach(el=>{
+      const name = (el.querySelector('span').textContent || '').toLowerCase();
+      el.classList.toggle('is-hidden', q.length > 0 && !name.includes(q));
+    });
+  }
+
+  appsItem.addEventListener('click', (e)=>{ e.stopPropagation(); toggleDrawer(); });
+
+  // launching an app: close instantly so the window/app isn't left
+  // fading in underneath the still-visible drawer backdrop
+  apps.forEach(el=>{
+    el.addEventListener('click', ()=> closeDrawer(true));
+  });
+
+  // click on the empty backdrop (not a tile, not the search box) closes it
+  drawer.addEventListener('click', (e)=>{
+    if(e.target === drawer) closeDrawer(false);
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer(false);
+  });
+
+  if(searchInput){
+    searchInput.addEventListener('input', ()=> filterApps(searchInput.value));
+    searchInput.addEventListener('click', (e)=> e.stopPropagation());
+  }
+
+  window.addEventListener('resize', ()=>{
+    if(isMobile() && drawer.classList.contains('is-open')) closeDrawer(true);
+  });
+})();
+</script>
+
+<script id="spotlight-search-script">
+// ---- Spotlight-style search, opened from the "Search" menu-bar item ----
+(function(){
+  const spotlight = document.getElementById('spotlight');
+  const searchItem = document.getElementById('menubar-search-item');
+  const input = document.getElementById('spotlight-input');
+  const resultsEl = document.getElementById('spotlight-results');
+  if(!spotlight || !searchItem || !input || !resultsEl) return;
+
+  function isMobile(){ return window.matchMedia('(max-width:760px)').matches; }
+
+  // reuse the app-drawer tiles as the search index, so the two stay in sync
+  const apps = Array.from(document.querySelectorAll('#drawer-grid .drawer-app')).map(el=>{
+    const glyph = el.querySelector('.drawer-glyph');
+    const nameEl = el.querySelector('span');
+    return {
+      name: nameEl ? nameEl.textContent.trim() : '',
+      glyphHTML: glyph ? glyph.innerHTML : '',
+      glyphIsBall: !!(glyph && glyph.classList.contains('ball-glyph')),
+      target: el.dataset.target || '',
+      app: el.dataset.app || ''
+    };
+  });
+
+  let currentResults = [];
+  let selectedIndex = -1;
+
+  function render(query){
+    const q = query.trim().toLowerCase();
+    currentResults = q ? apps.filter(a=> a.name.toLowerCase().includes(q)) : apps.slice();
+    selectedIndex = currentResults.length ? 0 : -1;
+    paint();
+  }
+
+  function paint(){
+    resultsEl.innerHTML = '';
+    if(!currentResults.length){
+      resultsEl.innerHTML = '<div class="spotlight-empty">No results</div>';
+      return;
+    }
+    currentResults.forEach((a, i)=>{
+      const row = document.createElement('div');
+      row.className = 'spotlight-result' + (i === selectedIndex ? ' is-selected' : '');
+      row.innerHTML =
+        '<div class="sr-glyph' + (a.glyphIsBall ? ' ball-glyph' : '') + '">' + a.glyphHTML + '</div>' +
+        '<div class="sr-name"></div>' +
+        (i === selectedIndex ? '<div class="sr-hint">&#8629;</div>' : '');
+      row.querySelector('.sr-name').textContent = a.name;
+      row.addEventListener('mouseenter', ()=>{ selectedIndex = i; paint(); });
+      row.addEventListener('click', ()=> launch(a));
+      resultsEl.appendChild(row);
+    });
+  }
+
+  function launch(a){
+    closeSpotlight(true);
+    if(a.target && typeof focusWindow === 'function'){
+      focusWindow(a.target);
+    } else if(a.app === 'ball'){
+      const el = document.querySelector('[data-app="ball"]');
+      if(el) el.click();
+    }
+  }
+
+  function openSpotlight(){
+    if(isMobile()) return;
+    const drawer = document.getElementById('app-drawer');
+    if(drawer) drawer.classList.remove('is-open');
+    const windowsMenu = document.getElementById('windows-menu');
+    if(windowsMenu) windowsMenu.classList.remove('is-open');
+    spotlight.classList.add('is-open');
+    spotlight.setAttribute('aria-hidden', 'false');
+    searchItem.classList.add('is-active');
+    input.value = '';
+    render('');
+    setTimeout(()=> input.focus(), 60);
+  }
+
+  function closeSpotlight(instant){
+    if(instant){
+      spotlight.style.transition = 'none';
+      spotlight.classList.remove('is-open');
+      void spotlight.offsetWidth; // force reflow before restoring the transition
+      spotlight.style.transition = '';
+    } else {
+      spotlight.classList.remove('is-open');
+    }
+    spotlight.setAttribute('aria-hidden', 'true');
+    searchItem.classList.remove('is-active');
+  }
+
+  function toggleSpotlight(){
+    spotlight.classList.contains('is-open') ? closeSpotlight(false) : openSpotlight();
+  }
+
+  searchItem.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSpotlight(); });
+
+  spotlight.addEventListener('click', (e)=>{ if(e.target === spotlight) closeSpotlight(false); });
+
+  input.addEventListener('input', ()=> render(input.value));
+
+  input.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      if(currentResults.length){ selectedIndex = (selectedIndex + 1) % currentResults.length; paint(); }
+    } else if(e.key === 'ArrowUp'){
+      e.preventDefault();
+      if(currentResults.length){ selectedIndex = (selectedIndex - 1 + currentResults.length) % currentResults.length; paint(); }
+    } else if(e.key === 'Enter'){
+      e.preventDefault();
+      if(selectedIndex >= 0 && currentResults[selectedIndex]) launch(currentResults[selectedIndex]);
+    }
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && spotlight.classList.contains('is-open')) closeSpotlight(false);
+  });
+
+  window.addEventListener('resize', ()=>{
+    if(isMobile() && spotlight.classList.contains('is-open')) closeSpotlight(true);
+  });
+})();
+</script>
+
+<script id="windows-menu-script">
+// ---- "Window" menu-bar item: lists currently open windows, clicking
+// one brings it to front. Does nothing if nothing is open. ----
+(function(){
+  const menu = document.getElementById('windows-menu');
+  const windowItem = document.getElementById('menubar-window-item');
+  if(!menu || !windowItem) return;
+
+  function isMobile(){ return window.matchMedia('(max-width:760px)').matches; }
+
+  function openWindows(){
+    // "open" = not explicitly closed — this includes minimized windows,
+    // same as a real OS's Window menu
+    return Array.from(document.querySelectorAll('.window')).filter(w=> w.dataset.closed !== '1');
+  }
+
+  function titleOf(win){
+    const t = win.querySelector('.tl-title');
+    return t ? t.textContent.trim() : win.id;
+  }
+
+  function closeMenu(){
+    menu.classList.remove('is-open');
+    menu.setAttribute('aria-hidden', 'true');
+    windowItem.classList.remove('is-active');
+  }
+
+  function openMenu(){
+    const wins = openWindows();
+    if(!wins.length){ closeMenu(); return; } // nothing open — do nothing
+
+    const drawer = document.getElementById('app-drawer');
+    if(drawer) drawer.classList.remove('is-open');
+    const spotlight = document.getElementById('spotlight');
+    if(spotlight) spotlight.classList.remove('is-open');
+
+    menu.innerHTML = '';
+    wins.forEach(win=>{
+      const row = document.createElement('div');
+      row.className = 'menu-dropdown-item' + (win.dataset.minimized === '1' ? ' is-minimized' : '');
+      row.innerHTML = '<span class="mdi-dot"></span><span class="mdi-label"></span>';
+      row.querySelector('.mdi-label').textContent = titleOf(win);
+      row.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        closeMenu();
+        if(typeof focusWindow === 'function') focusWindow(win.id);
+      });
+      menu.appendChild(row);
+    });
+
+    const rect = windowItem.getBoundingClientRect();
+    menu.style.left = rect.left + 'px';
+    menu.style.top = (rect.bottom + 4) + 'px';
+
+    menu.classList.add('is-open');
+    menu.setAttribute('aria-hidden', 'false');
+    windowItem.classList.add('is-active');
+  }
+
+  function toggleMenu(){
+    menu.classList.contains('is-open') ? closeMenu() : openMenu();
+  }
+
+  windowItem.addEventListener('click', (e)=>{
+    if(isMobile()) return;
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(!menu.classList.contains('is-open')) return;
+    if(e.target === windowItem || windowItem.contains(e.target)) return;
+    if(menu.contains(e.target)) return;
+    closeMenu();
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && menu.classList.contains('is-open')) closeMenu();
+  });
+
+  window.addEventListener('resize', ()=>{
+    if(isMobile() && menu.classList.contains('is-open')) closeMenu();
+  });
+})();
+</script>
+
 <div id="irish-spring-image-popup" aria-hidden="true">
   <div class="ispopup-panel" role="dialog" aria-modal="true" aria-label="Image preview">
     <button class="ispopup-nav prev" type="button" aria-label="Previous image">&#8249;</button>
@@ -2142,29 +2945,45 @@ if(rmTexts.length){
   </div>
 </div>
 
-<script id="home-clock-widget-script">
+<script id="home-calendar-widget-script">
 (function(){
-  function updateHomeClock(){
-    const time = document.getElementById('home-clock-time');
-    const date = document.getElementById('home-clock-date');
-    if(!time || !date) return;
+  function renderCalendar(){
+    const monthEl = document.getElementById('home-cal-month');
+    const gridEl = document.getElementById('home-cal-grid');
+    if(!monthEl || !gridEl) return;
 
     const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const today = now.getDate();
 
-    time.textContent = now.toLocaleTimeString('en-PH', {
-      hour:'numeric',
-      minute:'2-digit'
-    });
+    monthEl.textContent = now.toLocaleDateString('en-PH', { month:'long', year:'numeric' });
 
-    date.textContent = now.toLocaleDateString('en-PH', {
-      weekday:'long',
-      month:'long',
-      day:'numeric'
-    });
+    const dows = ['S','M','T','W','T','F','S'];
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    let html = dows.map(d => `<div class="home-cal-dow">${d}</div>`).join('');
+
+    for(let i = 0; i < firstDay; i++){
+      html += `<div class="home-cal-day is-muted">${daysInPrevMonth - firstDay + i + 1}</div>`;
+    }
+    for(let d = 1; d <= daysInMonth; d++){
+      html += `<div class="home-cal-day${d === today ? ' is-today' : ''}">${d}</div>`;
+    }
+    const totalCells = firstDay + daysInMonth;
+    const trailing = (7 - (totalCells % 7)) % 7;
+    for(let i = 1; i <= trailing; i++){
+      html += `<div class="home-cal-day is-muted">${i}</div>`;
+    }
+
+    gridEl.innerHTML = html;
   }
 
-  updateHomeClock();
-  setInterval(updateHomeClock, 1000);
+  renderCalendar();
+  // catches month/day rollover without needing a per-second tick
+  setInterval(renderCalendar, 60 * 1000);
 })();
 </script>
 
