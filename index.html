@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Shane Paul Alimboyao</title>
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png">
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/as%20logo%20black-02.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&family=Fredoka:wght@500;600;700&family=Caveat:wght@600;700&family=Caprasimo&display=swap" rel="stylesheet">
 <style>
   :root{
     --desktop:#dcd6e8;
@@ -104,7 +106,7 @@
     position:absolute; inset:-24px;
     background-image: var(--boot-bg-image,
       linear-gradient(180deg, rgba(20,16,30,.5), rgba(20,16,30,.3) 18%, rgba(20,16,30,.55) 82%, rgba(20,16,30,.7)),
-      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg'));
+      url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg'));
     background-position:center 28%, center 28%;
     background-size:cover, cover;
     background-repeat:no-repeat, no-repeat;
@@ -136,7 +138,7 @@
     position:fixed; inset:0;
     background-image:
       linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
-      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg');
+      url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg');
     background-position: center 28%, center 28%;
     background-size: cover, cover;
     background-repeat: no-repeat, no-repeat;
@@ -355,7 +357,7 @@
   .finder-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px;}
   .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer; transition:background .2s ease;}
   .file:hover{ background:var(--hover);}
-  .file .thumb{ width:64px; height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+  .file .thumb{ width:64px; height:64px; border-radius:22%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
   .file .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
   .file:hover .thumb{ transform:translateY(-4px) scale(1.06); box-shadow:0 10px 18px rgba(0,0,0,.18); }
   .file:hover .thumb img{ transform:scale(1.1); }
@@ -484,7 +486,7 @@
       padding-top:50px; padding-bottom:112px;
       background-image:
         linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
-        url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg');
+        url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/IMG_8263.jpeg');
       background-position: center 28%, center 28%;
       background-size: cover, cover;
       background-repeat: no-repeat, no-repeat;
@@ -826,6 +828,72 @@
   #irish-spring-image-popup .ispopup-close{top:-10px;right:-6px;}
 }
 
+/* PDF file badge (1DOLO folder) + PDF preview popup */
+.pdf-badge{
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg,#ff6f5e,#e2493a);
+  color:#fff; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight:700; font-size:12px; letter-spacing:.04em; border-radius:8px;
+}
+#finder-1dolo .file.pdf-file{ cursor:pointer; }
+
+#pdf-preview-popup{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  padding:28px; opacity:0; visibility:hidden; pointer-events:none;
+  background:rgba(0,0,0,0); backdrop-filter:blur(0);
+  transition:opacity .28s cubic-bezier(.22,1,.36,1),
+             background .28s cubic-bezier(.22,1,.36,1),
+             backdrop-filter .28s cubic-bezier(.22,1,.36,1),
+             visibility 0s linear .28s;
+}
+#pdf-preview-popup.is-open{
+  opacity:1; visibility:visible; pointer-events:auto;
+  background:rgba(0,0,0,.72); backdrop-filter:blur(5px);
+  transition:opacity .28s cubic-bezier(.22,1,.36,1),
+             background .28s cubic-bezier(.22,1,.36,1),
+             backdrop-filter .28s cubic-bezier(.22,1,.36,1),
+             visibility 0s linear 0s;
+}
+#pdf-preview-popup .pdfpopup-panel{
+  position:relative; width:min(880px,92vw); height:min(920px,90vh);
+  display:flex; flex-direction:column;
+  background:var(--popup-img-bg); border-radius:12px; overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.5);
+  transform:scale(.92) translateY(10px); opacity:0;
+  transition:transform .34s cubic-bezier(.16,1,.3,1),opacity .22s ease;
+}
+#pdf-preview-popup.is-open .pdfpopup-panel{
+  transform:scale(1) translateY(0); opacity:1;
+}
+#pdf-preview-popup.is-maximized .pdfpopup-panel{
+  width:96vw; height:94vh;
+  transition:width .32s cubic-bezier(.16,1,.3,1),height .32s cubic-bezier(.16,1,.3,1);
+}
+#pdf-preview-popup .pdfpopup-titlebar{
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
+  font-size:12.5px; font-weight:500; color:var(--ink);
+  border-bottom:1px solid var(--border);
+  background:var(--surface-2);
+  flex-shrink:0;
+}
+#pdf-preview-popup .pdfpopup-titlebar .tl-btn{ flex-shrink:0; }
+#pdf-preview-popup .pdfpopup-name{
+  flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  text-align:center; margin-right:40px;
+}
+#pdf-preview-popup .fp-iframe{
+  flex:1; width:100%; border:1px solid lightgray; background:#fff;
+}
+@media (prefers-reduced-motion:reduce){
+  #pdf-preview-popup,#pdf-preview-popup .pdfpopup-panel{transition:none;}
+}
+@media (max-width:760px){
+  #pdf-preview-popup{padding:14px;}
+  #pdf-preview-popup .pdfpopup-panel{width:96vw;height:88vh;}
+}
+
+
   /* Preferences.app */
   #win-preferences{ width:min(560px,90vw); top:120px; left:38vw; }
   .prefs{ display:grid; grid-template-columns:150px 1fr; }
@@ -871,6 +939,130 @@
   }
 </style>
 
+<style>
+/* ===== ARCHIVEd. app demo (lives inside the Works folder) ===== */
+#win-archived{ width:390px; max-width:92vw; height:800px; max-height:92vh; background:#f3f1e8; }
+#win-archived .win-body{ padding:0; overflow:hidden; height:100%; flex:1 1 auto; min-height:0; }
+.arch-app{ position:relative; width:100%; height:100%; background:#f3f1e8; font-family:'Inter',sans-serif; color:#2b2b2b; overflow:hidden; }
+.arch-screen{ position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; padding-bottom:96px; }
+.arch-screen.is-active{ display:block; }
+.arch-screen::-webkit-scrollbar{ width:0; }
+
+/* shared top bar */
+.arch-topbar{ display:flex; align-items:center; justify-content:flex-start; gap:12px; padding:18px 16px 6px; }
+.arch-round-btn{ width:38px; height:38px; border-radius:50%; background:rgba(0,0,0,.06); border:none; display:flex; align-items:center; justify-content:center; font-size:16px; color:#555; cursor:pointer; flex-shrink:0; }
+.arch-logo{ font-family:'Courier New',Courier,'JetBrains Mono',monospace; font-weight:700; font-size:22px; color:#f0574f; letter-spacing:.01em; margin-right:auto; }
+
+/* bottom pill nav */
+.arch-nav{
+  position:absolute; left:50%; bottom:14px; transform:translateX(-50%); width:min(240px, 70%);
+  background:linear-gradient(180deg, rgba(240,87,79,.55), rgba(240,87,79,.38));
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-radius:999px; display:flex; align-items:center; padding:5px;
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 10px 24px rgba(220,80,70,.3),
+    0 1px 1px rgba(255,255,255,.4) inset,
+    0 -6px 14px rgba(255,255,255,.12) inset,
+    0 0 0 1px rgba(255,255,255,.06) inset;
+  z-index:5; cursor:grab; touch-action:none; isolation:isolate;
+}
+.arch-nav::before{
+  content:'';
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(120deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 65%, rgba(255,255,255,.14) 100%);
+  mix-blend-mode:overlay; z-index:-1;
+}
+.arch-nav.is-dragging{ cursor:grabbing; }
+.arch-nav-indicator{
+  position:absolute; top:5px; bottom:5px; left:5px; width:calc((100% - 10px)/3);
+  border-radius:999px; transition:transform .5s cubic-bezier(.34,2.2,.4,1); z-index:0; pointer-events:none;
+  background:transparent;
+  backdrop-filter:blur(3px) saturate(115%);
+  -webkit-backdrop-filter:blur(3px) saturate(115%);
+  box-shadow:
+    0 6px 14px rgba(0,0,0,.18),
+    1.5px 1.5px 0 -0.5px rgba(255,255,255,.65) inset,
+    0 -4px 8px rgba(255,255,255,.16) inset;
+  isolation:isolate;
+  overflow:hidden;
+}
+.arch-nav.is-dragging .arch-nav-indicator{
+  backdrop-filter:blur(3px) saturate(130%);
+  -webkit-backdrop-filter:blur(3px) saturate(130%);
+}
+.arch-nav-btn{ position:relative; z-index:1; flex:1; border:none; background:transparent; display:flex; flex-direction:column; align-items:center; gap:3px; padding:9px 4px; border-radius:999px; color:#fff; font:600 11px 'Fredoka',sans-serif; cursor:pointer; opacity:.85; }
+.arch-nav-btn svg{ width:18px; height:18px; }
+.arch-nav-btn.active{ opacity:1; }
+
+/* HOME screen */
+.arch-tabs{ margin:14px 16px 16px; background:#f0574f; border-radius:999px; padding:5px; display:flex; gap:4px; }
+.arch-tab{ flex:1; text-align:center; padding:11px 0; border-radius:999px; font:600 13.5px 'Fredoka',sans-serif; color:#fff; opacity:.85; cursor:pointer; border:none; background:transparent; }
+.arch-tab.active{ background:rgba(255,255,255,.85); color:#e05a50; opacity:1; }
+.arch-banner{ margin:0 16px 18px; border-radius:16px; overflow:hidden; position:relative; min-height:120px; background:linear-gradient(120deg,#8fc4e8,#c9d9ef); color:#fff; display:flex; align-items:center; }
+.arch-banner-merch{ padding:18px; font-family:'Fredoka',sans-serif; font-weight:700; font-size:16px; line-height:1.35; position:relative; z-index:2; text-shadow:0 1px 6px rgba(0,0,0,.15); }
+.arch-banner-photo{ position:absolute; inset:0; background:repeating-linear-gradient(115deg,rgba(255,255,255,.12) 0 18px, rgba(0,0,0,.05) 18px 36px); }
+.arch-note-card{ margin:0 16px 18px; background:#fff; border-radius:2px; padding:34px 18px 22px; text-align:center; position:relative; box-shadow:0 10px 24px rgba(0,0,0,.06);
+  clip-path:polygon(0% 1%,3% 0%,9% 1.4%,15% .2%,22% 1%,29% 0%,36% 1.2%,44% 0%,51% 1%,58% 0%,66% 1.3%,74% 0%,82% 1%,90% 0%,96% 1%,100% 0%,100% 100%,0% 100%); }
+.arch-note-emoji{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; margin:0 auto 18px; }
+.arch-note-text{ font-family:'Caveat',cursive; font-weight:700; font-size:26px; line-height:1.3; color:#1c1c1c; min-height:60px; }
+.arch-note-bookmark{ position:absolute; right:16px; bottom:14px; font-size:16px; color:#2b2b2b; opacity:.75; cursor:pointer; }
+
+/* WRITE screen */
+.arch-write-actions{ display:flex; align-items:center; gap:10px; }
+.arch-icon-pill{ height:38px; padding:0 14px; border-radius:999px; background:rgba(0,0,0,.06); border:none; font-size:15px; color:#555; cursor:pointer; }
+.arch-check-btn{ width:44px; height:44px; border-radius:50%; background:#f0574f; color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 6px 14px rgba(240,87,80,.4); }
+.arch-paper{ margin:18px 16px 20px; background:#fff; border-radius:2px; min-height:280px; padding:22px 18px; box-shadow:0 10px 24px rgba(0,0,0,.06);
+  clip-path:polygon(0% 1%,4% 0%,10% 1.2%,18% 0%,26% 1%,34% 0%,42% 1.1%,50% 0%,58% 1%,66% 0%,74% 1.2%,82% 0%,90% 1%,96% 0%,100% 1%,100% 100%,0% 100%); }
+.arch-paper textarea{ width:100%; height:220px; border:none; outline:none; resize:none; background:transparent; font:15px 'JetBrains Mono',monospace; color:#333; }
+.arch-paper textarea::placeholder{ color:#9a9a9a; }
+.arch-charcount{ text-align:right; margin:0 16px 16px; font:12px 'JetBrains Mono',monospace; color:#8a8a8a; }
+.arch-card{ margin:0 16px 16px; background:#fff; border-radius:16px; padding:16px; box-shadow:0 6px 16px rgba(0,0,0,.05); }
+.arch-card-title{ font:600 14.5px 'Inter',sans-serif; margin-bottom:14px; }
+.arch-moods{ display:flex; justify-content:space-between; gap:6px; }
+.arch-mood{ display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none; cursor:pointer; flex:1; }
+.arch-mood-circle{ width:46px; height:46px; border-radius:50%; border:2px solid var(--mc); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--mc); transition:background-color .15s ease,color .15s ease; }
+.arch-mood.selected .arch-mood-circle{ background:var(--mc); color:#fff; }
+.arch-mood-label{ font-size:11px; color:#555; }
+.arch-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+.arch-tag{ padding:11px 18px; border-radius:999px; border:none; font:600 13px 'Inter',sans-serif; color:#fff; cursor:pointer; opacity:.9; }
+.arch-tag.selected{ opacity:1; outline:2px solid rgba(0,0,0,.25); }
+
+/* YOU screen */
+.arch-you-avatar-row{ display:flex; align-items:center; justify-content:center; gap:14px; margin:6px 0 14px; }
+.arch-you-avatar{ width:96px; height:96px; border-radius:50%; background:#f0574f; display:flex; align-items:center; justify-content:center; font-size:44px; }
+.arch-guest-pill{ display:block; margin:0 auto 20px; padding:11px 34px; border-radius:999px; background:#f0574f; color:#fff; border:none; font:600 14px 'Fredoka',sans-serif; cursor:pointer; }
+.arch-stats-row{ display:flex; gap:12px; margin:0 16px 16px; }
+.arch-stats-card{ flex:1; background:#fff; border-radius:16px; padding:14px; display:flex; align-items:center; justify-content:center; gap:14px; box-shadow:0 6px 16px rgba(0,0,0,.05); }
+.arch-stat{ text-align:center; }
+.arch-stat b{ display:block; font:700 22px 'Fredoka',sans-serif; color:#f0574f; }
+.arch-stat span{ font-size:11px; color:#666; }
+.arch-stats-divider{ width:1px; align-self:stretch; background:#eee; }
+.arch-account-card{ flex:1; border-radius:16px; padding:14px; background:linear-gradient(160deg,#f0574f,#8fc4e8); border:1px solid #bfe3ee; color:#fff; font:600 12.5px 'Caveat',cursive; font-size:16px; display:flex; align-items:center; cursor:pointer; }
+.arch-year-banner{ margin:0 16px 14px; border-radius:16px; padding:18px; background:linear-gradient(90deg,#fff,#ffe08a); font:700 17px 'Fredoka',sans-serif; color:#e05a50; }
+.arch-outline-btn{ display:block; width:calc(100% - 32px); margin:0 16px 14px; padding:15px; border-radius:999px; border:1.5px solid #f0574f; background:transparent; color:#f0574f; font:600 14px 'Fredoka',sans-serif; cursor:pointer; text-align:center; }
+
+/* WELCOME screen — laid out as a flex column that fills the window's
+   full available height exactly (the ephemera collage flexes to soak
+   up whatever room is left), so the login screen never needs to
+   scroll no matter how tall or short the window ends up being. */
+.arch-screen[data-arch-screen="welcome"]{ padding-bottom:0; overflow:hidden; }
+.arch-screen[data-arch-screen="welcome"].is-active{ display:flex; flex-direction:column; }
+.arch-welcome{ position:relative; width:100%; height:100%; min-height:0; display:flex; flex-direction:column; padding-bottom:14px; background:linear-gradient(180deg,#f3f1e8 0%, #f3f1e8 30%, #f2857c 62%, #ef4a45 100%); }
+.arch-ephemera{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:1fr; gap:8px; padding:16px; align-items:stretch; }
+.arch-ephemera div{ background:#fff; border-radius:6px; min-height:0; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center; font:600 10px 'Inter',sans-serif; color:#555; padding:6px; box-shadow:0 3px 8px rgba(0,0,0,.08); transform:rotate(var(--r,0deg)); }
+.arch-welcome-quote{ flex:0 0 auto; font-family:'Caveat',cursive; font-weight:700; font-size:30px; color:#ffe27a; text-align:center; padding:14px 24px 0; line-height:1.15; text-shadow:0 2px 6px rgba(0,0,0,.15); }
+.arch-welcome-logo{ flex:0 0 auto; font-family:'Courier New',Courier,'JetBrains Mono',monospace; font-weight:700; font-size:52px; color:#ffe27a; text-align:left; padding:2px 20px 8px; }
+.arch-welcome-lock{ flex:0 0 auto; text-align:center; color:#fff; font:600 12.5px 'JetBrains Mono',monospace; margin-bottom:14px; opacity:.95; }
+.arch-signup-btn{ flex:0 0 auto; display:block; width:calc(100% - 40px); margin:0 20px 10px; padding:16px; border-radius:999px; background:#ffe27a; border:none; color:#7a3b1f; font:700 16px Helvetica,Arial,sans-serif; cursor:pointer; }
+.arch-guest-btn{ flex:0 0 auto; display:block; width:calc(100% - 40px); margin:0 20px 12px; padding:16px; border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; font:700 16px Helvetica,Arial,sans-serif; cursor:pointer; }
+.arch-welcome-legal{ flex:0 0 auto; text-align:center; color:rgba(255,255,255,.9); font-size:10.5px; padding:0 30px; line-height:1.4; }
+.arch-welcome-legal u{ cursor:pointer; }
+@media(max-width:600px){
+  #win-archived{ width:100%; }
+}
+</style>
 
 <style id="this-was-all-for-you-icon-css">
 .dicon[data-target="win-this-was-all-for-you"] .glyph{
@@ -903,7 +1095,7 @@
 <body>
 
 <div id="boot">
-  <div class="logo"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt="Shane Paul Alimboyao"></div>
+  <div class="logo"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/as%20logo%20black-02.png" alt="Shane Paul Alimboyao"></div>
   <div class="spinner" aria-hidden="true"></div>
   <div class="label">Logging user in…</div>
   <div class="txt" id="boottxt">Starting up…</div>
@@ -911,7 +1103,7 @@
 
 <div id="desktop">
   <div class="menubar">
-    <div class="brand"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt=""> Shane Paul Alimboyao</div>
+    <div class="brand"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/as%20logo%20black-02.png" alt=""> Shane Paul Alimboyao</div>
     <div class="item" id="menubar-apps-item">Apps</div>
     <div class="item" id="menubar-search-item">Search</div>
     <div class="item" id="menubar-window-item">Window</div>
@@ -926,27 +1118,31 @@
 
   <div class="icons">
     <div class="dicon" data-target="win-readme">
-      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt="About"></div>
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(2).webp" alt="About"></div>
       <span>About</span>
     </div>
     <div class="dicon" data-target="win-work">
-      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt="Works"></div>
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(1).webp" alt="Works"></div>
       <span>Works</span>
     </div>
     <div class="dicon" data-target="win-contact">
-      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75.webp" alt="Contact Me"></div>
       <span>Contact Me</span>
     </div>
     <div class="dicon" data-target="win-nowplaying">
-      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Now Playing"></div>
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75.webp" alt="Now Playing"></div>
       <span>Now Playing</span>
     </div>
     <div class="dicon" data-target="win-letterboxd">
-      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Watched"></div>
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75%20(1).webp" alt="Watched"></div>
       <span>Watched</span>
     </div>
+    <div class="dicon" data-target="win-archived">
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/icon-macos-824.png" alt="ARCHIVEd."></div>
+      <span>ARCHIVEd.</span>
+    </div>
     <div class="dicon" data-target="win-this-was-all-for-you">
-      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/images.jpg" alt="this was all for you♡"></div>
+      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/images.jpg" alt="this was all for you♡"></div>
       <span>this was all for you♡</span>
     </div>
     <div class="dicon" id="app-ball-icon" data-app="ball" role="button" tabindex="0" aria-pressed="false" aria-label="Ball">
@@ -989,6 +1185,145 @@
     </div>
   </div>
 
+  <!-- ARCHIVEd. app demo window -->
+  <div class="window" id="win-archived" style="top:60px; left:36vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">ARCHIVEd.</div>
+    </div>
+    <div class="win-body">
+      <div class="arch-app">
+
+        <!-- Welcome -->
+        <div class="arch-screen is-active" data-arch-screen="welcome">
+          <div class="arch-welcome">
+            <div class="arch-ephemera">
+              <div style="--r:-3deg;">Woodstock<br>ticket</div>
+              <div style="--r:2deg;">SPECIAL<br>$2.88</div>
+              <div style="--r:-2deg;">NEDERLAND<br>55c stamp</div>
+              <div style="--r:1deg;">KUNST<br>55/1 1979</div>
+              <div style="--r:-1deg;">Life is a journey,<br>enjoy the ride.</div>
+              <div style="--r:3deg;">Sorry for<br>being a bad<br>influence</div>
+              <div style="--r:-2deg;">I find you at the<br>end of every<br>lovesong</div>
+              <div style="--r:2deg;">You are doing<br>better than<br>you feel</div>
+              <div style="--r:-1deg;">"You can't control<br>every day..."</div>
+            </div>
+            <div class="arch-welcome-quote">For every thought left unsaid.</div>
+            <div class="arch-welcome-logo">ARCHIVEd.</div>
+            <div class="arch-welcome-lock">🔒 Privacy first. Anonymous only.</div>
+            <button class="arch-signup-btn" data-arch-go="home">Sign up/Log in</button>
+            <button class="arch-guest-btn" data-arch-go="home">Guest Mode</button>
+            <div class="arch-welcome-legal">By creating an account, you agree to the <u>Terms of Service</u> and acknowledge that you have read and understood the <u>Privacy Policy</u></div>
+          </div>
+        </div>
+
+        <!-- Home -->
+        <div class="arch-screen" data-arch-screen="home">
+          <div class="arch-topbar">
+            <button class="arch-round-btn" data-arch-go="welcome">✕</button>
+            <div class="arch-logo">ARCHIVEd.</div>
+            <button class="arch-round-btn">⋯</button>
+          </div>
+          <div class="arch-tabs">
+            <button class="arch-tab active">Most Recent</button>
+            <button class="arch-tab">Nearby</button>
+          </div>
+          <div class="arch-banner">
+            <div class="arch-banner-photo"></div>
+            <div class="arch-banner-merch">NEW!<br>Personal ARCHIVEd.<br>Merch Available now.</div>
+          </div>
+          <div class="arch-note-card">
+            <div class="arch-note-emoji" style="background:#f6c9dd;">🌸</div>
+            <div class="arch-note-text">You know I'd do anything for you</div>
+            <div class="arch-note-bookmark">🔖</div>
+          </div>
+          <div class="arch-note-card">
+            <div class="arch-note-emoji" style="background:#bdeecb;">😳</div>
+            <div class="arch-note-text">To be known the way you should is to put yourself through hell</div>
+            <div class="arch-note-bookmark">🔖</div>
+          </div>
+        </div>
+
+        <!-- Write -->
+        <div class="arch-screen" data-arch-screen="write">
+          <div class="arch-topbar">
+            <button class="arch-round-btn" data-arch-go="home">‹</button>
+            <div class="arch-write-actions">
+              <button class="arch-icon-pill">⬆</button>
+              <button class="arch-icon-pill">⋯</button>
+              <button class="arch-check-btn" data-arch-go="home">✓</button>
+            </div>
+          </div>
+          <div class="arch-paper">
+            <textarea id="arch-write-text" placeholder="What's on your mind..." maxlength="250"></textarea>
+          </div>
+          <div class="arch-charcount"><span id="arch-charcount-num">0</span>/250</div>
+          <div class="arch-card">
+            <div class="arch-card-title">How are you feeling now?</div>
+            <div class="arch-moods">
+              <button class="arch-mood" data-mood style="--mc:#6ea8e0;"><div class="arch-mood-circle">🙂</div><span class="arch-mood-label">Happy</span></button>
+              <button class="arch-mood" data-mood style="--mc:#e5847a;"><div class="arch-mood-circle">🙁</div><span class="arch-mood-label">Sad</span></button>
+              <button class="arch-mood" data-mood style="--mc:#e14c42;"><div class="arch-mood-circle">😠</div><span class="arch-mood-label">Angry</span></button>
+              <button class="arch-mood" data-mood style="--mc:#e8c34a;"><div class="arch-mood-circle">😐</div><span class="arch-mood-label">Empty</span></button>
+              <button class="arch-mood" data-mood style="--mc:#e8a24a;"><div class="arch-mood-circle">😑</div><span class="arch-mood-label">Other...</span></button>
+            </div>
+          </div>
+          <div class="arch-card">
+            <div class="arch-card-title">Why are you writing this?</div>
+            <div class="arch-tags">
+              <button class="arch-tag" data-tag style="background:#f0574f;">#crush</button>
+              <button class="arch-tag" data-tag style="background:#e07068;">#serious</button>
+              <button class="arch-tag" data-tag style="background:#f6dd7a; color:#7a5b12;">#relations</button>
+              <button class="arch-tag" data-tag style="background:#a9d3ea;">#mylove</button>
+              <button class="arch-tag" data-tag style="background:#e0918a;">#confession</button>
+              <button class="arch-tag" data-tag style="background:#f3c96c; color:#7a5b12;">other tags</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- You -->
+        <div class="arch-screen" data-arch-screen="you">
+          <div class="arch-topbar">
+            <button class="arch-round-btn" data-arch-go="welcome">✕</button>
+            <div class="arch-logo">ARCHIVEd.</div>
+            <button class="arch-round-btn">⋯</button>
+          </div>
+          <div class="arch-you-avatar-row">
+            <div class="arch-you-avatar">🤠</div>
+          </div>
+          <button class="arch-guest-pill">Guest</button>
+          <div class="arch-stats-row">
+            <div class="arch-stats-card">
+              <div class="arch-stat"><b>16</b><span>Kept</span></div>
+              <div class="arch-stats-divider"></div>
+              <div class="arch-stat"><b>8</b><span>Released</span></div>
+            </div>
+            <div class="arch-account-card">Create an account to save your works</div>
+          </div>
+          <div class="arch-year-banner">Year in ARCHIVEd. 2026</div>
+          <div class="arch-banner" style="margin:0 16px 18px;">
+            <div class="arch-banner-photo"></div>
+            <div class="arch-banner-merch">ARCHIVEd.<br>Merchandise</div>
+          </div>
+          <button class="arch-outline-btn">About ARCHIVEd.</button>
+          <button class="arch-outline-btn">Privacy &amp; Safety</button>
+          <button class="arch-outline-btn">Support &amp; Contact</button>
+        </div>
+
+        <!-- bottom nav -->
+        <div class="arch-nav" data-arch-nav style="display:none;">
+          <div class="arch-nav-indicator" data-arch-nav-indicator></div>
+          <button class="arch-nav-btn" data-arch-go="home" data-arch-tab="home">🏠<span>Home</span></button>
+          <button class="arch-nav-btn" data-arch-go="write" data-arch-tab="write">✏️<span>Write</span></button>
+          <button class="arch-nav-btn" data-arch-go="you" data-arch-tab="you">🤠<span>You</span></button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- 1DOLO folder window -->
   <div class="window" id="win-1dolo" style="  width:760px; max-width:90vw; top:170px; left:34vw; width:760px; max-width:90vw;">
     <div class="titlebar">
@@ -1017,19 +1352,23 @@
 
 
   <!-- 1DOLO Monthly folder -->
-  <div class="window" id="win-1dolo-monthly" style="width:600px; max-width:90vw;">
+  <div class="window" id="win-1dolo-monthly" style="width:600px; max-width:90vw; top:170px; left:30vw;">
     <div class="titlebar">
-      <span>Monthly</span>
-      <button class="window-close" type="button" aria-label="Close">×</button>
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Monthly</div>
     </div>
     <div class="finder" id="finder-1dolo-monthly"></div>
   </div>
 
   <!-- 1DOLO Officers folder -->
-  <div class="window" id="win-1dolo-officers" style="width:600px; max-width:90vw;">
+  <div class="window" id="win-1dolo-officers" style="width:600px; max-width:90vw; top:170px; left:34vw;">
     <div class="titlebar">
-      <span>Officers</span>
-      <button class="window-close" type="button" aria-label="Close">×</button>
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Officers</div>
     </div>
     <div class="finder" id="finder-1dolo-officers"></div>
   </div>
@@ -1151,7 +1490,7 @@
           <div class="prefs-row"><div><div class="prefs-label">Theme</div><div class="prefs-desc">Change the look of the windows.</div></div><select class="prefs-select" id="pref-theme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
           <div class="prefs-row"><div><div class="prefs-label">Accent color</div><div class="prefs-desc">Used for active controls and little details.</div></div><div class="prefs-colors"><button class="prefs-color active" data-accent="mint" style="background:#7be0ad" aria-label="Mint"></button><button class="prefs-color" data-accent="coral" style="background:#ff6f5e" aria-label="Coral"></button><button class="prefs-color" data-accent="amber" style="background:#ffcf6e" aria-label="Amber"></button><button class="prefs-color" data-accent="lilac" style="background:#8f8bd6" aria-label="Lilac"></button></div></div>
           <div class="prefs-row"><div><div class="prefs-label">Wallpaper</div><div class="prefs-desc">Pick the desktop background.</div></div></div>
-          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
+          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
         </section>
         <section class="prefs-pane" data-pref-pane="desktop">
           <h2 class="prefs-heading">Desktop</h2>
@@ -1178,14 +1517,14 @@
   </div>
 
   <div class="dock">
-    <div class="d-icon" data-target="win-readme"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt="About"></div>
-    <div class="d-icon" data-target="win-work"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt="Works"></div>
-    <div class="d-icon" data-target="win-contact"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
-    <div class="d-icon" data-target="win-nowplaying"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Now Playing"></div>
-    <div class="d-icon" data-target="win-letterboxd"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Watched"></div>
+    <div class="d-icon" data-target="win-readme"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(2).webp" alt="About"></div>
+    <div class="d-icon" data-target="win-work"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(1).webp" alt="Works"></div>
+    <div class="d-icon" data-target="win-contact"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75.webp" alt="Contact Me"></div>
+    <div class="d-icon" data-target="win-nowplaying"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75.webp" alt="Now Playing"></div>
+    <div class="d-icon" data-target="win-letterboxd"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75%20(1).webp" alt="Watched"></div>
     <div class="d-icon ball-glyph" id="app-ball-dock-icon" data-app="ball" role="button" tabindex="0" aria-pressed="false" title="Ball" aria-label="Ball"></div>
     <div class="d-icon" data-target="win-preferences" title="Preferences" aria-label="Preferences">
-      <img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="Preferences" style="width:100%;height:100%;object-fit:contain;">
+      <img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/1Settings_2025.png" alt="Preferences" style="width:100%;height:100%;object-fit:contain;">
     </div>
   </div>
 
@@ -1203,27 +1542,31 @@
     <div class="drawer-search"><input type="text" id="drawer-search-input" placeholder="Search" autocomplete="off" spellcheck="false"></div>
     <div class="drawer-grid" id="drawer-grid">
       <div class="drawer-app" data-target="win-readme">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt=""></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(2).webp" alt=""></div>
         <span>About</span>
       </div>
       <div class="drawer-app" data-target="win-work">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt=""></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(1).webp" alt=""></div>
         <span>Works</span>
       </div>
       <div class="drawer-app" data-target="win-contact">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt=""></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75.webp" alt=""></div>
         <span>Contact Me</span>
       </div>
       <div class="drawer-app" data-target="win-nowplaying">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt=""></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75.webp" alt=""></div>
         <span>Now Playing</span>
       </div>
       <div class="drawer-app" data-target="win-letterboxd">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt=""></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75%20(1).webp" alt=""></div>
         <span>Watched</span>
       </div>
+      <div class="drawer-app" data-target="win-archived">
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/icon-macos-824.png" alt=""></div>
+        <span>ARCHIVEd.</span>
+      </div>
       <div class="drawer-app" data-target="win-this-was-all-for-you">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/images.jpg" alt=""></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/images.jpg" alt=""></div>
         <span>this was all for you♡</span>
       </div>
       <div class="drawer-app" data-app="ball">
@@ -1231,7 +1574,7 @@
         <span>Ball</span>
       </div>
       <div class="drawer-app" data-target="win-preferences">
-        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="" style="object-fit:contain;"></div>
+        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/1Settings_2025.png" alt="" style="object-fit:contain;"></div>
         <span>Preferences</span>
       </div>
     </div>
@@ -1262,8 +1605,8 @@ const prefAccent = {
   lilac:{mint:'#8f8bd6', coral:'#ff6f9d'}
 };
 const prefWalls = {
-  newvegas:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')",
-  photo:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')",
+  newvegas:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg')",
+  photo:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/IMG_8263.jpeg')",
   solid:"linear-gradient(135deg, var(--desktop), var(--desktop-2))"
 };
 let prefs = {...PREF_DEFAULTS};
@@ -1336,8 +1679,9 @@ const cats = [
   {name:"UI/UX", color:"#ffcf6e"},
 ];
 const files = [
-  {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo"},
-  {name:"Irish Spring", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%2008335011111111111111111.png", target:"win-irish-springs"},
+  {name:"1DOLO", type:"Folder", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo"},
+  {name:"Irish Spring", type:"Folder", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/Screenshot%202025-01-22%2008335011111111111111111.png", target:"win-irish-springs"},
+  {name:"ARCHIVEd.", type:"App", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/icon-macos-824.png", color:"#f0574f", target:"win-archived"},
 ];
 const oneDoloFiles = [
   {name:"Monthly", type:"Folder", target:"win-1dolo-monthly"},
@@ -1348,8 +1692,8 @@ files.forEach(f=>{
   const el = document.createElement('div'); el.className='file';
   const thumbInner = f.gif
     ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">`
-    : (f.type || (cats[f.cat] && cats[f.cat].name) || '');
-  const bg = f.gif ? 'transparent' : (cats[f.cat] ? cats[f.cat].color : '#c9c0e0');
+    : (f.icon ? `<span style="font-size:26px;">${f.icon}</span>` : (f.type || (cats[f.cat] && cats[f.cat].name) || ''));
+  const bg = f.gif ? 'transparent' : (f.color || (cats[f.cat] ? cats[f.cat].color : '#c9c0e0'));
   el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || (cats[f.cat] && cats[f.cat].name+' file') || ''}</div>`;
   if(f.target){
     el.dataset.target = f.target;
@@ -1358,30 +1702,89 @@ files.forEach(f=>{
   finder.appendChild(el);
 });
 
-// contents shown inside the 1DOLO folder window — edit this array to add your own files/images
+// contents shown inside the 1DOLO folder window (rendered together with the
+// Monthly/Officers subfolders by renderOneDoloFolders() further down) —
+// edit this array to add your own files/images
 const dolo1Files = [
-  // {name:"example.jpg", type:"Image", gif:"https://link-to-image.jpg"},
+  {name:"1DOLO '26-'27 Guidelines v2", type:"PDF", pdf:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/1DOLO%20'26-'27%20Guidelines%20v2.pdf", thumb:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/Artboard%201%20copy%208.png"},
 ];
-const finder1dolo = document.getElementById('finder-1dolo');
-if(dolo1Files.length){
-  dolo1Files.forEach(f=>{
-    const el = document.createElement('div'); el.className='file';
-    const thumbInner = f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '');
-    const bg = f.gif ? 'transparent' : '#c9c0e0';
-    el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
-    finder1dolo.appendChild(el);
-  });
-} else {
-  finder1dolo.innerHTML = `<div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items to the dolo1Files array.</div>`;
+
+// PDF preview popup — used by files in the 1DOLO folder (add {pdf:"url"} to dolo1Files to use it elsewhere)
+// Embeds the Heyzine flipbook viewer for the 1DOLO guidelines document.
+let pdfPopupCloseTimer = null;
+const PDF_FLIPBOOK_URL = 'https://heyzine.com/flip-book/21d5fae10b.html';
+
+function getPdfPopup(){ return document.getElementById('pdf-preview-popup'); }
+function getPdfPopupFrame(){ return document.getElementById('pdf-preview-popup-frame'); }
+
+function openPdfPopup(url, name){
+  const popup = getPdfPopup();
+  const frame = getPdfPopupFrame();
+  const nameEl = document.getElementById('pdf-preview-popup-name');
+  if(!popup || !frame) return;
+
+  clearTimeout(pdfPopupCloseTimer);
+  frame.src = PDF_FLIPBOOK_URL;
+  if(nameEl) nameEl.textContent = name || 'Document.pdf';
+
+  popup.classList.add('is-open');
+  popup.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
 }
+
+function toggleMaximizePdfPopup(){
+  const popup = getPdfPopup();
+  if(!popup) return;
+  popup.classList.toggle('is-maximized');
+}
+
+function closePdfPopup(){
+  const popup = getPdfPopup();
+  const frame = getPdfPopupFrame();
+  if(!popup || !frame) return;
+
+  popup.classList.remove('is-open');
+  popup.classList.remove('is-maximized');
+  popup.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+
+  clearTimeout(pdfPopupCloseTimer);
+  pdfPopupCloseTimer = setTimeout(()=>{
+    if(!popup.classList.contains('is-open')) frame.src = '';
+  }, 380);
+}
+
+document.addEventListener('click', (e)=>{
+  const popup = getPdfPopup();
+  if(!popup) return;
+
+  const tlBtn = e.target.closest('.pdfpopup-titlebar .tl-btn');
+  if(tlBtn){
+    e.preventDefault();
+    const action = tlBtn.dataset.action;
+    if(action === 'close' || action === 'minimize') closePdfPopup();
+    else if(action === 'maximize') toggleMaximizePdfPopup();
+    return;
+  }
+
+  if(e.target === popup){
+    closePdfPopup();
+  }
+});
+
+document.addEventListener('keydown', (e)=>{
+  const popup = getPdfPopup();
+  if(!popup?.classList.contains('is-open')) return;
+  if(e.key === 'Escape') closePdfPopup();
+});
 
 // contents shown inside the Irish Springs folder window — edit this array to add your own files/images
 const irishSpringsFiles = [
-  {name:"irish spring 1.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%201.png"},
-  {name:"irish spring 2.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%202.png"},
-  {name:"irish spring 3.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%203.png"},
-  {name:"irish spring 4.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%204.png"},
-  {name:"irish spring 5.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%205.png"}
+  {name:"irish spring 1.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%201.png"},
+  {name:"irish spring 2.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%202.png"},
+  {name:"irish spring 3.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%203.png"},
+  {name:"irish spring 4.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%204.png"},
+  {name:"irish spring 5.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%205.png"}
 ];
 const finderIrishSprings = document.getElementById('finder-irish-springs');
 if(irishSpringsFiles.length){
@@ -1551,14 +1954,162 @@ function renderOneDoloFolders(){
     const el = document.createElement('div');
     el.className = 'file';
     el.innerHTML = `<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">${f.name}</div><div class="ftype">Folder</div>`;
-    el.addEventListener('dblclick', ()=>{
-      const win = document.getElementById(f.target);
-      if(win) win.style.display = 'block';
-    });
+    el.addEventListener('click', ()=> focusWindow(f.target));
+    finder.appendChild(el);
+  });
+  dolo1Files.forEach(f=>{
+    const el = document.createElement('div'); el.className='file';
+    const thumbInner = f.thumb
+      ? `<img src="${f.thumb}" alt="${f.name}" loading="lazy">`
+      : (f.pdf
+        ? `<div class="pdf-badge">PDF</div>`
+        : (f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '')));
+    const bg = (f.thumb || f.gif || f.pdf) ? 'transparent' : '#c9c0e0';
+    el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
+    if(f.pdf){
+      el.classList.add('pdf-file');
+      el.addEventListener('click', (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        openPdfPopup(f.pdf, f.name);
+      });
+    }
     finder.appendChild(el);
   });
 }
 renderOneDoloFolders();
+
+// ARCHIVEd. app demo (inside the Works folder)
+(function(){
+  const app = document.querySelector('#win-archived .arch-app');
+  if(!app) return;
+  const nav = app.querySelector('[data-arch-nav]');
+  const navIndicator = app.querySelector('[data-arch-nav-indicator]');
+  const navTabOrder = ['home', 'write', 'you'];
+
+  function archGoTo(screen){
+    app.querySelectorAll('.arch-screen').forEach(s=> s.classList.toggle('is-active', s.dataset.archScreen === screen));
+    if(nav) nav.style.display = (screen === 'welcome') ? 'none' : 'flex';
+    app.querySelectorAll('.arch-nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.archTab === screen));
+    const tabIndex = navTabOrder.indexOf(screen);
+    if(navIndicator && tabIndex !== -1) navIndicator.style.transform = `translateX(${tabIndex * 100}%)`;
+  }
+
+  app.querySelectorAll('[data-arch-go]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); archGoTo(btn.dataset.archGo); });
+  });
+
+  // draggable segmented-control nav — press and drag across the pill
+  // to slide between Home / Write / You, not just tap a button
+  if(nav && navIndicator){
+    let dragging = false;
+    let startX = 0;
+    let navRect = null;
+    let dragIndex = 0;
+    let suppressNextNavClick = false;
+
+    // continuous fractional position (in "tab widths") under the pointer,
+    // clamped to the pill — used while actively dragging so the indicator
+    // glides with the finger instead of hopping between slots
+    function posFromClientX(clientX){
+      const rel = Math.min(Math.max(clientX - navRect.left, 0), navRect.width);
+      const pos = (rel / navRect.width) * navTabOrder.length;
+      return Math.min(navTabOrder.length - 1, Math.max(0, pos));
+    }
+
+    function indexFromPos(pos){
+      return Math.min(navTabOrder.length - 1, Math.max(0, Math.round(pos)));
+    }
+
+    nav.addEventListener('pointerdown', (e)=>{
+      e.stopPropagation();
+      if(nav.style.display === 'none') return;
+      navRect = nav.getBoundingClientRect();
+      startX = e.clientX;
+      dragging = false;
+      const activeBtn = app.querySelector('.arch-nav-btn.active');
+      const activeIndex = activeBtn ? navTabOrder.indexOf(activeBtn.dataset.archTab) : 0;
+      dragIndex = activeIndex === -1 ? 0 : activeIndex;
+    });
+
+    nav.addEventListener('pointermove', (e)=>{
+      e.stopPropagation();
+      if(navRect === null || e.buttons === 0) return;
+      if(!dragging && Math.abs(e.clientX - startX) < 6) return;
+      if(!dragging){
+        dragging = true;
+        nav.classList.add('is-dragging');
+        navIndicator.style.transition = 'none';
+        nav.setPointerCapture(e.pointerId);
+      }
+      e.preventDefault();
+      const pos = posFromClientX(e.clientX);
+      dragIndex = indexFromPos(pos);
+      navIndicator.style.transform = `translateX(${pos * 100}%)`;
+    });
+
+    function endNavDrag(e){
+      e.stopPropagation();
+      navRect = null;
+      if(dragging){
+        dragging = false;
+        nav.classList.remove('is-dragging');
+        // re-enable the transition first so the snap into place animates
+        navIndicator.style.transition = '';
+        navIndicator.style.transform = `translateX(${dragIndex * 100}%)`;
+        suppressNextNavClick = true;
+        archGoTo(navTabOrder[dragIndex]);
+      }
+    }
+    nav.addEventListener('pointerup', endNavDrag);
+    nav.addEventListener('pointercancel', endNavDrag);
+
+    // swallow the click that follows a drag so it doesn't also toggle
+    // whichever button happened to be under the finger on release
+    nav.addEventListener('click', (e)=>{
+      if(!suppressNextNavClick) return;
+      suppressNextNavClick = false;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+  }
+
+  // single-select mood picker
+  app.querySelectorAll('[data-mood]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      app.querySelectorAll('[data-mood]').forEach(b=> b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+
+  // multi-select tags
+  app.querySelectorAll('[data-tag]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); btn.classList.toggle('selected'); });
+  });
+
+  // Most Recent / Nearby segmented control
+  const tabsWrap = app.querySelector('.arch-tabs');
+  if(tabsWrap){
+    tabsWrap.querySelectorAll('.arch-tab').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        tabsWrap.querySelectorAll('.arch-tab').forEach(b=> b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  }
+
+  // live character counter on the write screen
+  const archTextarea = app.querySelector('#arch-write-text');
+  const archCount = app.querySelector('#arch-charcount-num');
+  if(archTextarea && archCount){
+    archTextarea.addEventListener('input', ()=>{ archCount.textContent = archTextarea.value.length; });
+  }
+
+  archGoTo('welcome');
+})();
+
 
 
 // draggable windows — clamped so the titlebar (and its buttons) can
@@ -2078,10 +2629,10 @@ function renderLbCard(f){
 // Four Favorite Films — hand-picked, not pulled from Letterboxd, since
 // favorites aren't exposed via the RSS feed. Edit this array to change picks.
 const FAVORITE_FILMS = [
-  { title:'The Florida Project', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/floridaproject.jpg' },
-  { title:'Over the Garden Wall', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/gardenwall.jpg' },
-  { title:'Death Becomes Her', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/deathbecomesher.jpg' },
-  { title:'The Thing', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/thething.jpg' },
+  { title:'The Florida Project', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/floridaproject.jpg' },
+  { title:'Over the Garden Wall', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/gardenwall.jpg' },
+  { title:'Death Becomes Her', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/deathbecomesher.jpg' },
+  { title:'The Thing', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/thething.jpg' },
 ];
 const favoritesGrid = document.getElementById('lb-grid-favorites');
 FAVORITE_FILMS.forEach(f => favoritesGrid.appendChild(renderLbCard(f)));
@@ -2945,6 +3496,19 @@ if(rmTexts.length){
   </div>
 </div>
 
+<div id="pdf-preview-popup" aria-hidden="true">
+  <div class="pdfpopup-panel" role="dialog" aria-modal="true" aria-label="PDF preview">
+    <div class="pdfpopup-titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="pdfpopup-name" id="pdf-preview-popup-name"></div>
+    </div>
+    <iframe id="pdf-preview-popup-frame" class="fp-iframe" allowfullscreen="allowfullscreen" allow="autoplay; fullscreen; clipboard-write" scrolling="no" src="" title="PDF preview"></iframe>
+  </div>
+</div>
+
+
 <script id="home-calendar-widget-script">
 (function(){
   function renderCalendar(){
@@ -2990,8 +3554,30 @@ if(rmTexts.length){
 <!-- "Ball" app: a full-screen bouncing ball, toggled on/off from its icon -->
 <canvas id="ball-app-canvas" aria-hidden="true"></canvas>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script id="ball-app-script">
+// three.js (~600KB) is only fetched the first time the Ball toy is opened,
+// instead of on every page load, since it's an optional Easter-egg app.
+(function(){
+  const launchers = Array.from(document.querySelectorAll('[data-app="ball"]'));
+  if(!launchers.length) return;
+  let started = false;
+  function boot(){
+    if(started) return;
+    started = true;
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload = ()=> initBallApp(true);
+    document.head.appendChild(s);
+  }
+  launchers.forEach(el=>{
+    el.addEventListener('click', boot);
+    el.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); boot(); }
+    });
+  });
+})();
+
+function initBallApp(autoStart){
 (function(){
   const canvas = document.getElementById('ball-app-canvas');
   const launchers = Array.from(document.querySelectorAll('[data-app="ball"]'));
@@ -3366,7 +3952,10 @@ if(rmTexts.length){
       }
     });
   });
+
+  if(autoStart) setActive(true);
 })();
+}
 </script>
 
 </body>
