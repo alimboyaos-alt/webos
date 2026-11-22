@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Shane Paul Alimboyao</title>
-<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/as%20logo%20black-02.png">
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&family=Fredoka:wght@500;600;700&family=Caveat:wght@600;700&family=Caprasimo&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --desktop:#dcd6e8;
@@ -106,7 +104,7 @@
     position:absolute; inset:-24px;
     background-image: var(--boot-bg-image,
       linear-gradient(180deg, rgba(20,16,30,.5), rgba(20,16,30,.3) 18%, rgba(20,16,30,.55) 82%, rgba(20,16,30,.7)),
-      url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg'));
+      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg'));
     background-position:center 28%, center 28%;
     background-size:cover, cover;
     background-repeat:no-repeat, no-repeat;
@@ -138,7 +136,7 @@
     position:fixed; inset:0;
     background-image:
       linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
-      url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg');
+      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg');
     background-position: center 28%, center 28%;
     background-size: cover, cover;
     background-repeat: no-repeat, no-repeat;
@@ -316,6 +314,19 @@
     z-index:10;
   }
   body.prefs-dark .window{ box-shadow:0 30px 60px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.3); }
+  /* snap-to-maximize preview — shown while dragging a window's titlebar
+     close to the very top of the screen, previewing the fullscreen spot
+     it'll snap into if released there */
+  .snap-preview{
+    position:fixed; left:18px; right:18px; z-index:40; border-radius:12px;
+    background:linear-gradient(180deg, var(--dock-bg-1), var(--dock-bg-2));
+    border:1px solid var(--dock-border);
+    backdrop-filter:blur(14px) saturate(180%);
+    -webkit-backdrop-filter:blur(14px) saturate(180%);
+    opacity:0; pointer-events:none;
+    transition:opacity .18s ease;
+  }
+  .snap-preview.is-visible{ opacity:.6; }
   .resize-handle{
     position:absolute; right:2px; bottom:2px; width:16px; height:16px; cursor:nwse-resize; z-index:6; touch-action:none;
     color:var(--dim); opacity:.55; transition:opacity .15s ease;
@@ -333,7 +344,7 @@
   .tl-btn::after{ content:''; position:absolute; inset:-6px; }
   .window.is-minimized{ pointer-events:none; }
   .tl-title{ flex:1; text-align:center; font-size:12px; font-weight:500; color:var(--dim); margin-right:40px;}
-  .win-body{ padding:20px 22px; overflow:auto; font-size:13.5px; line-height:1.6;}
+  .win-body{ padding:20px 22px; overflow:auto; font-size:13.5px; line-height:1.6; flex:1; min-height:0; }
 
   /* READme.app */
   #win-readme{ width:min(560px,86vw); top:70px; left:6vw;}
@@ -357,7 +368,8 @@
   .finder-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px;}
   .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer; transition:background .2s ease;}
   .file:hover{ background:var(--hover);}
-  .file .thumb{ width:64px; height:64px; border-radius:22%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+  .file .thumb{ width:64px; height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+.file .thumb .folder-icon{ font-size:30px; line-height:1; }
   .file .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
   .file:hover .thumb{ transform:translateY(-4px) scale(1.06); box-shadow:0 10px 18px rgba(0,0,0,.18); }
   .file:hover .thumb img{ transform:scale(1.1); }
@@ -407,6 +419,138 @@
   .np-genre-chips{ display:flex; flex-wrap:wrap; gap:6px; }
   .np-genre-chip{ font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.03em; color:var(--ink); background:var(--surface-3); border:1px solid var(--border); border-radius:20px; padding:4px 10px; text-transform:lowercase; transition:background-color .35s ease, border-color .35s ease; }
 
+  /* Photos.app — iOS "Library" layout */
+  #win-photos{ width:min(480px,92vw); height:min(680px,80vh); top:90px; left:30vw;}
+  #win-photos .photos-body{ position:relative; padding:0; overflow:hidden; background:#000; color:#fff; line-height:1.2; }
+  .ph-scroll{ position:absolute; inset:0; overflow-y:auto; padding:104px 0 96px; scrollbar-width:none; }
+  .ph-scroll::-webkit-scrollbar{ display:none; }
+  .ph-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:2px; }
+  .ph-grid[data-cols="4"]{ grid-template-columns:repeat(4, 1fr); }
+  .ph-grid[data-cols="5"]{ grid-template-columns:repeat(5, 1fr); }
+  .ph-tile{ position:relative; aspect-ratio:1/1; overflow:hidden; cursor:pointer; background:#1c1c1e; }
+  .ph-tile img{ width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
+  .ph-tile .ph-fill{ position:absolute; inset:0; }
+  .ph-dur{ position:absolute; right:7px; bottom:5px; font-size:12px; font-weight:600; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.55); }
+  .ph-check{ position:absolute; right:6px; bottom:6px; width:20px; height:20px; border-radius:50%; border:2px solid #fff; background:rgba(0,0,0,.25); display:none; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+  .ph-body-selecting .ph-check{ display:flex; }
+  .ph-body-selecting .ph-dur{ display:none; }
+  .ph-tile.is-selected .ph-check{ background:#0a84ff; border-color:#0a84ff; }
+  .ph-tile.is-selected::after{ content:''; position:absolute; inset:0; background:rgba(10,132,255,.22); }
+
+  .ph-header{ position:absolute; top:0; left:0; right:0; z-index:3; padding:16px 14px 26px 16px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    background:linear-gradient(180deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,0) 100%); pointer-events:none; }
+  .ph-header > *{ pointer-events:auto; }
+  .ph-title{ font-size:32px; font-weight:700; letter-spacing:-.01em; }
+  .ph-date{ margin-top:2px; font-size:15px; font-weight:600; color:rgba(255,255,255,.78); }
+  .ph-actions{ display:flex; gap:8px; align-items:center; padding-top:4px; }
+  .ph-glass{ display:flex; align-items:center; justify-content:center; height:38px; border:0; color:#fff; cursor:pointer; font-family:'Inter',sans-serif;
+    background:rgba(120,120,128,.42); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12), 0 4px 14px rgba(0,0,0,.3); transition:background-color .15s ease, transform .15s ease; }
+  .ph-glass:hover{ background:rgba(140,140,148,.52); }
+  .ph-glass:active{ transform:scale(.96); }
+  .ph-glass.round{ width:38px; border-radius:50%; padding:0; }
+  .ph-glass.pill{ padding:0 16px; border-radius:20px; font-size:15px; font-weight:500; }
+  .ph-glass svg{ width:18px; height:18px; display:block; }
+
+  .ph-bar{ position:absolute; left:0; right:0; bottom:14px; z-index:3; display:flex; align-items:center; justify-content:center; gap:10px; padding:0 14px; pointer-events:none; }
+  .ph-bar > *{ pointer-events:auto; }
+  .ph-bar .ph-glass.round{ width:46px; height:46px; flex-shrink:0; }
+  .ph-bar .ph-glass.round svg{ width:24px; height:24px; }
+  .ph-seg{ position:relative; display:flex; flex:1; max-width:290px; height:46px; padding:3px; border-radius:23px;
+    background:rgba(120,120,128,.42); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12), 0 4px 14px rgba(0,0,0,.3); }
+  .ph-seg-thumb{ position:absolute; top:3px; bottom:3px; left:3px; width:calc((100% - 6px) / 3); border-radius:20px; background:rgba(190,190,200,.38); box-shadow:inset 0 0 0 1px rgba(255,255,255,.14); transition:transform .25s cubic-bezier(.3,.8,.3,1); }
+  .ph-seg button{ position:relative; z-index:1; flex:1; border:0; background:none; color:#fff; font-family:'Inter',sans-serif; font-size:15px; font-weight:500; cursor:pointer; }
+  /* Photos.app — "Collections" view */
+  .ph-coll{ position:absolute; inset:0; z-index:4; background:linear-gradient(180deg,#fff 0%,#f6f6f9 100%); color:#000;
+    opacity:0; visibility:hidden; pointer-events:none; transition:opacity .25s ease, visibility 0s linear .25s; }
+  .ph-view-coll .ph-coll{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .25s ease, visibility 0s linear 0s; }
+  .ph-coll-head{ position:absolute; top:0; left:0; right:0; z-index:2; display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px 12px 22px; background:rgba(255,255,255,.82); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border-bottom:1px solid rgba(0,0,0,.07); }
+  .ph-coll-title{ font-size:32px; font-weight:700; letter-spacing:-.015em; }
+  .ph-coll-actions{ display:flex; align-items:center; gap:10px; }
+  .ph-avatar{ width:42px; height:42px; border-radius:50%; background:#ececf1; display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 0 0 1px rgba(0,0,0,.06); }
+  .ph-avatar img{ width:62%; height:62%; object-fit:contain; display:block; }
+  .ph-lglass{ display:flex; align-items:center; justify-content:center; border:0; cursor:pointer; color:#0a84ff; font-family:'Inter',sans-serif;
+    background:rgba(255,255,255,.72); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:0 0 0 1px rgba(0,0,0,.08), 0 6px 18px rgba(0,0,0,.1); transition:background-color .15s ease, transform .15s ease; }
+  .ph-lglass:hover{ background:rgba(255,255,255,.95); }
+  .ph-lglass:active{ transform:scale(.96); }
+  .ph-lglass.round{ width:42px; height:42px; border-radius:50%; padding:0; color:#111; }
+  .ph-lglass.round svg{ width:20px; height:20px; display:block; }
+  .ph-coll-scroll{ position:absolute; inset:0; overflow-y:auto; padding:84px 0 110px; scrollbar-width:none; }
+  .ph-coll-scroll::-webkit-scrollbar{ display:none; }
+  .ph-sec{ margin-bottom:22px; }
+  .ph-sec-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 18px 10px 22px; }
+  .ph-sec-title{ display:flex; align-items:center; gap:6px; font-size:21px; font-weight:700; letter-spacing:-.01em; }
+  .ph-sec-title svg{ width:15px; height:15px; color:#8e8e93; }
+  .ph-sec-tools{ display:flex; align-items:center; gap:8px; }
+  .ph-edit{ height:30px; padding:0 15px; border:0; border-radius:15px; background:#ececf1; color:#0a84ff; font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .ph-chev{ width:30px; height:30px; border:0; border-radius:50%; background:#ececf1; color:#0a84ff; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:transform .2s ease; }
+  .ph-chev svg{ width:14px; height:14px; display:block; }
+  .ph-sec.is-collapsed .ph-chev{ transform:rotate(-90deg); }
+  .ph-sec.is-collapsed .ph-row{ display:none; }
+  .ph-row{ display:flex; gap:12px; overflow-x:auto; padding:2px 0 14px 22px; scroll-padding-left:22px; scroll-snap-type:x proximity; scrollbar-width:none; }
+  .ph-row::-webkit-scrollbar{ display:none; }
+  .ph-row::after{ content:''; flex:0 0 10px; }
+  .ph-card{ position:relative; flex:0 0 calc((100% - 72px) / 3); aspect-ratio:1/1; border-radius:18px; overflow:hidden; cursor:pointer; scroll-snap-align:start;
+    box-shadow:0 8px 20px rgba(30,20,60,.16); transition:transform .2s ease, box-shadow .2s ease; }
+  .ph-card:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(30,20,60,.22); }
+  .ph-card:active{ transform:scale(.97); }
+  .ph-card-bg{ position:absolute; inset:0; background-size:cover; background-position:center; }
+  .ph-card::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.5) 100%); }
+  .ph-card-label{ position:absolute; left:11px; right:8px; bottom:9px; z-index:1; color:#fff; font-size:13.5px; font-weight:600; line-height:1.18; text-shadow:0 1px 6px rgba(0,0,0,.45); }
+  .ph-card-heart{ position:absolute; top:9px; right:9px; z-index:1; width:18px; height:18px; color:#fff; }
+
+  .ph-bar-coll{ position:absolute; left:0; right:0; bottom:14px; z-index:5; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px;
+    opacity:0; visibility:hidden; pointer-events:none; transition:opacity .25s ease, visibility 0s linear .25s; }
+  .ph-view-coll .ph-bar-coll{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .25s ease, visibility 0s linear 0s; }
+  .ph-tabs{ display:flex; padding:4px; gap:2px; border-radius:30px;
+    background:rgba(255,255,255,.78); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:0 0 0 1px rgba(0,0,0,.08), 0 6px 18px rgba(0,0,0,.12); }
+  .ph-tab{ display:flex; flex-direction:column; align-items:center; gap:3px; min-width:92px; padding:7px 14px 6px; border:0; border-radius:26px; background:none; color:#1c1c1e; cursor:pointer; font-family:'Inter',sans-serif; font-size:11.5px; font-weight:500; }
+  .ph-tab svg{ width:26px; height:26px; display:block; }
+  .ph-tab.is-active{ background:rgba(120,120,128,.16); color:#0a84ff; }
+  .ph-bar-coll .ph-lglass.round{ width:50px; height:50px; }
+  .ph-bar-coll .ph-lglass.round svg{ width:24px; height:24px; }
+  /* Photos.app — album detail view */
+  .ph-album{ position:absolute; inset:0; z-index:6; background:#fff; color:#000;
+    opacity:0; visibility:hidden; pointer-events:none; transform:translateX(28px);
+    transition:opacity .25s ease, transform .3s cubic-bezier(.3,.8,.3,1), visibility 0s linear .3s; }
+  .ph-view-album .ph-album{ opacity:1; visibility:visible; pointer-events:auto; transform:none;
+    transition:opacity .25s ease, transform .3s cubic-bezier(.3,.8,.3,1), visibility 0s linear 0s; }
+  .ph-album-scroll{ position:absolute; inset:0; overflow-y:auto; scrollbar-width:none; }
+  .ph-album-scroll::-webkit-scrollbar{ display:none; }
+  .ph-album-hero{ position:relative; height:56%; min-height:260px; background-size:cover; background-position:center; }
+  .ph-album-hero::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.5) 100%); }
+  .ph-album-meta{ position:absolute; left:22px; right:80px; bottom:20px; z-index:1; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.4); }
+  .ph-album-title{ font-size:38px; font-weight:700; letter-spacing:-.02em; line-height:1.05; }
+  .ph-album-count{ display:flex; align-items:center; gap:7px; margin-top:8px; font-size:16px; font-weight:600; }
+  .ph-album-count svg{ width:17px; height:17px; display:block; }
+  .ph-album-play{ position:absolute; right:18px; bottom:20px; z-index:1; width:46px; height:46px; border-radius:50%; border:0; padding:0; cursor:pointer; color:#fff;
+    background:rgba(255,255,255,.34); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+    display:flex; align-items:center; justify-content:center; transition:transform .15s ease, background-color .15s ease; }
+  .ph-album-play:hover{ background:rgba(255,255,255,.48); }
+  .ph-album-play:active{ transform:scale(.94); }
+  .ph-album-play svg{ width:20px; height:20px; display:block; margin-left:2px; }
+  .ph-album-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:2px; padding-bottom:100px; background:#fff; }
+  .ph-album-grid .ph-tile{ cursor:default; }
+  .ph-album-empty{ grid-column:1/-1; padding:44px 24px; text-align:center; font-size:13px; color:#8e8e93; }
+  .ph-album-top{ position:absolute; top:14px; left:14px; right:14px; z-index:2; display:flex; align-items:center; justify-content:space-between; pointer-events:none; }
+  .ph-album-top > *{ pointer-events:auto; }
+  .ph-album-top .ph-lglass.round{ width:44px; height:44px; }
+  .ph-album-top .ph-lglass.round svg{ width:20px; height:20px; }
+  .ph-album-top-right{ display:flex; align-items:center; gap:10px; }
+  .ph-lglass.pill{ height:44px; padding:0 22px; border-radius:22px; font-size:16px; font-weight:500; color:#111; }
+  .ph-album-bar{ position:absolute; left:0; right:0; bottom:14px; z-index:2; display:flex; align-items:center; justify-content:space-between; padding:0 14px; pointer-events:none; }
+  .ph-album-bar > *{ pointer-events:auto; }
+  .ph-album-bar .ph-lglass.round{ width:50px; height:50px; }
+  .ph-album-bar .ph-lglass.round svg{ width:24px; height:24px; }
+  @media (max-width:760px){
+    .ph-title{ font-size:34px; }
+    .ph-scroll{ padding-top:128px; }
+  }
+
   /* Letterboxd.app */
   #win-letterboxd{ width:min(460px,88vw); top:300px; left:32vw;}
   .lb-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#14181c; }
@@ -416,7 +560,8 @@
   .lb-section-title{ font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); margin-bottom:12px; }
   .lb-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:0; }
   .lb-card{ text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px; cursor:pointer; min-width:0; }
-  .lb-poster{ width:100%; aspect-ratio:2/3; border-radius:8px; overflow:hidden; background-color:var(--surface-3); background-size:cover; background-position:center; box-shadow:0 8px 16px rgba(30,20,60,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background-color .35s ease; }
+  .lb-poster{ position:relative; width:100%; aspect-ratio:2/3; border-radius:8px; overflow:hidden; background-color:var(--surface-3); background-size:cover; background-position:center; box-shadow:0 8px 16px rgba(30,20,60,.18); transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background-color .35s ease; }
+.lb-liked{ position:absolute; top:5px; right:5px; width:18px; height:18px; border-radius:50%; background:rgba(20,16,26,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; color:#ff6f5e; font-size:10px; line-height:1; pointer-events:none; }
   .lb-card:hover .lb-poster{ transform:translateY(-4px) scale(1.06); box-shadow:0 14px 22px rgba(0,0,0,.24); }
   .lb-title{ font-size:11px; font-weight:600; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .lb-meta{ font-size:10px; color:var(--dim); font-family:'JetBrains Mono', monospace; letter-spacing:.02em; }
@@ -427,7 +572,7 @@
 
   /* dock — liquid glass */
   .dock{
-    position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:100;
+    position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:5;
     display:flex; gap:12px; padding:9px 14px;
     background:linear-gradient(180deg, var(--dock-bg-1), var(--dock-bg-2));
     backdrop-filter:blur(22px) saturate(180%);
@@ -440,8 +585,16 @@
       0 -6px 14px rgba(255,255,255,.18) inset,
       0 0 0 1px rgba(255,255,255,.08) inset;
     isolation:isolate;
+    opacity:1;
+    mask-image:none; -webkit-mask-image:none;
     transition:background-color .35s ease, border-color .35s ease;
   }
+  /* sits below windows by default (so a window dragged over it truly
+     covers it), and jumps above them while the pointer hovers the
+     dock's horizontal band at the bottom of the screen — only the
+     window-covered slice fades in/out (via the mask above), the rest
+     of the dock was already visible and stays that way the whole time */
+  .dock.dock-hovered{ z-index:30; }
   .dock::before{
     content:'';
     position:absolute; inset:0; border-radius:22px; pointer-events:none;
@@ -486,19 +639,20 @@
       padding-top:50px; padding-bottom:112px;
       background-image:
         linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
-        url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/IMG_8263.jpeg');
+        url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg');
       background-position: center 28%, center 28%;
       background-size: cover, cover;
       background-repeat: no-repeat, no-repeat;
       background-attachment: scroll, scroll;
     }
 
-    /* Now Playing, Watched, and Ball also live in the bottom dock —
+    /* Now Playing, Watched, and Photos also live in the bottom dock —
        drop them from the dock on mobile so they aren't duplicated now
        that they're in the grid below */
     .dock .d-icon[data-target="win-nowplaying"],
     .dock .d-icon[data-target="win-letterboxd"],
-    .dock .d-icon[data-app="ball"]{ display:none !important; }
+    .dock .d-icon[data-target="win-photos"],
+    .dock .d-icon[data-app="1dolo"]{ display:none !important; }
 
     /* About, Works, and Contact Me already live in the bottom dock —
        drop them from the home-screen grid on mobile so it only shows
@@ -508,8 +662,7 @@
     .icons .dicon[data-target="win-contact"]{ display:none !important; }
 
     /* iPhone-style homescreen grid — 4 columns; with About, Works, and
-       Contact Me kept dock-only, this now shows Now Playing, Watched,
-       Ball, and this was all for you — icons target ~140x140px (85%
+       Contact Me kept dock-only, this now shows Now Playing and Watched — icons target ~140x140px (85%
        of a ~165px cell) and shrink further on narrow phones */
     .icons{
       display:grid;
@@ -572,7 +725,7 @@
 
 /* 1DOLO folder contents: Monthly and Officers side-by-side */
 #finder-1dolo{
-  grid-template-columns:repeat(2, minmax(0, 1fr));
+  grid-template-columns:repeat(3, minmax(0, 1fr));
   align-items:start;
 }
 #finder-1dolo .file{
@@ -585,46 +738,6 @@
 }
 
 
-/* this was all for you♡ home-screen app */
-#finder .file[data-target="win-this-was-all-for-you"] .thumb{
-  overflow:hidden;
-  background:transparent !important;
-}
-#finder .file[data-target="win-this-was-all-for-you"] .thumb img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-
-
-
-/* this was all for you♡ — lower-right desktop position */
-.icons .dicon[data-target="win-this-was-all-for-you"]{
-  position:fixed;
-  left:auto;
-  top:auto;
-  right:34px;
-  bottom:34px;
-  z-index:10;
-}
-@media (max-width:700px){
-  .icons .dicon[data-target="win-this-was-all-for-you"]{
-    right:20px;
-    bottom:24px;
-  }
-}
-
-/* on mobile it should just sit in the grid like every other icon,
-   not float fixed at full grid-cell width (which blew it up huge) */
-@media (max-width:760px){
-  .icons .dicon[data-target="win-this-was-all-for-you"]{
-    position:static;
-    left:auto; top:auto; right:auto; bottom:auto;
-    z-index:auto;
-  }
-}
 
 
 /* Home-screen calendar widget */
@@ -693,24 +806,6 @@
   .home-cal-day{font-size:7.5px; line-height:15px; height:15px;}
 }
 
-/* "Ball" app icon glyph — a little CSS sphere so it doesn't need an image asset */
-.ball-glyph{
-  background:radial-gradient(circle at 33% 28%, #ffcabf 0%, var(--coral) 46%, #d1493c 100%);
-  box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 4px 6px rgba(255,255,255,.35);
-}
-.dock .d-icon.ball-glyph{ width:42px; height:42px; }
-
-/* Full-screen bounce-physics overlay for the "Ball" app */
-#ball-app-canvas{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  z-index:150;
-  pointer-events:none;
-  display:none;
-}
-#ball-app-canvas.is-active{ display:block; }
 
 /* Prevent the calendar widget from creating a backdrop/compositing glow in the
    menu bar above it. */
@@ -828,72 +923,6 @@
   #irish-spring-image-popup .ispopup-close{top:-10px;right:-6px;}
 }
 
-/* PDF file badge (1DOLO folder) + PDF preview popup */
-.pdf-badge{
-  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(160deg,#ff6f5e,#e2493a);
-  color:#fff; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight:700; font-size:12px; letter-spacing:.04em; border-radius:8px;
-}
-#finder-1dolo .file.pdf-file{ cursor:pointer; }
-
-#pdf-preview-popup{
-  position:fixed; inset:0; z-index:9999;
-  display:flex; align-items:center; justify-content:center;
-  padding:28px; opacity:0; visibility:hidden; pointer-events:none;
-  background:rgba(0,0,0,0); backdrop-filter:blur(0);
-  transition:opacity .28s cubic-bezier(.22,1,.36,1),
-             background .28s cubic-bezier(.22,1,.36,1),
-             backdrop-filter .28s cubic-bezier(.22,1,.36,1),
-             visibility 0s linear .28s;
-}
-#pdf-preview-popup.is-open{
-  opacity:1; visibility:visible; pointer-events:auto;
-  background:rgba(0,0,0,.72); backdrop-filter:blur(5px);
-  transition:opacity .28s cubic-bezier(.22,1,.36,1),
-             background .28s cubic-bezier(.22,1,.36,1),
-             backdrop-filter .28s cubic-bezier(.22,1,.36,1),
-             visibility 0s linear 0s;
-}
-#pdf-preview-popup .pdfpopup-panel{
-  position:relative; width:min(880px,92vw); height:min(920px,90vh);
-  display:flex; flex-direction:column;
-  background:var(--popup-img-bg); border-radius:12px; overflow:hidden;
-  box-shadow:0 18px 60px rgba(0,0,0,.5);
-  transform:scale(.92) translateY(10px); opacity:0;
-  transition:transform .34s cubic-bezier(.16,1,.3,1),opacity .22s ease;
-}
-#pdf-preview-popup.is-open .pdfpopup-panel{
-  transform:scale(1) translateY(0); opacity:1;
-}
-#pdf-preview-popup.is-maximized .pdfpopup-panel{
-  width:96vw; height:94vh;
-  transition:width .32s cubic-bezier(.16,1,.3,1),height .32s cubic-bezier(.16,1,.3,1);
-}
-#pdf-preview-popup .pdfpopup-titlebar{
-  display:flex; align-items:center; gap:8px; padding:10px 16px;
-  font-size:12.5px; font-weight:500; color:var(--ink);
-  border-bottom:1px solid var(--border);
-  background:var(--surface-2);
-  flex-shrink:0;
-}
-#pdf-preview-popup .pdfpopup-titlebar .tl-btn{ flex-shrink:0; }
-#pdf-preview-popup .pdfpopup-name{
-  flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  text-align:center; margin-right:40px;
-}
-#pdf-preview-popup .fp-iframe{
-  flex:1; width:100%; border:1px solid lightgray; background:#fff;
-}
-@media (prefers-reduced-motion:reduce){
-  #pdf-preview-popup,#pdf-preview-popup .pdfpopup-panel{transition:none;}
-}
-@media (max-width:760px){
-  #pdf-preview-popup{padding:14px;}
-  #pdf-preview-popup .pdfpopup-panel{width:96vw;height:88vh;}
-}
-
-
   /* Preferences.app */
   #win-preferences{ width:min(560px,90vw); top:120px; left:38vw; }
   .prefs{ display:grid; grid-template-columns:150px 1fr; }
@@ -939,163 +968,15 @@
   }
 </style>
 
-<style>
-/* ===== ARCHIVEd. app demo (lives inside the Works folder) ===== */
-#win-archived{ width:390px; max-width:92vw; height:800px; max-height:92vh; background:#f3f1e8; }
-#win-archived .win-body{ padding:0; overflow:hidden; height:100%; flex:1 1 auto; min-height:0; }
-.arch-app{ position:relative; width:100%; height:100%; background:#f3f1e8; font-family:'Inter',sans-serif; color:#2b2b2b; overflow:hidden; }
-.arch-screen{ position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; padding-bottom:96px; }
-.arch-screen.is-active{ display:block; }
-.arch-screen::-webkit-scrollbar{ width:0; }
-
-/* shared top bar */
-.arch-topbar{ display:flex; align-items:center; justify-content:flex-start; gap:12px; padding:18px 16px 6px; }
-.arch-round-btn{ width:38px; height:38px; border-radius:50%; background:rgba(0,0,0,.06); border:none; display:flex; align-items:center; justify-content:center; font-size:16px; color:#555; cursor:pointer; flex-shrink:0; }
-.arch-logo{ font-family:'Courier New',Courier,'JetBrains Mono',monospace; font-weight:700; font-size:22px; color:#f0574f; letter-spacing:.01em; margin-right:auto; }
-
-/* bottom pill nav */
-.arch-nav{
-  position:absolute; left:50%; bottom:14px; transform:translateX(-50%); width:min(240px, 70%);
-  background:linear-gradient(180deg, rgba(240,87,79,.55), rgba(240,87,79,.38));
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  border-radius:999px; display:flex; align-items:center; padding:5px;
-  border:1px solid rgba(255,255,255,.35);
-  box-shadow:
-    0 10px 24px rgba(220,80,70,.3),
-    0 1px 1px rgba(255,255,255,.4) inset,
-    0 -6px 14px rgba(255,255,255,.12) inset,
-    0 0 0 1px rgba(255,255,255,.06) inset;
-  z-index:5; cursor:grab; touch-action:none; isolation:isolate;
-}
-.arch-nav::before{
-  content:'';
-  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background:linear-gradient(120deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 65%, rgba(255,255,255,.14) 100%);
-  mix-blend-mode:overlay; z-index:-1;
-}
-.arch-nav.is-dragging{ cursor:grabbing; }
-.arch-nav-indicator{
-  position:absolute; top:5px; bottom:5px; left:5px; width:calc((100% - 10px)/3);
-  border-radius:999px; transition:transform .5s cubic-bezier(.34,2.2,.4,1); z-index:0; pointer-events:none;
-  background:transparent;
-  backdrop-filter:blur(3px) saturate(115%);
-  -webkit-backdrop-filter:blur(3px) saturate(115%);
-  box-shadow:
-    0 6px 14px rgba(0,0,0,.18),
-    1.5px 1.5px 0 -0.5px rgba(255,255,255,.65) inset,
-    0 -4px 8px rgba(255,255,255,.16) inset;
-  isolation:isolate;
-  overflow:hidden;
-}
-.arch-nav.is-dragging .arch-nav-indicator{
-  backdrop-filter:blur(3px) saturate(130%);
-  -webkit-backdrop-filter:blur(3px) saturate(130%);
-}
-.arch-nav-btn{ position:relative; z-index:1; flex:1; border:none; background:transparent; display:flex; flex-direction:column; align-items:center; gap:3px; padding:9px 4px; border-radius:999px; color:#fff; font:600 11px 'Fredoka',sans-serif; cursor:pointer; opacity:.85; }
-.arch-nav-btn svg{ width:18px; height:18px; }
-.arch-nav-btn.active{ opacity:1; }
-
-/* HOME screen */
-.arch-tabs{ margin:14px 16px 16px; background:#f0574f; border-radius:999px; padding:5px; display:flex; gap:4px; }
-.arch-tab{ flex:1; text-align:center; padding:11px 0; border-radius:999px; font:600 13.5px 'Fredoka',sans-serif; color:#fff; opacity:.85; cursor:pointer; border:none; background:transparent; }
-.arch-tab.active{ background:rgba(255,255,255,.85); color:#e05a50; opacity:1; }
-.arch-banner{ margin:0 16px 18px; border-radius:16px; overflow:hidden; position:relative; min-height:120px; background:linear-gradient(120deg,#8fc4e8,#c9d9ef); color:#fff; display:flex; align-items:center; }
-.arch-banner-merch{ padding:18px; font-family:'Fredoka',sans-serif; font-weight:700; font-size:16px; line-height:1.35; position:relative; z-index:2; text-shadow:0 1px 6px rgba(0,0,0,.15); }
-.arch-banner-photo{ position:absolute; inset:0; background:repeating-linear-gradient(115deg,rgba(255,255,255,.12) 0 18px, rgba(0,0,0,.05) 18px 36px); }
-.arch-note-card{ margin:0 16px 18px; background:#fff; border-radius:2px; padding:34px 18px 22px; text-align:center; position:relative; box-shadow:0 10px 24px rgba(0,0,0,.06);
-  clip-path:polygon(0% 1%,3% 0%,9% 1.4%,15% .2%,22% 1%,29% 0%,36% 1.2%,44% 0%,51% 1%,58% 0%,66% 1.3%,74% 0%,82% 1%,90% 0%,96% 1%,100% 0%,100% 100%,0% 100%); }
-.arch-note-emoji{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; margin:0 auto 18px; }
-.arch-note-text{ font-family:'Caveat',cursive; font-weight:700; font-size:26px; line-height:1.3; color:#1c1c1c; min-height:60px; }
-.arch-note-bookmark{ position:absolute; right:16px; bottom:14px; font-size:16px; color:#2b2b2b; opacity:.75; cursor:pointer; }
-
-/* WRITE screen */
-.arch-write-actions{ display:flex; align-items:center; gap:10px; }
-.arch-icon-pill{ height:38px; padding:0 14px; border-radius:999px; background:rgba(0,0,0,.06); border:none; font-size:15px; color:#555; cursor:pointer; }
-.arch-check-btn{ width:44px; height:44px; border-radius:50%; background:#f0574f; color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 6px 14px rgba(240,87,80,.4); }
-.arch-paper{ margin:18px 16px 20px; background:#fff; border-radius:2px; min-height:280px; padding:22px 18px; box-shadow:0 10px 24px rgba(0,0,0,.06);
-  clip-path:polygon(0% 1%,4% 0%,10% 1.2%,18% 0%,26% 1%,34% 0%,42% 1.1%,50% 0%,58% 1%,66% 0%,74% 1.2%,82% 0%,90% 1%,96% 0%,100% 1%,100% 100%,0% 100%); }
-.arch-paper textarea{ width:100%; height:220px; border:none; outline:none; resize:none; background:transparent; font:15px 'JetBrains Mono',monospace; color:#333; }
-.arch-paper textarea::placeholder{ color:#9a9a9a; }
-.arch-charcount{ text-align:right; margin:0 16px 16px; font:12px 'JetBrains Mono',monospace; color:#8a8a8a; }
-.arch-card{ margin:0 16px 16px; background:#fff; border-radius:16px; padding:16px; box-shadow:0 6px 16px rgba(0,0,0,.05); }
-.arch-card-title{ font:600 14.5px 'Inter',sans-serif; margin-bottom:14px; }
-.arch-moods{ display:flex; justify-content:space-between; gap:6px; }
-.arch-mood{ display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none; cursor:pointer; flex:1; }
-.arch-mood-circle{ width:46px; height:46px; border-radius:50%; border:2px solid var(--mc); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--mc); transition:background-color .15s ease,color .15s ease; }
-.arch-mood.selected .arch-mood-circle{ background:var(--mc); color:#fff; }
-.arch-mood-label{ font-size:11px; color:#555; }
-.arch-tags{ display:flex; flex-wrap:wrap; gap:8px; }
-.arch-tag{ padding:11px 18px; border-radius:999px; border:none; font:600 13px 'Inter',sans-serif; color:#fff; cursor:pointer; opacity:.9; }
-.arch-tag.selected{ opacity:1; outline:2px solid rgba(0,0,0,.25); }
-
-/* YOU screen */
-.arch-you-avatar-row{ display:flex; align-items:center; justify-content:center; gap:14px; margin:6px 0 14px; }
-.arch-you-avatar{ width:96px; height:96px; border-radius:50%; background:#f0574f; display:flex; align-items:center; justify-content:center; font-size:44px; }
-.arch-guest-pill{ display:block; margin:0 auto 20px; padding:11px 34px; border-radius:999px; background:#f0574f; color:#fff; border:none; font:600 14px 'Fredoka',sans-serif; cursor:pointer; }
-.arch-stats-row{ display:flex; gap:12px; margin:0 16px 16px; }
-.arch-stats-card{ flex:1; background:#fff; border-radius:16px; padding:14px; display:flex; align-items:center; justify-content:center; gap:14px; box-shadow:0 6px 16px rgba(0,0,0,.05); }
-.arch-stat{ text-align:center; }
-.arch-stat b{ display:block; font:700 22px 'Fredoka',sans-serif; color:#f0574f; }
-.arch-stat span{ font-size:11px; color:#666; }
-.arch-stats-divider{ width:1px; align-self:stretch; background:#eee; }
-.arch-account-card{ flex:1; border-radius:16px; padding:14px; background:linear-gradient(160deg,#f0574f,#8fc4e8); border:1px solid #bfe3ee; color:#fff; font:600 12.5px 'Caveat',cursive; font-size:16px; display:flex; align-items:center; cursor:pointer; }
-.arch-year-banner{ margin:0 16px 14px; border-radius:16px; padding:18px; background:linear-gradient(90deg,#fff,#ffe08a); font:700 17px 'Fredoka',sans-serif; color:#e05a50; }
-.arch-outline-btn{ display:block; width:calc(100% - 32px); margin:0 16px 14px; padding:15px; border-radius:999px; border:1.5px solid #f0574f; background:transparent; color:#f0574f; font:600 14px 'Fredoka',sans-serif; cursor:pointer; text-align:center; }
-
-/* WELCOME screen — laid out as a flex column that fills the window's
-   full available height exactly (the ephemera collage flexes to soak
-   up whatever room is left), so the login screen never needs to
-   scroll no matter how tall or short the window ends up being. */
-.arch-screen[data-arch-screen="welcome"]{ padding-bottom:0; overflow:hidden; }
-.arch-screen[data-arch-screen="welcome"].is-active{ display:flex; flex-direction:column; }
-.arch-welcome{ position:relative; width:100%; height:100%; min-height:0; display:flex; flex-direction:column; padding-bottom:14px; background:linear-gradient(180deg,#f3f1e8 0%, #f3f1e8 30%, #f2857c 62%, #ef4a45 100%); }
-.arch-ephemera{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:1fr; gap:8px; padding:16px; align-items:stretch; }
-.arch-ephemera div{ background:#fff; border-radius:6px; min-height:0; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center; font:600 10px 'Inter',sans-serif; color:#555; padding:6px; box-shadow:0 3px 8px rgba(0,0,0,.08); transform:rotate(var(--r,0deg)); }
-.arch-welcome-quote{ flex:0 0 auto; font-family:'Caveat',cursive; font-weight:700; font-size:30px; color:#ffe27a; text-align:center; padding:14px 24px 0; line-height:1.15; text-shadow:0 2px 6px rgba(0,0,0,.15); }
-.arch-welcome-logo{ flex:0 0 auto; font-family:'Courier New',Courier,'JetBrains Mono',monospace; font-weight:700; font-size:52px; color:#ffe27a; text-align:left; padding:2px 20px 8px; }
-.arch-welcome-lock{ flex:0 0 auto; text-align:center; color:#fff; font:600 12.5px 'JetBrains Mono',monospace; margin-bottom:14px; opacity:.95; }
-.arch-signup-btn{ flex:0 0 auto; display:block; width:calc(100% - 40px); margin:0 20px 10px; padding:16px; border-radius:999px; background:#ffe27a; border:none; color:#7a3b1f; font:700 16px Helvetica,Arial,sans-serif; cursor:pointer; }
-.arch-guest-btn{ flex:0 0 auto; display:block; width:calc(100% - 40px); margin:0 20px 12px; padding:16px; border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; font:700 16px Helvetica,Arial,sans-serif; cursor:pointer; }
-.arch-welcome-legal{ flex:0 0 auto; text-align:center; color:rgba(255,255,255,.9); font-size:10.5px; padding:0 30px; line-height:1.4; }
-.arch-welcome-legal u{ cursor:pointer; }
-@media(max-width:600px){
-  #win-archived{ width:100%; }
-}
-</style>
-
-<style id="this-was-all-for-you-icon-css">
-.dicon[data-target="win-this-was-all-for-you"] .glyph{
-  overflow:hidden;
-}
-.dicon[data-target="win-this-was-all-for-you"] .glyph img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:inherit;
-}
-</style>
 
 
-<style id="this-was-all-for-you-final-css">
-.dicon[data-target="win-this-was-all-for-you"] .glyph{
-  overflow:hidden;
-}
-.dicon[data-target="win-this-was-all-for-you"] .glyph img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:inherit;
-}
-</style>
+
 
 </head>
 <body>
 
 <div id="boot">
-  <div class="logo"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/as%20logo%20black-02.png" alt="Shane Paul Alimboyao"></div>
+  <div class="logo"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt="Shane Paul Alimboyao"></div>
   <div class="spinner" aria-hidden="true"></div>
   <div class="label">Logging user in…</div>
   <div class="txt" id="boottxt">Starting up…</div>
@@ -1103,7 +984,7 @@
 
 <div id="desktop">
   <div class="menubar">
-    <div class="brand"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/as%20logo%20black-02.png" alt=""> Shane Paul Alimboyao</div>
+    <div class="brand"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt=""> Shane Paul Alimboyao</div>
     <div class="item" id="menubar-apps-item">Apps</div>
     <div class="item" id="menubar-search-item">Search</div>
     <div class="item" id="menubar-window-item">Window</div>
@@ -1118,36 +999,32 @@
 
   <div class="icons">
     <div class="dicon" data-target="win-readme">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(2).webp" alt="About"></div>
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt="About"></div>
       <span>About</span>
     </div>
     <div class="dicon" data-target="win-work">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(1).webp" alt="Works"></div>
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt="Works"></div>
       <span>Works</span>
     </div>
     <div class="dicon" data-target="win-contact">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75.webp" alt="Contact Me"></div>
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
       <span>Contact Me</span>
     </div>
     <div class="dicon" data-target="win-nowplaying">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75.webp" alt="Now Playing"></div>
-      <span>Now Playing</span>
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Music"></div>
+      <span>Music</span>
     </div>
     <div class="dicon" data-target="win-letterboxd">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75%20(1).webp" alt="Watched"></div>
-      <span>Watched</span>
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Film"></div>
+      <span>Film</span>
     </div>
-    <div class="dicon" data-target="win-archived">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/icon-macos-824.png" alt="ARCHIVEd."></div>
-      <span>ARCHIVEd.</span>
+    <div class="dicon" data-target="win-photos">
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Apple_Photos_2025_III.webp" alt="Photos"></div>
+      <span>Photos</span>
     </div>
-    <div class="dicon" data-target="win-this-was-all-for-you">
-      <div class="glyph"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/images.jpg" alt="this was all for you♡"></div>
-      <span>this was all for you♡</span>
-    </div>
-    <div class="dicon" id="app-ball-icon" data-app="ball" role="button" tabindex="0" aria-pressed="false" aria-label="Ball">
-      <div class="glyph ball-glyph"></div>
-      <span>Ball</span>
+    <div class="dicon" data-app="1dolo" data-url="https://www.facebook.com/profile.php?id=61565202106574" role="link" tabindex="0">
+      <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg" alt="1DOLO"></div>
+      <span>1DOLO</span>
     </div>
   </div>
 
@@ -1164,6 +1041,7 @@
         <h1 class="rm-name">Shane Paul Alimboyao</h1>
         <h1 class="rm-dim">20 years old</h1>
         <h1 class="rm-dim">Metro Manila, PH</h1>
+        <h1>Graphics Head at 1DOLO</h1>
         <h1>Graphic &amp; Motion Designer</h1>
         <h1>Video Editor</h1>
         <h1>Digital Artist</h1>
@@ -1182,145 +1060,6 @@
     </div>
     <div class="win-body">
       <div class="finder-grid" id="finder"></div>
-    </div>
-  </div>
-
-  <!-- ARCHIVEd. app demo window -->
-  <div class="window" id="win-archived" style="top:60px; left:36vw;">
-    <div class="titlebar">
-      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
-      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
-      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">ARCHIVEd.</div>
-    </div>
-    <div class="win-body">
-      <div class="arch-app">
-
-        <!-- Welcome -->
-        <div class="arch-screen is-active" data-arch-screen="welcome">
-          <div class="arch-welcome">
-            <div class="arch-ephemera">
-              <div style="--r:-3deg;">Woodstock<br>ticket</div>
-              <div style="--r:2deg;">SPECIAL<br>$2.88</div>
-              <div style="--r:-2deg;">NEDERLAND<br>55c stamp</div>
-              <div style="--r:1deg;">KUNST<br>55/1 1979</div>
-              <div style="--r:-1deg;">Life is a journey,<br>enjoy the ride.</div>
-              <div style="--r:3deg;">Sorry for<br>being a bad<br>influence</div>
-              <div style="--r:-2deg;">I find you at the<br>end of every<br>lovesong</div>
-              <div style="--r:2deg;">You are doing<br>better than<br>you feel</div>
-              <div style="--r:-1deg;">"You can't control<br>every day..."</div>
-            </div>
-            <div class="arch-welcome-quote">For every thought left unsaid.</div>
-            <div class="arch-welcome-logo">ARCHIVEd.</div>
-            <div class="arch-welcome-lock">🔒 Privacy first. Anonymous only.</div>
-            <button class="arch-signup-btn" data-arch-go="home">Sign up/Log in</button>
-            <button class="arch-guest-btn" data-arch-go="home">Guest Mode</button>
-            <div class="arch-welcome-legal">By creating an account, you agree to the <u>Terms of Service</u> and acknowledge that you have read and understood the <u>Privacy Policy</u></div>
-          </div>
-        </div>
-
-        <!-- Home -->
-        <div class="arch-screen" data-arch-screen="home">
-          <div class="arch-topbar">
-            <button class="arch-round-btn" data-arch-go="welcome">✕</button>
-            <div class="arch-logo">ARCHIVEd.</div>
-            <button class="arch-round-btn">⋯</button>
-          </div>
-          <div class="arch-tabs">
-            <button class="arch-tab active">Most Recent</button>
-            <button class="arch-tab">Nearby</button>
-          </div>
-          <div class="arch-banner">
-            <div class="arch-banner-photo"></div>
-            <div class="arch-banner-merch">NEW!<br>Personal ARCHIVEd.<br>Merch Available now.</div>
-          </div>
-          <div class="arch-note-card">
-            <div class="arch-note-emoji" style="background:#f6c9dd;">🌸</div>
-            <div class="arch-note-text">You know I'd do anything for you</div>
-            <div class="arch-note-bookmark">🔖</div>
-          </div>
-          <div class="arch-note-card">
-            <div class="arch-note-emoji" style="background:#bdeecb;">😳</div>
-            <div class="arch-note-text">To be known the way you should is to put yourself through hell</div>
-            <div class="arch-note-bookmark">🔖</div>
-          </div>
-        </div>
-
-        <!-- Write -->
-        <div class="arch-screen" data-arch-screen="write">
-          <div class="arch-topbar">
-            <button class="arch-round-btn" data-arch-go="home">‹</button>
-            <div class="arch-write-actions">
-              <button class="arch-icon-pill">⬆</button>
-              <button class="arch-icon-pill">⋯</button>
-              <button class="arch-check-btn" data-arch-go="home">✓</button>
-            </div>
-          </div>
-          <div class="arch-paper">
-            <textarea id="arch-write-text" placeholder="What's on your mind..." maxlength="250"></textarea>
-          </div>
-          <div class="arch-charcount"><span id="arch-charcount-num">0</span>/250</div>
-          <div class="arch-card">
-            <div class="arch-card-title">How are you feeling now?</div>
-            <div class="arch-moods">
-              <button class="arch-mood" data-mood style="--mc:#6ea8e0;"><div class="arch-mood-circle">🙂</div><span class="arch-mood-label">Happy</span></button>
-              <button class="arch-mood" data-mood style="--mc:#e5847a;"><div class="arch-mood-circle">🙁</div><span class="arch-mood-label">Sad</span></button>
-              <button class="arch-mood" data-mood style="--mc:#e14c42;"><div class="arch-mood-circle">😠</div><span class="arch-mood-label">Angry</span></button>
-              <button class="arch-mood" data-mood style="--mc:#e8c34a;"><div class="arch-mood-circle">😐</div><span class="arch-mood-label">Empty</span></button>
-              <button class="arch-mood" data-mood style="--mc:#e8a24a;"><div class="arch-mood-circle">😑</div><span class="arch-mood-label">Other...</span></button>
-            </div>
-          </div>
-          <div class="arch-card">
-            <div class="arch-card-title">Why are you writing this?</div>
-            <div class="arch-tags">
-              <button class="arch-tag" data-tag style="background:#f0574f;">#crush</button>
-              <button class="arch-tag" data-tag style="background:#e07068;">#serious</button>
-              <button class="arch-tag" data-tag style="background:#f6dd7a; color:#7a5b12;">#relations</button>
-              <button class="arch-tag" data-tag style="background:#a9d3ea;">#mylove</button>
-              <button class="arch-tag" data-tag style="background:#e0918a;">#confession</button>
-              <button class="arch-tag" data-tag style="background:#f3c96c; color:#7a5b12;">other tags</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- You -->
-        <div class="arch-screen" data-arch-screen="you">
-          <div class="arch-topbar">
-            <button class="arch-round-btn" data-arch-go="welcome">✕</button>
-            <div class="arch-logo">ARCHIVEd.</div>
-            <button class="arch-round-btn">⋯</button>
-          </div>
-          <div class="arch-you-avatar-row">
-            <div class="arch-you-avatar">🤠</div>
-          </div>
-          <button class="arch-guest-pill">Guest</button>
-          <div class="arch-stats-row">
-            <div class="arch-stats-card">
-              <div class="arch-stat"><b>16</b><span>Kept</span></div>
-              <div class="arch-stats-divider"></div>
-              <div class="arch-stat"><b>8</b><span>Released</span></div>
-            </div>
-            <div class="arch-account-card">Create an account to save your works</div>
-          </div>
-          <div class="arch-year-banner">Year in ARCHIVEd. 2026</div>
-          <div class="arch-banner" style="margin:0 16px 18px;">
-            <div class="arch-banner-photo"></div>
-            <div class="arch-banner-merch">ARCHIVEd.<br>Merchandise</div>
-          </div>
-          <button class="arch-outline-btn">About ARCHIVEd.</button>
-          <button class="arch-outline-btn">Privacy &amp; Safety</button>
-          <button class="arch-outline-btn">Support &amp; Contact</button>
-        </div>
-
-        <!-- bottom nav -->
-        <div class="arch-nav" data-arch-nav style="display:none;">
-          <div class="arch-nav-indicator" data-arch-nav-indicator></div>
-          <button class="arch-nav-btn" data-arch-go="home" data-arch-tab="home">🏠<span>Home</span></button>
-          <button class="arch-nav-btn" data-arch-go="write" data-arch-tab="write">✏️<span>Write</span></button>
-          <button class="arch-nav-btn" data-arch-go="you" data-arch-tab="you">🤠<span>You</span></button>
-        </div>
-
-      </div>
     </div>
   </div>
 
@@ -1350,39 +1089,277 @@
     </div>
   </div>
 
-
-  <!-- 1DOLO Monthly folder -->
-  <div class="window" id="win-1dolo-monthly" style="width:600px; max-width:90vw; top:170px; left:30vw;">
+  <!-- Chewtor Brain Boost Gums folder window -->
+  <div class="window" id="win-work-chewtor-brain-boost-gums" style="width:700px; max-width:90vw; top:170px; left:34vw;">
     <div class="titlebar">
       <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
       <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
       <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">Monthly</div>
+      <div class="tl-title">Chewtor Brain Boost Gums</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-chewtor-brain-boost-gums">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chewtor Cereals folder window -->
+  <div class="window" id="win-work-chewtor-cereals" style="width:700px; max-width:90vw; top:150px; left:24vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Chewtor Cereals</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-chewtor-cereals">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sereniscents folder window -->
+  <div class="window" id="win-work-sereniscents" style="width:700px; max-width:90vw; top:190px; left:44vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Sereniscents</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-sereniscents">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHIVEd. folder window -->
+  <div class="window" id="win-work-archived" style="width:700px; max-width:90vw; top:210px; left:30vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">ARCHIVEd.</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-archived">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo Designs folder window -->
+  <div class="window" id="win-work-logo-designs" style="width:700px; max-width:90vw; top:140px; left:40vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Logo Designs</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-logo-designs">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Published Materials folder window -->
+  <div class="window" id="win-work-published-materials" style="width:700px; max-width:90vw; top:230px; left:20vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Published Materials</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-published-materials">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1D DP Blast folder window -->
+  <div class="window" id="win-work-1d-dp-blast" style="width:700px; max-width:90vw; top:160px; left:48vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">1D DP Blast</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-1d-dp-blast">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1D First Honor Roll folder window -->
+  <div class="window" id="win-work-1d-first-honor-roll" style="width:700px; max-width:90vw; top:200px; left:28vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">1D First Honor Roll</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-1d-first-honor-roll">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Written folder window -->
+  <div class="window" id="win-work-written" style="width:700px; max-width:90vw; top:180px; left:36vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Written</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-written">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decks folder window -->
+  <div class="window" id="win-work-decks" style="width:700px; max-width:90vw; top:220px; left:22vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Decks</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-decks">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticker Designs folder window -->
+  <div class="window" id="win-work-sticker-designs" style="width:700px; max-width:90vw; top:155px; left:46vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Sticker Designs</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-work-sticker-designs">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 1DOLO Monthly folder -->
+  <div class="window" id="win-1dolo-monthly" style="width:600px; max-width:90vw;">
+    <div class="titlebar">
+      <span>Monthly</span>
+      <button class="window-close" type="button" aria-label="Close">×</button>
     </div>
     <div class="finder" id="finder-1dolo-monthly"></div>
   </div>
 
   <!-- 1DOLO Officers folder -->
-  <div class="window" id="win-1dolo-officers" style="width:600px; max-width:90vw; top:170px; left:34vw;">
+  <div class="window" id="win-1dolo-officers" style="width:600px; max-width:90vw;">
     <div class="titlebar">
-      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
-      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
-      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">Officers</div>
+      <span>Officers</span>
+      <button class="window-close" type="button" aria-label="Close">×</button>
     </div>
     <div class="finder" id="finder-1dolo-officers"></div>
   </div>
 
 
-  <!-- this was all for you♡ app -->
-  <div class="window" id="win-this-was-all-for-you" style="width:760px; max-width:90vw; top:170px; left:34vw;">
+  <!-- Photos window -->
+  <div class="window" id="win-photos">
     <div class="titlebar">
       <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
       <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
       <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">this was all for you♡</div>
+      <div class="tl-title">Photos</div>
     </div>
-    <div class="finder" id="finder-this-was-all-for-you"></div>
+    <div class="win-body photos-body" id="photos-body">
+      <div class="ph-header">
+        <div>
+          <div class="ph-title">Library</div>
+          <div class="ph-date" id="ph-date"></div>
+        </div>
+        <div class="ph-actions">
+          <button class="ph-glass round" type="button" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button>
+          <button class="ph-glass pill" type="button" id="ph-select">Select</button>
+        </div>
+      </div>
+      <div class="ph-scroll"><div class="ph-grid" id="ph-grid" data-cols="3"></div></div>
+      <div class="ph-bar">
+        <button class="ph-glass round" type="button" id="ph-lib-btn" aria-label="Collections"><svg viewBox="0 0 24 24" fill="none" stroke="#5ac8fa" stroke-width="1.8" stroke-linejoin="round"><rect x="7" y="2.5" width="14" height="14" rx="2.5" transform="translate(-1 1)" fill="rgba(90,200,250,.28)"/><rect x="3" y="7" width="14" height="14" rx="2.5" fill="rgba(90,200,250,.28)"/><circle cx="7.5" cy="11.5" r="1.4" fill="#5ac8fa" stroke="none"/><path d="M3.8 19l4.4-4.4 3 3 2.2-2 3.2 3.4" stroke-linecap="round"/></svg></button>
+        <div class="ph-seg" id="ph-seg">
+          <div class="ph-seg-thumb" id="ph-seg-thumb"></div>
+          <button type="button" data-cols="5">Years</button>
+          <button type="button" data-cols="4">Months</button>
+          <button type="button" data-cols="3">All</button>
+        </div>
+        <button class="ph-glass round" type="button" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>
+      </div>
+      <div class="ph-coll" id="ph-coll">
+        <div class="ph-coll-head">
+          <div class="ph-coll-title">Collections</div>
+          <div class="ph-coll-actions">
+            <div class="ph-avatar"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png" alt=""></div>
+            <button class="ph-lglass round" type="button" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
+          </div>
+        </div>
+        <div class="ph-coll-scroll">
+        <section class="ph-sec" id="ph-pinned">
+          <div class="ph-sec-head">
+            <div class="ph-sec-title">Pinned<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+            <div class="ph-sec-tools"><button class="ph-edit" type="button">Edit</button><button class="ph-chev" type="button" aria-label="Collapse Pinned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
+          </div>
+          <div class="ph-row" id="ph-pinned-row"></div>
+        </section>
+        <section class="ph-sec" id="ph-albums">
+          <div class="ph-sec-head">
+            <div class="ph-sec-title">Albums<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+            <div class="ph-sec-tools"><button class="ph-chev" type="button" aria-label="Collapse Albums"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
+          </div>
+          <div class="ph-row" id="ph-albums-row"></div>
+        </section>
+        </div>
+      </div>
+      <div class="ph-bar-coll">
+        <div class="ph-tabs">
+          <button class="ph-tab" type="button" id="ph-tab-library"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="3" width="17" height="17" rx="3.5"/><rect x="3" y="8" width="17" height="17" rx="3.5" fill="#fff"/><circle cx="8.5" cy="13.5" r="1.7" fill="currentColor" stroke="none"/><path d="M4 22.5l5-5 3.5 3.5 2.8-2.6 3.7 4" stroke-linecap="round"/></svg><span>Library</span></button>
+          <button class="ph-tab is-active" type="button" id="ph-tab-coll"><svg viewBox="0 0 28 28" fill="currentColor"><rect x="6" y="3" width="16" height="3.2" rx="1.6" opacity=".5"/><rect x="4" y="8" width="20" height="3.6" rx="1.8" opacity=".75"/><rect x="2.5" y="13.5" width="23" height="11" rx="3.2"/></svg><span>Collections</span></button>
+        </div>
+        <button class="ph-lglass round" type="button" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>
+      </div>
+      <div class="ph-album" id="ph-album">
+        <div class="ph-album-scroll" id="ph-album-scroll">
+          <div class="ph-album-hero" id="ph-album-hero">
+            <div class="ph-album-meta">
+              <div class="ph-album-title" id="ph-album-title"></div>
+              <div class="ph-album-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5l-1.2-1.1C5.700 14.800 3 12.300 3 8.900 3 6.300 5 4.500 7.400 4.500c1.700 0 3.300.9 4.600 2.600 1.300-1.700 2.900-2.600 4.600-2.600C19 4.500 21 6.300 21 8.900c0 3.400-2.700 5.900-7.800 10.500L12 20.500z"/></svg><span id="ph-album-count"></span></div>
+            </div>
+            <button class="ph-album-play" type="button" id="ph-album-play" aria-label="Open project folder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3.8v16.4a1 1 0 001.5.9l13.2-8.2a1 1 0 000-1.7L7.5 2.900A1 1 0 006 3.800z"/></svg></button>
+          </div>
+          <div class="ph-album-grid" id="ph-album-grid"></div>
+        </div>
+        <div class="ph-album-top">
+          <button class="ph-lglass round" type="button" id="ph-album-back" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="ph-album-top-right">
+            <button class="ph-lglass pill" type="button">Select</button>
+            <button class="ph-lglass round" type="button" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
+          </div>
+        </div>
+        <div class="ph-album-bar">
+          <button class="ph-lglass round" type="button" aria-label="Sort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button>
+          <button class="ph-lglass round" type="button" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Contact window -->
@@ -1406,7 +1383,7 @@
       <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
       <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
       <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">Now Playing</div>
+      <div class="tl-title">Music</div>
     </div>
     <div class="win-body np-card">
       <div class="np-top">
@@ -1451,7 +1428,7 @@
       <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
       <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
       <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">Watched</div>
+      <div class="tl-title">Film</div>
     </div>
     <div class="win-body" style="padding:0;">
       <div class="lb-section">
@@ -1490,7 +1467,7 @@
           <div class="prefs-row"><div><div class="prefs-label">Theme</div><div class="prefs-desc">Change the look of the windows.</div></div><select class="prefs-select" id="pref-theme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
           <div class="prefs-row"><div><div class="prefs-label">Accent color</div><div class="prefs-desc">Used for active controls and little details.</div></div><div class="prefs-colors"><button class="prefs-color active" data-accent="mint" style="background:#7be0ad" aria-label="Mint"></button><button class="prefs-color" data-accent="coral" style="background:#ff6f5e" aria-label="Coral"></button><button class="prefs-color" data-accent="amber" style="background:#ffcf6e" aria-label="Amber"></button><button class="prefs-color" data-accent="lilac" style="background:#8f8bd6" aria-label="Lilac"></button></div></div>
           <div class="prefs-row"><div><div class="prefs-label">Wallpaper</div><div class="prefs-desc">Pick the desktop background.</div></div></div>
-          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
+          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
         </section>
         <section class="prefs-pane" data-pref-pane="desktop">
           <h2 class="prefs-heading">Desktop</h2>
@@ -1517,14 +1494,15 @@
   </div>
 
   <div class="dock">
-    <div class="d-icon" data-target="win-readme"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(2).webp" alt="About"></div>
-    <div class="d-icon" data-target="win-work"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(1).webp" alt="Works"></div>
-    <div class="d-icon" data-target="win-contact"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75.webp" alt="Contact Me"></div>
-    <div class="d-icon" data-target="win-nowplaying"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75.webp" alt="Now Playing"></div>
-    <div class="d-icon" data-target="win-letterboxd"><img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75%20(1).webp" alt="Watched"></div>
-    <div class="d-icon ball-glyph" id="app-ball-dock-icon" data-app="ball" role="button" tabindex="0" aria-pressed="false" title="Ball" aria-label="Ball"></div>
+    <div class="d-icon" data-target="win-readme"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt="About"></div>
+    <div class="d-icon" data-target="win-work"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt="Works"></div>
+    <div class="d-icon" data-target="win-contact"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt="Contact Me"></div>
+    <div class="d-icon" data-target="win-nowplaying"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt="Music"></div>
+    <div class="d-icon" data-target="win-letterboxd"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt="Film"></div>
+    <div class="d-icon" data-target="win-photos"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Apple_Photos_2025_III.webp" alt="Photos"></div>
+    <div class="d-icon" data-app="1dolo" data-url="https://www.facebook.com/profile.php?id=61565202106574" title="1DOLO" role="link" tabindex="0"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg" alt="1DOLO"></div>
     <div class="d-icon" data-target="win-preferences" title="Preferences" aria-label="Preferences">
-      <img src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/1Settings_2025.png" alt="Preferences" style="width:100%;height:100%;object-fit:contain;">
+      <img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="Preferences" style="width:100%;height:100%;object-fit:contain;">
     </div>
   </div>
 
@@ -1542,39 +1520,35 @@
     <div class="drawer-search"><input type="text" id="drawer-search-input" placeholder="Search" autocomplete="off" spellcheck="false"></div>
     <div class="drawer-grid" id="drawer-grid">
       <div class="drawer-app" data-target="win-readme">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(2).webp" alt=""></div>
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(2).webp" alt=""></div>
         <span>About</span>
       </div>
       <div class="drawer-app" data-target="win-work">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75%20(1).webp" alt=""></div>
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75%20(1).webp" alt=""></div>
         <span>Works</span>
       </div>
       <div class="drawer-app" data-target="win-contact">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/200x200bb-75.webp" alt=""></div>
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/200x200bb-75.webp" alt=""></div>
         <span>Contact Me</span>
       </div>
       <div class="drawer-app" data-target="win-nowplaying">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75.webp" alt=""></div>
-        <span>Now Playing</span>
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75.webp" alt=""></div>
+        <span>Music</span>
       </div>
       <div class="drawer-app" data-target="win-letterboxd">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/400x400bb-75%20(1).webp" alt=""></div>
-        <span>Watched</span>
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/400x400bb-75%20(1).webp" alt=""></div>
+        <span>Film</span>
       </div>
-      <div class="drawer-app" data-target="win-archived">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/icon-macos-824.png" alt=""></div>
-        <span>ARCHIVEd.</span>
+      <div class="drawer-app" data-target="win-photos">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Apple_Photos_2025_III.webp" alt=""></div>
+        <span>Photos</span>
       </div>
-      <div class="drawer-app" data-target="win-this-was-all-for-you">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/images.jpg" alt=""></div>
-        <span>this was all for you♡</span>
-      </div>
-      <div class="drawer-app" data-app="ball">
-        <div class="drawer-glyph ball-glyph"></div>
-        <span>Ball</span>
+      <div class="drawer-app" data-app="1dolo" data-url="https://www.facebook.com/profile.php?id=61565202106574">
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg" alt=""></div>
+        <span>1DOLO</span>
       </div>
       <div class="drawer-app" data-target="win-preferences">
-        <div class="drawer-glyph"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/1Settings_2025.png" alt="" style="object-fit:contain;"></div>
+        <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="" style="object-fit:contain;"></div>
         <span>Preferences</span>
       </div>
     </div>
@@ -1605,8 +1579,8 @@ const prefAccent = {
   lilac:{mint:'#8f8bd6', coral:'#ff6f9d'}
 };
 const prefWalls = {
-  newvegas:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/fall0utnewvegas@main/DSC_4765.jpeg')",
-  photo:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/IMG_8263.jpeg')",
+  newvegas:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')",
+  photo:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')",
   solid:"linear-gradient(135deg, var(--desktop), var(--desktop-2))"
 };
 let prefs = {...PREF_DEFAULTS};
@@ -1679,112 +1653,68 @@ const cats = [
   {name:"UI/UX", color:"#ffcf6e"},
 ];
 const files = [
-  {name:"1DOLO", type:"Folder", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo"},
-  {name:"Irish Spring", type:"Folder", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/Screenshot%202025-01-22%2008335011111111111111111.png", target:"win-irish-springs"},
-  {name:"ARCHIVEd.", type:"App", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/icon-macos-824.png", color:"#f0574f", target:"win-archived"},
+  {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo", photosAlbum:"1DOLO"},
+  {name:"Irish Spring", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%2008335011111111111111111.png", target:"win-irish-springs"},
+  {name:"Chewtor Brain Boost Gums", type:"Folder", target:"win-work-chewtor-brain-boost-gums"},
+  {name:"Chewtor Cereals", type:"Folder", target:"win-work-chewtor-cereals"},
+  {name:"Sereniscents", type:"Folder", target:"win-work-sereniscents"},
+  {name:"ARCHIVEd.", type:"Folder", target:"win-work-archived"},
+  {name:"Logo Designs", type:"Folder", target:"win-work-logo-designs"},
+  {name:"Published Materials", type:"Folder", target:"win-work-published-materials"},
+  {name:"1D DP Blast", type:"Folder", target:"win-work-1d-dp-blast"},
+  {name:"1D First Honor Roll", type:"Folder", target:"win-work-1d-first-honor-roll"},
+  {name:"Written", type:"Folder", target:"win-work-written"},
+  {name:"Decks", type:"Folder", target:"win-work-decks"},
+  {name:"Sticker Designs", type:"Folder", target:"win-work-sticker-designs"},
 ];
 const oneDoloFiles = [
   {name:"Monthly", type:"Folder", target:"win-1dolo-monthly"},
   {name:"Officers", type:"Folder", target:"win-1dolo-officers"},
+  {name:"Facebook", type:"App", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg", url:"https://www.facebook.com/profile.php?id=61565202106574"},
 ];
 const finder = document.getElementById('finder');
 files.forEach(f=>{
   const el = document.createElement('div'); el.className='file';
   const thumbInner = f.gif
     ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">`
-    : (f.icon ? `<span style="font-size:26px;">${f.icon}</span>` : (f.type || (cats[f.cat] && cats[f.cat].name) || ''));
-  const bg = f.gif ? 'transparent' : (f.color || (cats[f.cat] ? cats[f.cat].color : '#c9c0e0'));
+    : (f.type === 'Folder' ? `<div class="folder-icon">📁</div>` : (f.type || (cats[f.cat] && cats[f.cat].name) || ''));
+  const bg = f.gif ? 'transparent' : (cats[f.cat] ? cats[f.cat].color : '#c9c0e0');
   el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || (cats[f.cat] && cats[f.cat].name+' file') || ''}</div>`;
   if(f.target){
-    el.dataset.target = f.target;
-    el.addEventListener('click', ()=> focusWindow(f.target));
+    // items that open a Photos album skip data-target, which the global handler would use to open the folder window too
+    if(!f.photosAlbum) el.dataset.target = f.target;
+    el.addEventListener('click', ()=>{
+      if(f.photosAlbum && typeof window.openPhotosAlbum === 'function') window.openPhotosAlbum(f.photosAlbum);
+      else focusWindow(f.target);
+    });
   }
   finder.appendChild(el);
 });
 
-// contents shown inside the 1DOLO folder window (rendered together with the
-// Monthly/Officers subfolders by renderOneDoloFolders() further down) —
-// edit this array to add your own files/images
+// contents shown inside the 1DOLO folder window — edit this array to add your own files/images
 const dolo1Files = [
-  {name:"1DOLO '26-'27 Guidelines v2", type:"PDF", pdf:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/1DOLO%20'26-'27%20Guidelines%20v2.pdf", thumb:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/Artboard%201%20copy%208.png"},
+  // {name:"example.jpg", type:"Image", gif:"https://link-to-image.jpg"},
 ];
-
-// PDF preview popup — used by files in the 1DOLO folder (add {pdf:"url"} to dolo1Files to use it elsewhere)
-// Embeds the Heyzine flipbook viewer for the 1DOLO guidelines document.
-let pdfPopupCloseTimer = null;
-const PDF_FLIPBOOK_URL = 'https://heyzine.com/flip-book/21d5fae10b.html';
-
-function getPdfPopup(){ return document.getElementById('pdf-preview-popup'); }
-function getPdfPopupFrame(){ return document.getElementById('pdf-preview-popup-frame'); }
-
-function openPdfPopup(url, name){
-  const popup = getPdfPopup();
-  const frame = getPdfPopupFrame();
-  const nameEl = document.getElementById('pdf-preview-popup-name');
-  if(!popup || !frame) return;
-
-  clearTimeout(pdfPopupCloseTimer);
-  frame.src = PDF_FLIPBOOK_URL;
-  if(nameEl) nameEl.textContent = name || 'Document.pdf';
-
-  popup.classList.add('is-open');
-  popup.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+const finder1dolo = document.getElementById('finder-1dolo');
+if(dolo1Files.length){
+  dolo1Files.forEach(f=>{
+    const el = document.createElement('div'); el.className='file';
+    const thumbInner = f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '');
+    const bg = f.gif ? 'transparent' : '#c9c0e0';
+    el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
+    finder1dolo.appendChild(el);
+  });
+} else {
+  finder1dolo.innerHTML = `<div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items to the dolo1Files array.</div>`;
 }
-
-function toggleMaximizePdfPopup(){
-  const popup = getPdfPopup();
-  if(!popup) return;
-  popup.classList.toggle('is-maximized');
-}
-
-function closePdfPopup(){
-  const popup = getPdfPopup();
-  const frame = getPdfPopupFrame();
-  if(!popup || !frame) return;
-
-  popup.classList.remove('is-open');
-  popup.classList.remove('is-maximized');
-  popup.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-
-  clearTimeout(pdfPopupCloseTimer);
-  pdfPopupCloseTimer = setTimeout(()=>{
-    if(!popup.classList.contains('is-open')) frame.src = '';
-  }, 380);
-}
-
-document.addEventListener('click', (e)=>{
-  const popup = getPdfPopup();
-  if(!popup) return;
-
-  const tlBtn = e.target.closest('.pdfpopup-titlebar .tl-btn');
-  if(tlBtn){
-    e.preventDefault();
-    const action = tlBtn.dataset.action;
-    if(action === 'close' || action === 'minimize') closePdfPopup();
-    else if(action === 'maximize') toggleMaximizePdfPopup();
-    return;
-  }
-
-  if(e.target === popup){
-    closePdfPopup();
-  }
-});
-
-document.addEventListener('keydown', (e)=>{
-  const popup = getPdfPopup();
-  if(!popup?.classList.contains('is-open')) return;
-  if(e.key === 'Escape') closePdfPopup();
-});
 
 // contents shown inside the Irish Springs folder window — edit this array to add your own files/images
 const irishSpringsFiles = [
-  {name:"irish spring 1.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%201.png"},
-  {name:"irish spring 2.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%202.png"},
-  {name:"irish spring 3.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%203.png"},
-  {name:"irish spring 4.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%204.png"},
-  {name:"irish spring 5.png", type:"Image", gif:"https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/irish%20spring%205.png"}
+  {name:"irish spring 1.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%201.png"},
+  {name:"irish spring 2.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%202.png"},
+  {name:"irish spring 3.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%203.png"},
+  {name:"irish spring 4.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%204.png"},
+  {name:"irish spring 5.png", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%205.png"}
 ];
 const finderIrishSprings = document.getElementById('finder-irish-springs');
 if(irishSpringsFiles.length){
@@ -1953,25 +1883,19 @@ function renderOneDoloFolders(){
   oneDoloFiles.forEach(f=>{
     const el = document.createElement('div');
     el.className = 'file';
-    el.innerHTML = `<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">${f.name}</div><div class="ftype">Folder</div>`;
-    el.addEventListener('click', ()=> focusWindow(f.target));
-    finder.appendChild(el);
-  });
-  dolo1Files.forEach(f=>{
-    const el = document.createElement('div'); el.className='file';
-    const thumbInner = f.thumb
-      ? `<img src="${f.thumb}" alt="${f.name}" loading="lazy">`
-      : (f.pdf
-        ? `<div class="pdf-badge">PDF</div>`
-        : (f.gif ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">` : (f.type || '')));
-    const bg = (f.thumb || f.gif || f.pdf) ? 'transparent' : '#c9c0e0';
-    el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
-    if(f.pdf){
-      el.classList.add('pdf-file');
-      el.addEventListener('click', (e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        openPdfPopup(f.pdf, f.name);
+    if(f.gif){
+      el.innerHTML = `<div class="thumb" style="background:transparent;"><img src="${f.gif}" alt="${f.name}" loading="lazy"></div><div class="fname">${f.name}</div>`;
+      if(f.url){
+        el.addEventListener('click', ()=> window.open(f.url, '_blank', 'noopener,noreferrer'));
+      } else {
+        el.dataset.target = f.target;
+        el.addEventListener('click', ()=> focusWindow(f.target));
+      }
+    } else {
+      el.innerHTML = `<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">${f.name}</div><div class="ftype">Folder</div>`;
+      el.addEventListener('dblclick', ()=>{
+        const win = document.getElementById(f.target);
+        if(win) win.style.display = 'block';
       });
     }
     finder.appendChild(el);
@@ -1979,147 +1903,200 @@ function renderOneDoloFolders(){
 }
 renderOneDoloFolders();
 
-// ARCHIVEd. app demo (inside the Works folder)
-(function(){
-  const app = document.querySelector('#win-archived .arch-app');
-  if(!app) return;
-  const nav = app.querySelector('[data-arch-nav]');
-  const navIndicator = app.querySelector('[data-arch-nav-indicator]');
-  const navTabOrder = ['home', 'write', 'you'];
-
-  function archGoTo(screen){
-    app.querySelectorAll('.arch-screen').forEach(s=> s.classList.toggle('is-active', s.dataset.archScreen === screen));
-    if(nav) nav.style.display = (screen === 'welcome') ? 'none' : 'flex';
-    app.querySelectorAll('.arch-nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.archTab === screen));
-    const tabIndex = navTabOrder.indexOf(screen);
-    if(navIndicator && tabIndex !== -1) navIndicator.style.transform = `translateX(${tabIndex * 100}%)`;
-  }
-
-  app.querySelectorAll('[data-arch-go]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{ e.stopPropagation(); archGoTo(btn.dataset.archGo); });
-  });
-
-  // draggable segmented-control nav — press and drag across the pill
-  // to slide between Home / Write / You, not just tap a button
-  if(nav && navIndicator){
-    let dragging = false;
-    let startX = 0;
-    let navRect = null;
-    let dragIndex = 0;
-    let suppressNextNavClick = false;
-
-    // continuous fractional position (in "tab widths") under the pointer,
-    // clamped to the pill — used while actively dragging so the indicator
-    // glides with the finger instead of hopping between slots
-    function posFromClientX(clientX){
-      const rel = Math.min(Math.max(clientX - navRect.left, 0), navRect.width);
-      const pos = (rel / navRect.width) * navTabOrder.length;
-      return Math.min(navTabOrder.length - 1, Math.max(0, pos));
-    }
-
-    function indexFromPos(pos){
-      return Math.min(navTabOrder.length - 1, Math.max(0, Math.round(pos)));
-    }
-
-    nav.addEventListener('pointerdown', (e)=>{
-      e.stopPropagation();
-      if(nav.style.display === 'none') return;
-      navRect = nav.getBoundingClientRect();
-      startX = e.clientX;
-      dragging = false;
-      const activeBtn = app.querySelector('.arch-nav-btn.active');
-      const activeIndex = activeBtn ? navTabOrder.indexOf(activeBtn.dataset.archTab) : 0;
-      dragIndex = activeIndex === -1 ? 0 : activeIndex;
-    });
-
-    nav.addEventListener('pointermove', (e)=>{
-      e.stopPropagation();
-      if(navRect === null || e.buttons === 0) return;
-      if(!dragging && Math.abs(e.clientX - startX) < 6) return;
-      if(!dragging){
-        dragging = true;
-        nav.classList.add('is-dragging');
-        navIndicator.style.transition = 'none';
-        nav.setPointerCapture(e.pointerId);
-      }
-      e.preventDefault();
-      const pos = posFromClientX(e.clientX);
-      dragIndex = indexFromPos(pos);
-      navIndicator.style.transform = `translateX(${pos * 100}%)`;
-    });
-
-    function endNavDrag(e){
-      e.stopPropagation();
-      navRect = null;
-      if(dragging){
-        dragging = false;
-        nav.classList.remove('is-dragging');
-        // re-enable the transition first so the snap into place animates
-        navIndicator.style.transition = '';
-        navIndicator.style.transform = `translateX(${dragIndex * 100}%)`;
-        suppressNextNavClick = true;
-        archGoTo(navTabOrder[dragIndex]);
-      }
-    }
-    nav.addEventListener('pointerup', endNavDrag);
-    nav.addEventListener('pointercancel', endNavDrag);
-
-    // swallow the click that follows a drag so it doesn't also toggle
-    // whichever button happened to be under the finger on release
-    nav.addEventListener('click', (e)=>{
-      if(!suppressNextNavClick) return;
-      suppressNextNavClick = false;
-      e.preventDefault();
-      e.stopPropagation();
-    }, true);
-  }
-
-  // single-select mood picker
-  app.querySelectorAll('[data-mood]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      app.querySelectorAll('[data-mood]').forEach(b=> b.classList.remove('selected'));
-      btn.classList.add('selected');
-    });
-  });
-
-  // multi-select tags
-  app.querySelectorAll('[data-tag]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{ e.stopPropagation(); btn.classList.toggle('selected'); });
-  });
-
-  // Most Recent / Nearby segmented control
-  const tabsWrap = app.querySelector('.arch-tabs');
-  if(tabsWrap){
-    tabsWrap.querySelectorAll('.arch-tab').forEach(btn=>{
-      btn.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        tabsWrap.querySelectorAll('.arch-tab').forEach(b=> b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-  }
-
-  // live character counter on the write screen
-  const archTextarea = app.querySelector('#arch-write-text');
-  const archCount = app.querySelector('#arch-charcount-num');
-  if(archTextarea && archCount){
-    archTextarea.addEventListener('input', ()=>{ archCount.textContent = archTextarea.value.length; });
-  }
-
-  archGoTo('welcome');
-})();
-
-
 
 // draggable windows — clamped so the titlebar (and its buttons) can
 // never be dragged above the menu bar or off the sides/bottom
 const MENUBAR_H = 34;
 const EDGE_MARGIN = 10;
 
+// the dock floats above the desktop (not part of layout flow), so
+// nothing normally stops a dragged/resized window from sliding its
+// bottom edge underneath it and getting its content covered. Read the
+// dock's live top edge so windows can be clamped to stop just above
+// it — falls back to the viewport bottom when the dock is hidden or
+// on mobile (where dragging/resizing is disabled anyway).
+function getDockTopLimit(){
+  const dockEl = document.querySelector('.dock');
+  if(!dockEl) return window.innerHeight;
+  const cs = getComputedStyle(dockEl);
+  if(cs.display === 'none' || window.matchMedia('(max-width:760px)').matches) return window.innerHeight;
+  const r = dockEl.getBoundingClientRect();
+  return r.top;
+}
+
+// the dock sits below windows by default (z-index-wise), so a window
+// dragged or resized over it genuinely covers it — no window content
+// gets an artificial dimmed dock punching through it. Hovering the
+// dock's horizontal band (anywhere left-to-right at that height, not
+// just directly over its narrow icon row — useful since a window on
+// top of it currently intercepts the pointer there) jumps the dock
+// above every window and crossfades it in; moving away crossfades it
+// back out before it drops behind windows again, so both directions
+// animate instead of popping instantly.
+(function initDockHoverReveal(){
+  const dockEl = document.querySelector('.dock');
+  if(!dockEl) return;
+
+  const DURATION = 300; // ms
+
+  function isDockActive(){
+    return !window.matchMedia('(max-width:760px)').matches && getComputedStyle(dockEl).display !== 'none';
+  }
+
+  function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
+  function easeInCubic(t){ return t*t*t; }
+
+  // Finds the horizontal slice(s) of the dock that are actually covered
+  // by an open (non-minimized) window right now, and builds a mask-image
+  // out of them: covered slices get the given alpha baked in as a plain
+  // number, everything else is pinned to fully-opaque white — so only
+  // the actually-covered part of the dock is ever affected, and it's
+  // recomputed with a literal number every animation frame (see
+  // animateAlpha below) rather than through a CSS transition, since
+  // browsers don't reliably repaint mask-image continuously off an
+  // animated custom property — that's what was causing the fade to
+  // jump/blink instead of animate smoothly.
+  function buildCoverMask(alpha){
+    const dr = dockEl.getBoundingClientRect();
+    if(dr.width === 0) return { mask:null, covered:false };
+    const ranges = [];
+    document.querySelectorAll('.window').forEach(win=>{
+      if(win.style.display === 'none' || win.classList.contains('is-minimized')) return;
+      const wr = win.getBoundingClientRect();
+      if(wr.width === 0 || wr.height === 0) return;
+      if(wr.bottom <= dr.top || wr.top >= dr.bottom) return; // doesn't reach the dock's band
+      const left = Math.max(wr.left, dr.left);
+      const right = Math.min(wr.right, dr.right);
+      if(right > left) ranges.push([left - dr.left, right - dr.left]);
+    });
+    if(!ranges.length) return { mask:null, covered:false };
+
+    ranges.sort((a,b)=> a[0]-b[0]);
+    const merged = [ranges[0]];
+    for(let i=1;i<ranges.length;i++){
+      const last = merged[merged.length-1];
+      if(ranges[i][0] <= last[1]) last[1] = Math.max(last[1], ranges[i][1]);
+      else merged.push(ranges[i]);
+    }
+
+    const stops = [];
+    let cursor = 0;
+    merged.forEach(([start,end])=>{
+      start = Math.max(0, Math.min(dr.width, start));
+      end = Math.max(0, Math.min(dr.width, end));
+      if(start > cursor) stops.push(`white ${cursor}px ${start}px`);
+      stops.push(`rgba(0,0,0,${alpha}) ${start}px ${end}px`);
+      cursor = end;
+    });
+    if(cursor < dr.width) stops.push(`white ${cursor}px ${dr.width}px`);
+
+    return { mask:`linear-gradient(to right, ${stops.join(', ')})`, covered:true };
+  }
+
+  function setMask(mask){
+    dockEl.style.maskImage = mask || 'none';
+    dockEl.style.webkitMaskImage = mask || 'none';
+  }
+
+  let rafId = null;
+  let currentAlpha = 0; // 0 == "covered slice currently hidden" (the resting state)
+
+  function stopAnim(){
+    if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  // Animates just the covered slice's alpha from `from` to `to`,
+  // recomputing the mask (window positions + alpha) fresh every frame.
+  // If nothing is covered at all there's nothing to animate — resolve
+  // immediately so hovering an uncovered dock never flashes anything.
+  //
+  // The starting frame is painted synchronously (not deferred to the
+  // first requestAnimationFrame callback) so it lands in the exact same
+  // paint as the z-index change that show/hideDock make right alongside
+  // it — otherwise there's a one-frame gap where the dock is elevated
+  // (or dropped) but still showing the *previous* mask, which is the
+  // blink.
+  function animateAlpha(from, to, onDone){
+    stopAnim();
+    const probe = buildCoverMask(1);
+    if(!probe.covered){
+      currentAlpha = to;
+      setMask(null);
+      if(onDone) onDone();
+      return;
+    }
+    const start = performance.now();
+    const ease = to > from ? easeOutCubic : easeInCubic;
+    function frame(now){
+      const t = Math.min(1, (now - start) / DURATION);
+      const alpha = from + (to - from) * ease(t);
+      currentAlpha = alpha;
+      setMask(buildCoverMask(alpha).mask);
+      if(t < 1){
+        rafId = requestAnimationFrame(frame);
+      } else {
+        rafId = null;
+        if(onDone) onDone();
+      }
+    }
+    frame(start); // paint alpha=`from` right now, then continue on rAF
+  }
+
+  function showDock(){
+    dockEl.classList.add('dock-hovered'); // jump above windows immediately...
+    animateAlpha(currentAlpha, 1); // ...then fade in just the covered slice, starting frame painted in the same tick
+  }
+  function hideDock(){
+    animateAlpha(currentAlpha, 0, ()=>{
+      dockEl.classList.remove('dock-hovered'); // drop back behind windows once the covered slice is invisible
+      // Clear the mask a frame later, not in this same tick: the covered
+      // slice is already invisible (alpha 0) at this exact moment, so
+      // there's nothing to see either way — but clearing the mask and
+      // dropping z-index in the very same paint is what caused the
+      // compositor to flash a stale frame. A tick apart, it's silent.
+      requestAnimationFrame(()=> setMask(null));
+    });
+  }
+
+  let hovering = false;
+
+  document.addEventListener('pointermove', (e)=>{
+    if(!isDockActive()){
+      if(hovering){
+        hovering = false;
+        stopAnim();
+        currentAlpha = 0;
+        dockEl.classList.remove('dock-hovered');
+        requestAnimationFrame(()=> setMask(null));
+      }
+      return;
+    }
+    const r = dockEl.getBoundingClientRect();
+    const within = e.clientY >= r.top - 14 && e.clientY <= r.bottom + 14;
+    if(within === hovering) return;
+    hovering = within;
+    if(hovering) showDock(); else hideDock();
+  });
+})();
+
+// drag-to-maximize — pulling a window's titlebar up to the very top
+// edge of the screen (past the menu bar) and releasing snaps it to
+// fullscreen, same as clicking the maximize traffic-light button. A
+// translucent preview shows where it'll land while you're close enough
+// to trigger it, so the drop isn't a surprise.
+const SNAP_THRESHOLD = MENUBAR_H + 6;
+const snapPreview = document.createElement('div');
+snapPreview.className = 'snap-preview';
+document.body.appendChild(snapPreview);
+function updateSnapPreviewBounds(){
+  const margin = 18;
+  snapPreview.style.top = (MENUBAR_H + margin) + 'px';
+  snapPreview.style.height = (getDockTopLimit() - MENUBAR_H - margin - EDGE_MARGIN) + 'px';
+}
+
 function makeDraggable(win){
   const bar = win.querySelector('.titlebar');
-  let ox=0, oy=0, dragging=false;
+  let ox=0, oy=0, dragging=false, pulledToTop=false;
   function bringToFront(){
     document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
     win.style.zIndex = 20;
@@ -2127,23 +2104,48 @@ function makeDraggable(win){
   win.addEventListener('mousedown', bringToFront);
   bar.addEventListener('pointerdown', (e)=>{
     if(window.matchMedia('(max-width:760px)').matches) return; // windows are stacked, not dragged, on mobile
-    dragging = true; bringToFront();
+    dragging = true; pulledToTop = false; bringToFront();
     const rect = win.getBoundingClientRect();
     ox = e.clientX - rect.left; oy = e.clientY - rect.top;
     bar.setPointerCapture(e.pointerId);
   });
   bar.addEventListener('pointermove', (e)=>{
     if(!dragging) return;
-    const w = win.offsetWidth, h = win.offsetHeight;
+    const w = win.offsetWidth;
     let nx = e.clientX - ox;
     let ny = e.clientY - oy;
-    // clamp: titlebar never above the menu bar, and window stays reachable on all sides
+    // clamp horizontally so the window stays reachable on both sides
     nx = Math.min(Math.max(nx, EDGE_MARGIN - w + 120), window.innerWidth - EDGE_MARGIN - 120);
-    ny = Math.min(Math.max(ny, MENUBAR_H + EDGE_MARGIN), window.innerHeight - 40);
+    // clamp vertically so the titlebar itself — where the traffic-light
+    // buttons live — always stays fully visible: never above the menu
+    // bar, and never low enough to dip below the dock's top edge. The
+    // rest of the window is free to extend past the dock (or the
+    // bottom of the viewport) and get covered by it.
+    const minTop = MENUBAR_H + EDGE_MARGIN;
+    const maxTop = Math.max(minTop, getDockTopLimit() - bar.offsetHeight);
+    ny = Math.min(Math.max(ny, minTop), maxTop);
     win.style.left = nx + 'px';
     win.style.top = ny + 'px';
+
+    // dragging by the cursor's own position (not the clamped window
+    // position) so the preview reacts the instant the pointer reaches
+    // the top edge, even though the titlebar itself can't follow it
+    // any further up
+    const nowPulledToTop = e.clientY <= SNAP_THRESHOLD && win.dataset.maximized !== "1";
+    if(nowPulledToTop !== pulledToTop){
+      pulledToTop = nowPulledToTop;
+      if(pulledToTop) updateSnapPreviewBounds();
+      snapPreview.classList.toggle('is-visible', pulledToTop);
+    }
   });
-  bar.addEventListener('pointerup', ()=> dragging=false);
+  bar.addEventListener('pointerup', ()=>{
+    dragging = false;
+    snapPreview.classList.remove('is-visible');
+    if(pulledToTop){
+      pulledToTop = false;
+      maximizeWindow(win);
+    }
+  });
 }
 document.querySelectorAll('.window').forEach(makeDraggable);
 
@@ -2164,6 +2166,7 @@ function makeResizable(win){
     const rect = win.getBoundingClientRect();
     startX = e.clientX; startY = e.clientY;
     startW = rect.width; startH = rect.height;
+    win.style.maxHeight = 'none'; // hand control to the user; the dock clamp below still applies
     document.querySelectorAll('.window').forEach(w=> w.style.zIndex = 10);
     win.style.zIndex = 20;
     handle.setPointerCapture(e.pointerId);
@@ -2172,9 +2175,10 @@ function makeResizable(win){
     if(!resizing) return;
     const minW = 240, minH = 160;
     const maxW = window.innerWidth - win.offsetLeft - EDGE_MARGIN;
-    const maxH = window.innerHeight - win.offsetTop - EDGE_MARGIN;
+    // no lower/height cap here: the window is free to extend past the
+    // bottom of the viewport (and behind the dock) when resized taller
     const nw = Math.min(Math.max(startW + (e.clientX - startX), minW), Math.max(maxW, minW));
-    const nh = Math.min(Math.max(startH + (e.clientY - startY), minH), Math.max(maxH, minH));
+    const nh = Math.max(startH + (e.clientY - startY), minH);
     win.style.width = nw + 'px';
     win.style.height = nh + 'px';
   });
@@ -2232,6 +2236,48 @@ function genieToDock(win, dockIcon, { reverse = false, onComplete } = {}){
   return tl;
 }
 
+// center a window in the space between the menu bar and the dock,
+// rather than leaving it at whatever top/left happens to be baked
+// into its markup (which, for taller windows, can sit low enough
+// that the dock overlaps and hides its content) or at the dock icon
+// it was opened from.
+//
+// Also nudge every window a little wider and cap its height to the
+// available space: a wider window lets grid/list content (like the
+// Film app's poster grid) wrap into fewer rows and need less vertical
+// room, and the height cap means any content that's still too tall
+// scrolls inside the window (.win-body already allows this) instead
+// of stretching the window itself down under the dock.
+function centerWindow(win){
+  if(isMobileViewport()) return; // mobile windows go full-screen; no positioning needed
+
+  win.style.maxHeight = 'none';
+  win.style.width = '';
+  const naturalW = win.offsetWidth;
+  const widerW = Math.max(240, Math.min(naturalW * 1.15, window.innerWidth - EDGE_MARGIN * 2));
+  win.style.width = widerW + 'px';
+
+  const availTop = MENUBAR_H + EDGE_MARGIN;
+  const availBottom = getDockTopLimit() - EDGE_MARGIN;
+  const availH = Math.max(160, availBottom - availTop);
+  win.style.maxHeight = availH + 'px';
+
+  const w = win.offsetWidth, h = Math.min(win.offsetHeight, availH);
+
+  let top = availTop + Math.max(0, (availBottom - availTop - h) / 2);
+  // if the window is taller than the available space, still prefer
+  // keeping its bottom clear of the dock over keeping its top clear
+  // of the menu bar
+  top = Math.min(top, Math.max(availTop, availBottom - h));
+  top = Math.max(top, availTop);
+
+  let left = (window.innerWidth - w) / 2;
+  left = Math.min(Math.max(left, EDGE_MARGIN), Math.max(EDGE_MARGIN, window.innerWidth - EDGE_MARGIN - w));
+
+  win.style.top = top + 'px';
+  win.style.left = left + 'px';
+}
+
 function focusWindow(id){
   const win = document.getElementById(id);
   if(id === 'win-letterboxd') refreshLetterboxdRecent({ reason:'open', force:true });
@@ -2279,6 +2325,7 @@ function focusWindow(id){
   if(win.style.display === 'none' || win.dataset.closed === "1"){
     win.dataset.closed = "0";
     win.style.display = 'flex';
+    centerWindow(win);
     gsap.fromTo(win, {scale:.9, opacity:0}, {scale:1, opacity:1, duration:.3, ease:"back.out(2)"});
     return;
   }
@@ -2332,7 +2379,8 @@ function minimizeWindow(win){
 }
 
 function maximizeWindow(win){
-  const menubarH = 34, dockClearance = 90, margin = 18;
+  const margin = 18;
+  win.style.maxHeight = 'none'; // let the explicit height below take over
   if(win.dataset.maximized === "1"){
     // restore previous bounds
     const l = win.dataset.prevLeft, t = win.dataset.prevTop, w = win.dataset.prevWidth, h = win.dataset.prevHeight;
@@ -2347,9 +2395,9 @@ function maximizeWindow(win){
     win.dataset.prevWidth = rect.width + 'px';
     win.dataset.prevHeight = rect.height + 'px';
     gsap.to(win, {
-      left: margin, top: menubarH + margin,
+      left: margin, top: MENUBAR_H + margin,
       width: window.innerWidth - margin*2,
-      height: window.innerHeight - menubarH - margin - dockClearance,
+      height: getDockTopLimit() - MENUBAR_H - margin - EDGE_MARGIN,
       duration:.32, ease:"power3.inOut",
       onComplete:()=>{ win.dataset.maximized = "1"; }
     });
@@ -2614,6 +2662,13 @@ function renderLbCard(f){
   poster.setAttribute('role', 'img');
   poster.setAttribute('aria-label', f.title ? `${f.title} poster` : 'Film poster');
   if(f.poster) poster.style.backgroundImage = `url("${f.poster}")`;
+  if(f.liked){
+    const heart = document.createElement('div');
+    heart.className = 'lb-liked';
+    heart.setAttribute('aria-label', 'Liked');
+    heart.textContent = '\u2665';
+    poster.appendChild(heart);
+  }
   card.appendChild(poster);
 
   const rest = document.createElement('div');
@@ -2629,10 +2684,10 @@ function renderLbCard(f){
 // Four Favorite Films — hand-picked, not pulled from Letterboxd, since
 // favorites aren't exposed via the RSS feed. Edit this array to change picks.
 const FAVORITE_FILMS = [
-  { title:'The Florida Project', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/floridaproject.jpg' },
-  { title:'Over the Garden Wall', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/gardenwall.jpg' },
-  { title:'Death Becomes Her', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/deathbecomesher.jpg' },
-  { title:'The Thing', poster:'https://cdn.jsdelivr.net/gh/alimboyaos-alt/webos@main/thething.jpg' },
+  { title:'The Florida Project', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/floridaproject.jpg' },
+  { title:'Over the Garden Wall', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/gardenwall.jpg' },
+  { title:'Death Becomes Her', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/deathbecomesher.jpg' },
+  { title:'The Thing', poster:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/thething.jpg' },
 ];
 const favoritesGrid = document.getElementById('lb-grid-favorites');
 FAVORITE_FILMS.forEach(f => favoritesGrid.appendChild(renderLbCard(f)));
@@ -2664,8 +2719,10 @@ function parseLbEntriesFromRss2json(items){
     const imgMatch = descHtml.match(/src="([^"]+)"/);
     const poster = imgMatch ? imgMatch[1] : (item.thumbnail || '');
     const dateLabel = formatWatchedDate((item.pubDate || '').slice(0, 10));
+    const likedRaw = item['letterboxd:liked'] ?? item['letterboxd_liked'] ?? item.liked ?? '';
+    const liked = /^(yes|true)$/i.test(String(likedRaw).trim());
     return {
-      title: filmTitle, year: filmYear, link: item.link, poster,
+      title: filmTitle, year: filmYear, link: item.link, poster, liked,
       meta: `${dateLabel}${stars ? ' · ' + stars : ''}`
     };
   });
@@ -2690,8 +2747,9 @@ function parseLbEntriesFromRawRss(items){
     const poster = imgMatch ? imgMatch[1] : '';
     const stars = ratingToStars(ratingRaw);
     const dateLabel = formatWatchedDate(watchedDate);
+    const liked = /^(yes|true)$/i.test(getTag('letterboxd:liked').trim());
     return {
-      title: filmTitle, year: filmYear, link, poster,
+      title: filmTitle, year: filmYear, link, poster, liked,
       meta: `${dateLabel}${stars ? ' · ' + stars : ''}`
     };
   });
@@ -3081,7 +3139,7 @@ if(rmTexts.length){
 
     // measure each icon's current on-screen slot BEFORE touching any
     // layout styles, so the default arrangement matches what's already
-    // on screen (including the specially-placed "for you" icon)
+    // on screen
     const defaults = dicons.map(el=>{
       const r = el.getBoundingClientRect();
       const localX = r.left - iconsRect.left - OFFSET_X;
@@ -3295,9 +3353,9 @@ if(rmTexts.length){
     return {
       name: nameEl ? nameEl.textContent.trim() : '',
       glyphHTML: glyph ? glyph.innerHTML : '',
-      glyphIsBall: !!(glyph && glyph.classList.contains('ball-glyph')),
       target: el.dataset.target || '',
-      app: el.dataset.app || ''
+      app: el.dataset.app || '',
+      url: el.dataset.url || ''
     };
   });
 
@@ -3321,7 +3379,7 @@ if(rmTexts.length){
       const row = document.createElement('div');
       row.className = 'spotlight-result' + (i === selectedIndex ? ' is-selected' : '');
       row.innerHTML =
-        '<div class="sr-glyph' + (a.glyphIsBall ? ' ball-glyph' : '') + '">' + a.glyphHTML + '</div>' +
+        '<div class="sr-glyph">' + a.glyphHTML + '</div>' +
         '<div class="sr-name"></div>' +
         (i === selectedIndex ? '<div class="sr-hint">&#8629;</div>' : '');
       row.querySelector('.sr-name').textContent = a.name;
@@ -3335,9 +3393,8 @@ if(rmTexts.length){
     closeSpotlight(true);
     if(a.target && typeof focusWindow === 'function'){
       focusWindow(a.target);
-    } else if(a.app === 'ball'){
-      const el = document.querySelector('[data-app="ball"]');
-      if(el) el.click();
+    } else if(a.url){
+      window.open(a.url, '_blank', 'noopener,noreferrer');
     }
   }
 
@@ -3496,19 +3553,6 @@ if(rmTexts.length){
   </div>
 </div>
 
-<div id="pdf-preview-popup" aria-hidden="true">
-  <div class="pdfpopup-panel" role="dialog" aria-modal="true" aria-label="PDF preview">
-    <div class="pdfpopup-titlebar">
-      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
-      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
-      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="pdfpopup-name" id="pdf-preview-popup-name"></div>
-    </div>
-    <iframe id="pdf-preview-popup-frame" class="fp-iframe" allowfullscreen="allowfullscreen" allow="autoplay; fullscreen; clipboard-write" scrolling="no" src="" title="PDF preview"></iframe>
-  </div>
-</div>
-
-
 <script id="home-calendar-widget-script">
 (function(){
   function renderCalendar(){
@@ -3551,411 +3595,219 @@ if(rmTexts.length){
 })();
 </script>
 
-<!-- "Ball" app: a full-screen bouncing ball, toggled on/off from its icon -->
-<canvas id="ball-app-canvas" aria-hidden="true"></canvas>
 
-<script id="ball-app-script">
-// three.js (~600KB) is only fetched the first time the Ball toy is opened,
-// instead of on every page load, since it's an optional Easter-egg app.
+<script id="photos-app-script">
 (function(){
-  const launchers = Array.from(document.querySelectorAll('[data-app="ball"]'));
-  if(!launchers.length) return;
-  let started = false;
-  function boot(){
-    if(started) return;
-    started = true;
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    s.onload = ()=> initBallApp(true);
-    document.head.appendChild(s);
-  }
-  launchers.forEach(el=>{
-    el.addEventListener('click', boot);
-    el.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); boot(); }
+  const grid = document.getElementById('ph-grid');
+  const body = document.getElementById('photos-body');
+  if(!grid || !body) return;
+
+  // Add your own photos here, e.g. { src:'https://…/pic.jpg' } or { src:'…', dur:'0:13' } for a video.
+  // Anything left empty falls back to the soft placeholder tiles below.
+  const PHOTOS = [];
+
+  const PLACEHOLDER_COUNT = 33;
+  const HUES = [250, 210, 330, 30, 160, 280, 190, 350, 50, 230, 140];
+  const VIDEOS = { 7:'0:13', 13:'0:18', 22:'0:06' };
+
+  function tile(item, i){
+    const t = document.createElement('div');
+    t.className = 'ph-tile';
+    if(item.src){
+      const img = document.createElement('img');
+      img.src = item.src; img.alt = ''; img.loading = 'lazy';
+      t.appendChild(img);
+    } else {
+      const h = HUES[i % HUES.length], h2 = (h + 40) % 360;
+      const f = document.createElement('div');
+      f.className = 'ph-fill';
+      f.style.background = `linear-gradient(${(i * 37) % 360}deg, hsl(${h} 38% 26%), hsl(${h2} 46% 38%))`;
+      t.appendChild(f);
+    }
+    if(item.dur){
+      const d = document.createElement('div');
+      d.className = 'ph-dur'; d.textContent = item.dur;
+      t.appendChild(d);
+    }
+    const c = document.createElement('div');
+    c.className = 'ph-check'; c.textContent = '\u2713';
+    t.appendChild(c);
+    t.addEventListener('click', ()=>{
+      if(body.classList.contains('ph-body-selecting')) t.classList.toggle('is-selected');
     });
+    return t;
+  }
+
+  const items = PHOTOS.length
+    ? PHOTOS
+    : Array.from({ length:PLACEHOLDER_COUNT }, (_, i)=> ({ dur: VIDEOS[i] }));
+  items.forEach((it, i)=> grid.appendChild(tile(it, i)));
+
+  // header date
+  const dateEl = document.getElementById('ph-date');
+  if(dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+
+  // Years / Months / All
+  const seg = document.getElementById('ph-seg');
+  const thumb = document.getElementById('ph-seg-thumb');
+  const btns = Array.from(seg.querySelectorAll('button'));
+  function setSeg(idx){
+    thumb.style.transform = `translateX(${idx * 100}%)`;
+    grid.dataset.cols = btns[idx].dataset.cols;
+  }
+  btns.forEach((b, i)=> b.addEventListener('click', ()=> setSeg(i)));
+  setSeg(2);
+
+  // Select mode
+  const sel = document.getElementById('ph-select');
+  sel.addEventListener('click', ()=>{
+    const on = body.classList.toggle('ph-body-selecting');
+    sel.textContent = on ? 'Cancel' : 'Select';
+    if(!on) grid.querySelectorAll('.is-selected').forEach(t=> t.classList.remove('is-selected'));
   });
 })();
+</script>
 
-function initBallApp(autoStart){
+<script id="photos-collections-script">
 (function(){
-  const canvas = document.getElementById('ball-app-canvas');
-  const launchers = Array.from(document.querySelectorAll('[data-app="ball"]'));
-  if(!canvas || typeof THREE === 'undefined' || !launchers.length) return;
+  const body = document.getElementById('photos-body');
+  if(!body) return;
 
-  // ---- renderer / scene (orthographic camera mapped 1:1 to viewport pixels) ----
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // Projects shown as albums. Add a `cover` image to replace the colour gradient, and a `photos` list ([url, url, …]) to fill the album.
+  const ALBUMS = [
+    { name:'1DOLO', target:'win-1dolo', cover:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif',
+      photos:['https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Artboard%201%20copy%203.png', 'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Artboard%201%20copy%204.png', 'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Artboard%2012.png'] },
+    { name:'Irish Spring', target:'win-irish-springs', cover:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%2008335011111111111111111.png',
+      photos:['https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%201.png', 'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%202.png', 'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%203.png', 'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%204.png', 'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%205.png'] },
+    { name:'Chewtor Brain Boost Gums', target:'win-work-chewtor-brain-boost-gums' },
+    { name:'Chewtor Cereals', target:'win-work-chewtor-cereals' },
+    { name:'Sereniscents', target:'win-work-sereniscents' },
+    { name:'ARCHIVEd.', target:'win-work-archived' },
+    { name:'Logo Designs', target:'win-work-logo-designs' },
+    { name:'Published Materials', target:'win-work-published-materials' },
+    { name:'1D DP Blast', target:'win-work-1d-dp-blast' },
+    { name:'1D First Honor Roll', target:'win-work-1d-first-honor-roll' },
+    { name:'Written', target:'win-work-written' },
+    { name:'Decks', target:'win-work-decks' },
+    { name:'Sticker Designs', target:'win-work-sticker-designs' }
+  ];
+  const PINNED = [
+    Object.assign({}, ALBUMS[0], { heart:true }),
+    Object.assign({}, ALBUMS[1]),
+    { name:'All Photos', view:'library', hue:215 }
+  ];
+  const HUES = [350, 28, 160, 262, 200, 330, 48, 140, 300, 12, 185, 240, 90];
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(0,0,0,0, 1, 2000);
-  camera.position.z = 500;
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
-  const key = new THREE.DirectionalLight(0xffffff, 0.9);
-  key.position.set(-150, 260, 260);
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0xfff3e8, 0.35);
-  fill.position.set(180, -80, 160);
-  scene.add(fill);
-
-  const RADIUS = 24;
-  const ball = new THREE.Mesh(
-    new THREE.SphereGeometry(RADIUS, 40, 40),
-    new THREE.MeshStandardMaterial({ color:0xff6f5e, roughness:0.35, metalness:0.12 })
-  );
-  scene.add(ball);
-
-  const shadow = new THREE.Mesh(
-    new THREE.CircleGeometry(RADIUS, 32),
-    new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.22 })
-  );
-  scene.add(shadow);
-
-  // ---- viewport sizing (screen-pixel space, y-down, like getBoundingClientRect) ----
-  let VW = 0, VH = 0;
-  function resize(){
-    VW = window.innerWidth;
-    VH = window.innerHeight;
-    renderer.setSize(VW, VH, false);
-    camera.left = -VW/2; camera.right = VW/2;
-    camera.top = VH/2; camera.bottom = -VH/2;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // world-space render helpers: screen (x,y, y-down) -> three.js world (y-up, centered)
-  function toWorldX(px){ return px - VW/2; }
-  function toWorldY(py){ return VH/2 - py; }
-
-  // ---- obstacle colliders: desktop icons + the dock + open windows act as solid objects ----
-  function collectObstacles(){
-    const els = document.querySelectorAll('.icons .dicon, .dock, .window');
-    const rects = [];
-    els.forEach(el=>{
-      if(el.offsetParent === null) return; // hidden (display:none / off mobile view)
-      if(el.classList.contains('window')){
-        if(el.dataset.minimized === '1' || el.dataset.closed === '1') return;
-        if(el.classList.contains('is-minimized')) return;
-      }
-      const r = el.getBoundingClientRect();
-      if(r.width < 2 || r.height < 2) return;
-      rects.push({ left:r.left, top:r.top, right:r.right, bottom:r.bottom });
+  function card(item, i){
+    const c = document.createElement('div');
+    c.className = 'ph-card';
+    const bg = document.createElement('div');
+    bg.className = 'ph-card-bg';
+    if(item.cover){
+      bg.style.backgroundImage = 'url("' + item.cover + '")';
+    } else {
+      const h = item.hue != null ? item.hue : HUES[i % HUES.length];
+      bg.style.background = 'linear-gradient(' + (150 + (i * 23) % 60) + 'deg, hsl(' + h + ' 62% 62%), hsl(' + ((h + 38) % 360) + ' 58% 42%))';
+    }
+    c.appendChild(bg);
+    if(item.heart){
+      c.insertAdjacentHTML('beforeend', '<svg class="ph-card-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.2l-1.4-1.3C5.4 15.2 2 12.1 2 8.3 2 5.2 4.4 3 7.4 3c1.7 0 3.4.8 4.6 2.1C13.2 3.8 14.9 3 16.6 3 19.6 3 22 5.200 22 8.300c0 3.800-3.400 6.900-8.600 11.600L12 21.200z"/></svg>');
+    }
+    const l = document.createElement('div');
+    l.className = 'ph-card-label';
+    l.textContent = item.name;
+    c.appendChild(l);
+    c.addEventListener('click', function(){
+      if(item.view === 'library'){ setView('library'); return; }
+      openAlbum(item);
     });
-    return rects;
+    return c;
   }
 
-  // ---- physics state (screen-pixel space) ----
-  let x = 0, y = 0, vx = 0, vy = 0;
-  const GRAVITY = 1700;
-  const RESTITUTION = 0.68;
-  const AIR_DRAG = 0.25;
-  let squash = 0;
-  let active = false;
-  let rafId = null;
-  let isDragging = false;
-  let permitAboveScreen = false; // true right after spawn, until the ball fully enters view
+  const pinnedRow = document.getElementById('ph-pinned-row');
+  const albumsRow = document.getElementById('ph-albums-row');
+  PINNED.forEach(function(it, i){ pinnedRow.appendChild(card(it, i)); });
+  ALBUMS.forEach(function(it, i){ albumsRow.appendChild(card(it, i)); });
 
-  function resolveObstacle(rect){
-    const cx = Math.max(rect.left, Math.min(x, rect.right));
-    const cy = Math.max(rect.top, Math.min(y, rect.bottom));
-    const dx = x - cx, dy = y - cy;
-    const distSq = dx*dx + dy*dy;
-    if(distSq >= RADIUS*RADIUS) return;
-    const dist = Math.sqrt(distSq);
-    let nx, ny;
-    if(dist < 0.001){
-      // center is inside the rect (rare) — push straight up
-      nx = 0; ny = -1;
-    } else {
-      nx = dx / dist; ny = dy / dist;
-    }
-    const overlap = RADIUS - dist;
-    x += nx * overlap;
-    y += ny * overlap;
-    const dot = vx*nx + vy*ny;
-    if(dot < 0){
-      vx -= (1 + RESTITUTION) * dot * nx;
-      vy -= (1 + RESTITUTION) * dot * ny;
-      squash = Math.min(1, Math.abs(dot) / 1000);
-    }
-  }
-
-  function step(dt){
-    if(isDragging) return;
-
-    vy += GRAVITY * dt;
-    x += vx * dt;
-    y += vy * dt;
-    vx *= Math.max(0, 1 - AIR_DRAG * dt);
-
-    // hard screen boundaries — the ball may never leave the viewport
-    if(x - RADIUS < 0){ x = RADIUS; vx = Math.abs(vx) * RESTITUTION; squash = Math.min(1, Math.abs(vx)/900); }
-    if(x + RADIUS > VW){ x = VW - RADIUS; vx = -Math.abs(vx) * RESTITUTION; squash = Math.min(1, Math.abs(vx)/900); }
-
-    if(permitAboveScreen){
-      // still dropping in from above the top edge — once it fully enters
-      // the viewport, switch back to normal ceiling-bounce behavior
-      if(y - RADIUS >= 0) permitAboveScreen = false;
-    } else if(y - RADIUS < 0){
-      y = RADIUS; vy = Math.abs(vy) * RESTITUTION;
-    }
-
-    if(y + RADIUS > VH){
-      y = VH - RADIUS;
-      if(Math.abs(vy) > 30){
-        squash = Math.min(1, Math.abs(vy) / 1200);
-        vy = -Math.abs(vy) * RESTITUTION;
-      } else {
-        vy = 0;
-      }
-      vx *= 0.985;
-    }
-
-    // icons + dock as hitable rectangular obstacles
-    collectObstacles().forEach(resolveObstacle);
-
-    squash = Math.max(0, squash - dt * 4.2);
-  }
-
-  // ---- drag & throw interaction ----
-  // The canvas itself is pointer-events:none (so it never blocks icons,
-  // windows, or the dock), so we hit-test the ball manually against
-  // document-level pointer events and only react when the pointer is
-  // actually over it.
-  let dragDX = 0, dragDY = 0;
-  let samples = [];
-  let suppressNextClick = false;
-
-  function hitBall(px, py){
-    const dx = px - x, dy = py - y;
-    return Math.sqrt(dx*dx + dy*dy) <= RADIUS * 1.4;
-  }
-
-  document.addEventListener('pointerdown', (e)=>{
-    if(!active || isDragging) return;
-    if(!hitBall(e.clientX, e.clientY)) return;
-    // claim this interaction before it can start a window drag, focus a
-    // window, or activate an icon underneath the ball
-    e.preventDefault();
-    e.stopPropagation();
-    isDragging = true;
-    suppressNextClick = true;
-    dragDX = x - e.clientX;
-    dragDY = y - e.clientY;
-    vx = 0; vy = 0;
-    samples = [{ x, y, t:performance.now() }];
-    document.body.style.cursor = 'grabbing';
-  }, { capture:true, passive:false });
-
-  document.addEventListener('pointermove', (e)=>{
-    if(!active) return;
-    if(isDragging){
-      const nx = Math.max(RADIUS, Math.min(VW - RADIUS, e.clientX + dragDX));
-      const ny = Math.max(RADIUS, Math.min(VH - RADIUS, e.clientY + dragDY));
-      x = nx; y = ny;
-      const now = performance.now();
-      samples.push({ x:nx, y:ny, t:now });
-      while(samples.length > 8) samples.shift();
-    } else {
-      document.body.style.cursor = hitBall(e.clientX, e.clientY) ? 'grab' : '';
-    }
+  // collapse / expand sections
+  body.querySelectorAll('.ph-sec .ph-chev').forEach(function(btn){
+    btn.addEventListener('click', function(){ btn.closest('.ph-sec').classList.toggle('is-collapsed'); });
   });
 
-  function endDrag(){
-    if(!isDragging) return;
-    isDragging = false;
-    document.body.style.cursor = '';
-    const now = performance.now();
-    const recent = samples.filter(s => now - s.t <= 120);
-    if(recent.length >= 2){
-      const a = recent[0], b = recent[recent.length - 1];
-      const dt = Math.max((b.t - a.t) / 1000, 1/60);
-      vx = (b.x - a.x) / dt;
-      vy = (b.y - a.y) / dt;
+  // Album detail view
+  const aHero = document.getElementById('ph-album-hero');
+  const aTitle = document.getElementById('ph-album-title');
+  const aCount = document.getElementById('ph-album-count');
+  const aGrid = document.getElementById('ph-album-grid');
+  const aScroll = document.getElementById('ph-album-scroll');
+  let currentAlbum = null;
+
+  function openAlbum(item){
+    currentAlbum = item;
+    const photos = item.photos || [];
+    aTitle.textContent = item.name;
+    aCount.textContent = photos.length + (photos.length === 1 ? ' Item' : ' Items');
+
+    const heroSrc = item.cover || photos[0];
+    if(heroSrc){
+      aHero.style.background = '';
+      aHero.style.backgroundImage = 'url("' + heroSrc + '")';
     } else {
-      // treat as a tap: give it a playful little pop upward
-      vx = (Math.random() - 0.5) * 220;
-      vy = -420;
+      const idx = Math.max(0, ALBUMS.findIndex(function(a){ return a.name === item.name; }));
+      const h = item.hue != null ? item.hue : HUES[idx % HUES.length];
+      aHero.style.backgroundImage = 'none';
+      aHero.style.background = 'linear-gradient(160deg, hsl(' + h + ' 62% 62%), hsl(' + ((h + 38) % 360) + ' 58% 38%))';
     }
-    const maxSpeed = 1700;
-    vx = Math.max(-maxSpeed, Math.min(maxSpeed, vx));
-    vy = Math.max(-maxSpeed, Math.min(maxSpeed, vy));
-  }
-  document.addEventListener('pointerup', endDrag);
-  document.addEventListener('pointercancel', endDrag);
 
-  // swallow the click that follows a drag so it doesn't also open/focus
-  // whatever icon or window happened to be sitting under the ball
-  document.addEventListener('click', (e)=>{
-    if(!suppressNextClick) return;
-    suppressNextClick = false;
-    e.preventDefault();
-    e.stopPropagation();
-  }, true);
-
-  let lastT = 0;
-  function animate(now){
-    if(!active) return;
-    rafId = requestAnimationFrame(animate);
-    let dt = (now - lastT) / 1000;
-    lastT = now;
-    dt = Math.min(dt, 1/30);
-
-    step(dt);
-
-    ball.position.set(toWorldX(x), toWorldY(y), 0);
-    const sy = 1 - squash * 0.32;
-    const sx = 1 + squash * 0.18;
-    ball.scale.set(sx, sy, sx);
-    ball.rotation.z -= (vx / RADIUS) * dt;
-
-    const heightRatio = Math.max(0, Math.min(1, 1 - (VH - y) / (VH || 1)));
-    const shadowScale = Math.max(0.35, 1 - heightRatio * 0.55);
-    shadow.position.set(toWorldX(x), toWorldY(VH - 4), -RADIUS * 0.9);
-    shadow.scale.set(shadowScale, shadowScale, 1);
-    shadow.material.opacity = 0.24 * (1 - heightRatio * 0.6);
-
-    renderer.render(scene, camera);
-  }
-
-  // ---- shatter animation, played when the Ball app is closed ----
-  let shatterFrags = [];
-  let shatterRafId = null;
-
-  function clearShatter(){
-    if(shatterRafId){ cancelAnimationFrame(shatterRafId); shatterRafId = null; }
-    shatterFrags.forEach(f=>{
-      scene.remove(f.mesh);
-      f.mesh.geometry.dispose();
-      f.mesh.material.dispose();
-    });
-    shatterFrags = [];
-  }
-
-  function startShatter(){
-    clearShatter();
-
-    const originWorld = new THREE.Vector3(toWorldX(x), toWorldY(y), 0);
-    const FRAG_COUNT = 16;
-    for(let i = 0; i < FRAG_COUNT; i++){
-      const size = RADIUS * (0.16 + Math.random() * 0.26);
-      const geo = (i % 2 === 0)
-        ? new THREE.TetrahedronGeometry(size)
-        : new THREE.BoxGeometry(size, size, size);
-      const mat = new THREE.MeshStandardMaterial({
-        color:0xff6f5e, roughness:0.4, metalness:0.1, transparent:true, opacity:1
+    aGrid.innerHTML = '';
+    if(photos.length){
+      photos.forEach(function(src){
+        const t = document.createElement('div');
+        t.className = 'ph-tile';
+        const img = document.createElement('img');
+        img.src = src; img.alt = ''; img.loading = 'lazy';
+        t.appendChild(img);
+        aGrid.appendChild(t);
       });
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.copy(originWorld);
-      mesh.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
-      scene.add(mesh);
-
-      // burst outward in a rough sphere, biased slightly upward, plus a
-      // share of the ball's own momentum at the moment it broke
-      const dir = new THREE.Vector3(
-        (Math.random() - 0.5),
-        Math.random() * 0.7 + 0.25,
-        (Math.random() - 0.5)
-      ).normalize();
-      const speed = 160 + Math.random() * 320;
-      shatterFrags.push({
-        mesh,
-        vel: new THREE.Vector3(
-          dir.x * speed + vx * 0.4,
-          dir.y * speed + (-vy * 0.4),
-          dir.z * speed
-        ),
-        spin: new THREE.Vector3(
-          (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8
-        )
-      });
+    } else {
+      aGrid.innerHTML = '<div class="ph-album-empty">No photos yet.</div>';
     }
-
-    ball.visible = false;
-    shadow.visible = false;
-
-    const FRAG_GRAVITY = 900;
-    const DURATION = 750;
-    const start = performance.now();
-    let last = start;
-
-    function tick(now){
-      const dt = Math.min(0.032, (now - last) / 1000);
-      last = now;
-      const progress = Math.min(1, (now - start) / DURATION);
-
-      shatterFrags.forEach(f=>{
-        f.vel.y -= FRAG_GRAVITY * dt;
-        f.mesh.position.addScaledVector(f.vel, dt);
-        f.mesh.rotation.x += f.spin.x * dt;
-        f.mesh.rotation.y += f.spin.y * dt;
-        f.mesh.rotation.z += f.spin.z * dt;
-        f.mesh.material.opacity = 1 - progress;
-        const s = 1 - progress * 0.4;
-        f.mesh.scale.set(s, s, s);
-      });
-
-      renderer.render(scene, camera);
-
-      if(progress < 1){
-        shatterRafId = requestAnimationFrame(tick);
-      } else {
-        shatterRafId = null;
-        clearShatter();
-        ball.visible = true;
-        shadow.visible = true;
-        canvas.classList.remove('is-active');
-      }
-    }
-    shatterRafId = requestAnimationFrame(tick);
+    aScroll.scrollTop = 0;
+    body.classList.add('ph-view-album');
   }
-
-  function setActive(isActive, spawnEl){
-    active = isActive;
-    launchers.forEach(el=>{
-      el.classList.toggle('is-running', isActive);
-      el.setAttribute('aria-pressed', String(isActive));
-    });
-
-    if(isActive){
-      clearShatter(); // if it was mid-shatter, cut straight to the new drop
-      ball.visible = true;
-      shadow.visible = true;
-      canvas.classList.add('is-active');
-      resize();
-      x = VW / 2;
-      y = -RADIUS * 2;
-      vx = (Math.random() - 0.5) * 260;
-      vy = 0;
-      squash = 0;
-      permitAboveScreen = true;
-      lastT = performance.now();
-      if(rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(animate);
-    } else if(rafId){
-      cancelAnimationFrame(rafId);
-      rafId = null;
-      isDragging = false;
-      document.body.style.cursor = '';
-      startShatter(); // canvas stays visible until the shatter animation finishes
-    }
-  }
-
-  launchers.forEach(el=>{
-    el.addEventListener('click', ()=> setActive(!active, el));
-    el.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        setActive(!active, el);
-      }
-    });
+  function closeAlbum(){ body.classList.remove('ph-view-album'); }
+  document.getElementById('ph-album-back').addEventListener('click', closeAlbum);
+  // the play button jumps to the project's own folder window
+  document.getElementById('ph-album-play').addEventListener('click', function(){
+    if(currentAlbum && currentAlbum.target && typeof focusWindow === 'function') focusWindow(currentAlbum.target);
   });
 
-  if(autoStart) setActive(true);
+  // lets other apps (e.g. Works) open an album directly
+  window.openPhotosAlbum = function(name){
+    const a = ALBUMS.find(function(x){ return x.name === name; });
+    if(!a) return;
+    if(typeof focusWindow === 'function') focusWindow('win-photos');
+    body.classList.add('ph-view-coll');
+    openAlbum(a);
+  };
+
+  // Library <-> Collections
+  function setView(v){ closeAlbum(); body.classList.toggle('ph-view-coll', v === 'collections'); }
+  document.getElementById('ph-lib-btn').addEventListener('click', function(){ setView('collections'); });
+  document.getElementById('ph-tab-library').addEventListener('click', function(){ setView('library'); });
+  document.getElementById('ph-tab-coll').addEventListener('click', function(){ setView('collections'); });
 })();
-}
+</script>
+
+<script id="link-apps-script">
+// icons with a data-url open that link in a new tab (e.g. the 1DOLO app -> its Facebook page)
+document.querySelectorAll('[data-url]').forEach(function(el){
+  function go(){ window.open(el.dataset.url, '_blank', 'noopener,noreferrer'); }
+  el.addEventListener('click', go);
+  el.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); }
+  });
+});
 </script>
 
 </body>
