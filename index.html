@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Shane Paul Alimboyao</title>
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/as%20logo%20black-02.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -581,7 +581,7 @@
   .ph-viewer-top .ph-lglass.round{ width:44px; height:44px; }
   .ph-viewer-top .ph-lglass.round svg{ width:20px; height:20px; }
   .ph-viewer-count{ height:36px; padding:0 16px; display:flex; align-items:center; border-radius:18px; font-size:14px; font-weight:600; color:#111; pointer-events:none !important; }
-  .ph-viewer-nav{ position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:42px; height:42px; }
+  .ph-viewer-nav{ position:absolute; top:calc(50% - 21px); z-index:3; width:42px; height:42px; } /* no translate: .ph-lglass:active's transform would override it and make the arrows jump */
   .ph-viewer-nav.prev{ left:12px; } .ph-viewer-nav.next{ right:12px; }
   .ph-viewer-nav svg{ width:20px; height:20px; display:block; }
   .ph-viewer.is-single .ph-viewer-nav, .ph-viewer.is-single .ph-viewer-thumbs, .ph-viewer.is-single .ph-viewer-count{ display:none; }
@@ -1028,6 +1028,20 @@
 
 
 
+<style id="no-page-zoom">html{ touch-action:pan-x pan-y; }</style>
+<script id="no-page-zoom-script">
+(function(){
+  // block browser/page zoom: pinch (incl. iOS Safari), ctrl/cmd + wheel, ctrl/cmd + + / - / 0
+  ['gesturestart','gesturechange','gestureend'].forEach(function(t){
+    document.addEventListener(t, function(e){ e.preventDefault(); }, { passive:false });
+  });
+  document.addEventListener('touchmove', function(e){ if(e.touches.length > 1) e.preventDefault(); }, { passive:false });
+  window.addEventListener('wheel', function(e){ if(e.ctrlKey || e.metaKey) e.preventDefault(); }, { passive:false, capture:true });
+  window.addEventListener('keydown', function(e){
+    if((e.ctrlKey || e.metaKey) && ['+','=','-','_','0'].indexOf(e.key) > -1) e.preventDefault();
+  }, true);
+})();
+</script>
 </head>
 <body>
 
@@ -1324,11 +1338,65 @@
       <div class="tl-title">Birthdays</div>
     </div>
     <div class="win-body">
-      <div class="finder-grid" id="finder-1dolo-birthdays">
-        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
-      </div>
+      <div class="finder-grid" id="finder-1dolo-birthdays"></div>
     </div>
   </div>
+
+  <!-- 2nd Year Branding folder window -->
+  <div class="window" id="win-1dolo-birthdays-2nd-year" style="width:700px; max-width:90vw; top:200px; left:37vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">2nd Year Branding</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-birthdays-2nd-year"></div>
+    </div>
+  </div>
+
+
+  <!-- 3rd Year Branding folder window -->
+  <div class="window" id="win-1dolo-birthdays-3rd-year" style="width:700px; max-width:90vw; top:210px; left:39vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">3rd Year Branding</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-birthdays-3rd-year"><div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div></div>
+    </div>
+  </div>
+
+
+  <!-- Monthly Front Cover folder window -->
+  <div class="window" id="win-1dolo-birthdays-2nd-year-monthly-front-cover" style="width:700px; max-width:90vw; top:225px; left:41vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Monthly Front Cover</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-birthdays-2nd-year-monthly-front-cover"></div>
+    </div>
+  </div>
+
+
+  <!-- 1DOLO TIMES folder window -->
+  <div class="window" id="win-1dolo-birthdays-2nd-year-1dolo-times" style="width:700px; max-width:90vw; top:235px; left:35vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">1DOLO TIMES</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-birthdays-2nd-year-1dolo-times"></div>
+    </div>
+  </div>
+
 
   <!-- 1DOLO Rebrand folder window -->
   <div class="window" id="win-1dolo-rebrand" style="width:700px; max-width:90vw; top:190px; left:38vw;">
@@ -2128,6 +2196,62 @@ window.REBRAND_ALBUMS = [
   });
 })();
 
+
+// Birthdays folder contents (2nd Year Branding > Monthly Front Cover, 1DOLO TIMES; 3rd Year Branding)
+(function(){
+  function fill(gridId, items){
+    const grid = document.getElementById(gridId);
+    if(!grid) return;
+    items.forEach(function(f){
+      const el = document.createElement('div');
+      el.className = 'file';
+      el.innerHTML = '<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">' + f.name + '</div><div class="ftype">Folder</div>';
+      el.dataset.target = f.target;
+      el.addEventListener('click', function(){ focusWindow(f.target); });
+      grid.appendChild(el);
+    });
+  }
+  fill('finder-1dolo-birthdays', [
+    {name:'2nd Year Branding', target:'win-1dolo-birthdays-2nd-year'},
+    {name:'3rd Year Branding', target:'win-1dolo-birthdays-3rd-year'}
+  ]);
+  fill('finder-1dolo-birthdays-2nd-year', [
+    {name:'Monthly Front Cover', target:'win-1dolo-birthdays-2nd-year-monthly-front-cover'},
+    {name:'1DOLO TIMES', target:'win-1dolo-birthdays-2nd-year-1dolo-times'}
+  ]);
+})();
+
+// contents of the 1DOLO TIMES folder window — 16 images named "1.png" ... "16.png", labelled with the names in TIMES_NAMES
+const TIMES_NAMES = ["Kalyl","Ryza","Erin","Jewel","Chloe","Kyle","Danelle","Althea","Kian","Gavril","Kent","Sean","Denise","Ysabel","Vega","Jillian"];
+const times1doloFiles = Array.from({length:16}, (_, i)=>({
+  name:TIMES_NAMES[i],
+  type:"Image",
+  gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1DOLO%20TIMES/" + (i + 1) + (i === 15 ? ".jpg" : ".png") // #16 is a .jpg
+}));
+renderImageFolder('finder-1dolo-birthdays-2nd-year-1dolo-times', '1DOLO TIMES', times1doloFiles);
+// also show 1DOLO TIMES as an album in the Photos app (and its Library view)
+window.REBRAND_ALBUMS.push({
+  name:'1DOLO TIMES',
+  target:'win-1dolo-birthdays-2nd-year-1dolo-times',
+  cover:times1doloFiles[0].gif,
+  photos:times1doloFiles.map(f=>({ src:f.gif, caption:f.name }))
+});
+
+// contents of the Monthly Front Cover folder window — 11 images named "1.png" ... "11.png", October '25 to August '26
+const FRONT_COVER_MONTHS = ["October '25","November '25","December '25","January '26","February '26","March '26","April '26","May '26","June '26","July '26","August '26"];
+const frontCoverFiles = FRONT_COVER_MONTHS.map((name, i)=>({
+  name:name,
+  type:"Image",
+  gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Front%20Page%20Bulk/" + (i + 1) + ".png"
+}));
+renderImageFolder('finder-1dolo-birthdays-2nd-year-monthly-front-cover', 'Monthly Front Cover', frontCoverFiles);
+// also show Monthly Front Cover as an album in the Photos app (and its Library view)
+window.REBRAND_ALBUMS.push({
+  name:'Monthly Front Cover',
+  target:'win-1dolo-birthdays-2nd-year-monthly-front-cover',
+  cover:frontCoverFiles[0].gif,
+  photos:frontCoverFiles.map(f=>({ src:f.gif, caption:f.name }))
+});
 
 // draggable windows — clamped so the titlebar (and its buttons) can
 // never be dragged above the menu bar or off the sides/bottom
@@ -3971,7 +4095,7 @@ if(rmTexts.length){
     count.textContent = (idx + 1) + ' of ' + list.length;
     Array.prototype.forEach.call(thumbs.children, function(b, k){
       b.classList.toggle('is-active', k === idx);
-      if(k === idx) b.scrollIntoView({ block:'nearest', inline:'center' });
+      if(k === idx) thumbs.scrollLeft = b.offsetLeft - (thumbs.clientWidth - b.offsetWidth) / 2; // scroll only the strip (scrollIntoView can shift the whole viewer)
     });
     [idx + 1, idx - 1].forEach(function(k){
       if(list.length > 1){ const p = new Image(); p.src = list[(k + list.length) % list.length].src; }
