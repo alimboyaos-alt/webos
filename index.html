@@ -104,7 +104,7 @@
     position:absolute; inset:-24px;
     background-image: var(--boot-bg-image,
       linear-gradient(180deg, rgba(20,16,30,.5), rgba(20,16,30,.3) 18%, rgba(20,16,30,.55) 82%, rgba(20,16,30,.7)),
-      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg'));
+      url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo.png'));
     background-position:center 28%, center 28%;
     background-size:cover, cover;
     background-repeat:no-repeat, no-repeat;
@@ -136,7 +136,7 @@
     position:fixed; inset:0;
     background-image:
       linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
-      url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg');
+      url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo.png');
     background-position: center 28%, center 28%;
     background-size: cover, cover;
     background-repeat: no-repeat, no-repeat;
@@ -365,16 +365,22 @@
 
   /* Work.app */
   #win-work{ width:min(620px,90vw); top:120px; left:22vw;}
-  .finder-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px;}
-  .file{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer; transition:background .2s ease;}
+  /* Folder view: items flow left to right and wrap onto the next row */
+  .finder-grid{ display:flex; flex-flow:row wrap; align-items:flex-start; align-content:flex-start; gap:8px 10px;}
+  .file{ flex:0 0 104px; width:104px; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; gap:7px; text-align:center; padding:10px 6px; border-radius:10px; cursor:pointer; transition:background .2s ease;}
+  .finder-grid > :not(.file){ flex:1 1 100%; }
   .file:hover{ background:var(--hover);}
-  .file .thumb{ width:64px; height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
-.file .thumb .folder-icon{ font-size:30px; line-height:1; }
+  .file .thumb{ width:58px; height:58px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-family:'JetBrains Mono'; overflow:hidden; transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+  .file .thumb .folder-icon{ font-size:30px; line-height:1; }
   .file .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease; }
-  .file:hover .thumb{ transform:translateY(-4px) scale(1.06); box-shadow:0 10px 18px rgba(0,0,0,.18); }
+  .file:hover .thumb{ transform:translateY(-3px) scale(1.06); box-shadow:0 8px 14px rgba(0,0,0,.18); }
   .file:hover .thumb img{ transform:scale(1.1); }
-  .file .fname{ font-size:11px;}
-  .file .ftype{ font-size:9.5px; color:var(--dim);}
+  .file .fname{ font-size:12px; font-weight:500; line-height:1.25; max-width:100%; overflow-wrap:anywhere;}
+  .file .ftype{ font-size:10px; color:var(--dim); margin-top:-4px;}
+
+  /* Brand Guidelines Book — embedded flipbook fills the window */
+  .win-body.book-body{ padding:0; overflow:hidden; line-height:0; }
+  .book-body iframe{ display:block; width:100%; height:100%; border:0; }
 
   /* Contact.app — terminal style */
   #win-contact{ width:min(440px,86vw); top:210px; left:56vw;}
@@ -419,49 +425,25 @@
   .np-genre-chips{ display:flex; flex-wrap:wrap; gap:6px; }
   .np-genre-chip{ font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.03em; color:var(--ink); background:var(--surface-3); border:1px solid var(--border); border-radius:20px; padding:4px 10px; text-transform:lowercase; transition:background-color .35s ease, border-color .35s ease; }
 
-  /* Whiteboard app - every work in its own zone on one pannable, zoomable board */
-  #win-whiteboard{ width:min(980px,94vw); height:min(640px,78vh); top:90px; left:12vw; }
-  .win-body.wb-body{ position:relative; padding:0; display:flex; flex-direction:column; overflow:hidden; line-height:1.3; }
-  .wb-chips{ flex:0 0 auto; display:flex; gap:6px; padding:8px 10px; overflow-x:auto; scrollbar-width:none; border-bottom:1px solid var(--border); background:var(--surface-2); }
-  .wb-chips::-webkit-scrollbar{ display:none; }
-  .wb-chip{ flex:0 0 auto; display:flex; align-items:center; gap:6px; border:1px solid var(--border); background:var(--surface-solid); color:var(--ink); border-radius:999px; padding:5px 11px; font:500 12px 'Inter',sans-serif; cursor:pointer; white-space:nowrap; transition:background-color .15s ease; }
-  .wb-chip:hover{ background:var(--hover); }
-  .wb-chip i{ width:8px; height:8px; border-radius:50%; background:hsl(var(--zh,220) 65% 55%); }
-  .wb-view{ position:relative; flex:1; min-height:0; overflow:hidden; cursor:grab; touch-action:none; user-select:none; background-color:var(--surface-2);
-    background-image:radial-gradient(circle, var(--border-strong) 1.3px, transparent 1.6px); background-size:28px 28px; }
-  .wb-view.is-panning{ cursor:grabbing; }
-  .wb-view.is-flying{ transition:background-position .55s cubic-bezier(.22,.8,.2,1), background-size .55s cubic-bezier(.22,.8,.2,1); }
-  .wb-world{ position:absolute; left:0; top:0; transform-origin:0 0; will-change:transform; }
-  .wb-view.is-flying .wb-world{ transition:transform .55s cubic-bezier(.22,.8,.2,1); }
-  .wb-zone{ position:absolute; border-radius:22px; background:hsl(var(--zh) 70% 95%); border:2px solid hsl(var(--zh) 55% 80%); box-shadow:0 10px 30px rgba(30,20,60,.10); }
-  body.prefs-dark .wb-zone{ background:hsl(var(--zh) 22% 19%); border-color:hsl(var(--zh) 25% 32%); box-shadow:0 10px 30px rgba(0,0,0,.35); }
-  .wb-zone-head{ position:absolute; left:0; right:0; top:0; height:78px; padding:20px 26px 0; display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-  .wb-zone-title{ font-size:22px; font-weight:700; letter-spacing:-.02em; color:var(--ink); line-height:1.15; }
-  .wb-zone-meta{ margin-top:4px; font:500 11px 'JetBrains Mono',monospace; color:var(--dim); }
-  .wb-open{ flex:0 0 auto; border:1px solid hsl(var(--zh) 40% 70%); background:rgba(255,255,255,.55); color:var(--ink); border-radius:999px; padding:6px 13px; font:500 12px 'Inter',sans-serif; cursor:pointer; }
-  body.prefs-dark .wb-open{ background:rgba(255,255,255,.08); border-color:hsl(var(--zh) 25% 40%); }
-  .wb-open:hover{ background:rgba(255,255,255,.9); }
-  body.prefs-dark .wb-open:hover{ background:rgba(255,255,255,.16); }
-  .wb-empty{ position:absolute; left:26px; right:26px; top:78px; height:110px; border:2px dashed hsl(var(--zh) 40% 70%); border-radius:14px; display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:12.5px; }
-  body.prefs-dark .wb-empty{ border-color:hsl(var(--zh) 20% 36%); }
-  .wb-card{ position:absolute; width:150px; height:168px; padding:8px 8px 0; background:#fff; border-radius:4px; box-shadow:0 6px 14px rgba(0,0,0,.18); transform:rotate(var(--r)); transition:transform .2s ease, box-shadow .2s ease; cursor:zoom-in; }
-  .wb-card::before{ content:''; position:absolute; top:-7px; left:50%; width:44px; height:15px; margin-left:-22px; background:rgba(255,255,255,.55); box-shadow:0 1px 3px rgba(0,0,0,.15); transform:rotate(-3deg); }
-  .wb-card:hover{ transform:rotate(0) scale(1.06); box-shadow:0 12px 24px rgba(0,0,0,.26); z-index:2; }
-  .wb-card img{ display:block; width:134px; height:134px; object-fit:cover; background:#e9e7ee; pointer-events:none; -webkit-user-drag:none; }
-  .wb-card span{ display:block; height:26px; line-height:26px; text-align:center; font:500 11px 'JetBrains Mono',monospace; color:#555; }
-  .wb-tools{ position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; display:flex; align-items:center; gap:2px; padding:5px; border-radius:14px; background:var(--surface-solid); box-shadow:0 8px 22px rgba(0,0,0,.2), 0 0 0 1px var(--border); }
-  .wb-tbtn{ min-width:34px; height:34px; padding:0 9px; border:0; border-radius:9px; background:none; color:var(--ink); font:600 15px 'Inter',sans-serif; cursor:pointer; }
-  .wb-tbtn:hover{ background:var(--hover); }
-  .wb-tbtn.fit{ font-size:12.5px; font-weight:500; }
-  .wb-zoomlabel{ min-width:50px; text-align:center; font:500 12px 'JetBrains Mono',monospace; color:var(--dim); }
-  .wb-lb{ position:absolute; inset:0; z-index:30; background:rgba(10,8,16,.88); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; color:#fff; }
-  .wb-lb.is-open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .2s ease, visibility 0s; }
-  .wb-lb img{ max-width:88%; max-height:76%; object-fit:contain; border-radius:6px; box-shadow:0 14px 40px rgba(0,0,0,.5); background:#1c1c1e; }
-  .wb-lb-cap{ font-size:13.5px; font-weight:500; text-align:center; padding:0 16px; }
-  .wb-lb-btn{ position:absolute; width:40px; height:40px; border:0; border-radius:50%; background:rgba(255,255,255,.16); color:#fff; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-  .wb-lb-btn:hover{ background:rgba(255,255,255,.3); }
-  .wb-lb-btn.close{ top:12px; right:12px; } .wb-lb-btn.prev{ left:12px; top:50%; margin-top:-20px; } .wb-lb-btn.next{ right:12px; top:50%; margin-top:-20px; }
-  .wb-lb.is-single .wb-lb-btn.prev, .wb-lb.is-single .wb-lb-btn.next{ display:none; }
+  /* Project picker cards (used by the Works app) */
+  @keyframes wbIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  .wb-home-title{ margin:0; font-size:28px; font-weight:700; letter-spacing:-.02em; }
+  .wb-home-sub{ margin:4px 0 20px; color:var(--dim); font-size:13px; }
+  .wb-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:16px; }
+  .wb-proj{ position:relative; aspect-ratio:4/3; border:0; padding:0; border-radius:18px; overflow:hidden; cursor:pointer; text-align:left; color:#fff;
+    background:linear-gradient(150deg, hsl(var(--zh) 62% 62%), hsl(calc(var(--zh) + 38) 58% 42%)); box-shadow:0 8px 20px rgba(30,20,60,.16); transition:transform .2s ease, box-shadow .2s ease; }
+  .wb-proj:hover{ transform:translateY(-3px); box-shadow:0 14px 28px rgba(30,20,60,.24); }
+  .wb-proj:active{ transform:scale(.98); }
+  .wb-proj-img{ position:absolute; inset:0; background-size:cover; background-position:center; }
+  .wb-proj::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.6) 100%); }
+  .wb-proj-info{ position:absolute; left:14px; right:12px; bottom:12px; z-index:1; text-shadow:0 1px 6px rgba(0,0,0,.45); }
+  .wb-proj-name{ font-size:16px; font-weight:700; letter-spacing:-.01em; line-height:1.2; }
+  .wb-proj-count{ margin-top:3px; font:500 11px 'JetBrains Mono',monospace; opacity:.85; }
+
+  /* Works app */
+  .win-body.works-body{ padding:0; line-height:1.3; }
+  .works-home{ min-height:100%; padding:26px 28px 30px; background:var(--surface-2); animation:wbIn .25s ease; user-select:none; box-sizing:border-box; }
+
 
   /* Photos.app — iOS "Library" layout */
   #win-photos{ width:min(480px,92vw); height:min(680px,80vh); top:90px; left:30vw;}
@@ -722,7 +704,7 @@
       padding-top:50px; padding-bottom:112px;
       background-image:
         linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)),
-        url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg');
+        url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo1.png');
       background-position: center 28%, center 28%;
       background-size: cover, cover;
       background-repeat: no-repeat, no-repeat;
@@ -806,19 +788,7 @@
     .icons{ gap:18px 10px; padding:0 12px; }
   }
 
-/* 1DOLO folder contents: Monthly and Officers side-by-side */
-#finder-1dolo{
-  grid-template-columns:repeat(3, minmax(0, 1fr));
-  align-items:start;
-}
-#finder-1dolo .file{
-  min-width:0;
-}
-@media (max-width:760px){
-  #finder-1dolo{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-  }
-}
+/* 1DOLO folder contents: uses the shared left-to-right flow above */
 
 
 
@@ -1030,6 +1000,9 @@
   .prefs-wallpapers{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
   .prefs-wall{ height:62px; border-radius:8px; border:2px solid transparent; cursor:pointer; background-size:cover; background-position:center; box-shadow:0 4px 10px rgba(0,0,0,.12); }
   .prefs-wall.active{ border-color:var(--ink); }
+  /* the mobile cover photo is only offered (and used) on the mobile layout */
+  .prefs-wall-mobile{ display:none; }
+  @media(max-width:760px){ .prefs-wall-mobile{ display:block; } }
   .prefs-wall.solid{ background:linear-gradient(135deg,#dcd6e8,#7be0ad); }
   .prefs-toggle{ position:relative; width:38px; height:22px; flex:0 0 auto; }
   .prefs-toggle input{ opacity:0; width:0; height:0; }
@@ -1109,10 +1082,6 @@
       <div class="glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg" alt="1DOLO"></div>
       <span>1DOLO</span>
     </div>
-    <div class="dicon" data-target="win-whiteboard">
-      <div class="glyph"><svg viewBox="0 0 46 46" width="100%" height="100%" aria-hidden="true"><rect width="46" height="46" fill="#f4f2f7"/><rect x="7.500" y="8.500" width="31" height="24" rx="3" fill="#fff" stroke="#23222b" stroke-width="1.800"/><rect x="11.500" y="12.500" width="10" height="8" rx="1.500" fill="#ff6f5e"/><rect x="24.500" y="12.500" width="10" height="8" rx="1.500" fill="#ffcf6e"/><rect x="11.500" y="23" width="10" height="6" rx="1.500" fill="#7be0ad"/><path d="M16 38l3-5.500M30 38l-3-5.500" stroke="#23222b" stroke-width="1.800" stroke-linecap="round"/></svg></div>
-      <span>Whiteboard</span>
-    </div>
   </div>
 
   <!-- READme window -->
@@ -1145,8 +1114,12 @@
       <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
       <div class="tl-title">Works</div>
     </div>
-    <div class="win-body">
-      <div class="finder-grid" id="finder"></div>
+    <div class="win-body works-body">
+      <div class="works-home">
+        <h2 class="wb-home-title">Works</h2>
+        <p class="wb-home-sub">Pick a project to open its folder.</p>
+        <div class="wb-grid" id="finder"></div>
+      </div>
     </div>
   </div>
 
@@ -1342,22 +1315,84 @@
   </div>
 
 
-  <!-- 1DOLO Monthly folder -->
-  <div class="window" id="win-1dolo-monthly" style="width:600px; max-width:90vw;">
+  <!-- 1DOLO Birthdays folder window -->
+  <div class="window" id="win-1dolo-birthdays" style="width:700px; max-width:90vw; top:180px; left:36vw;">
     <div class="titlebar">
-      <span>Monthly</span>
-      <button class="window-close" type="button" aria-label="Close">×</button>
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Birthdays</div>
     </div>
-    <div class="finder" id="finder-1dolo-monthly"></div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-birthdays">
+        <div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>
+      </div>
+    </div>
   </div>
 
-  <!-- 1DOLO Officers folder -->
-  <div class="window" id="win-1dolo-officers" style="width:600px; max-width:90vw;">
+  <!-- 1DOLO Rebrand folder window -->
+  <div class="window" id="win-1dolo-rebrand" style="width:700px; max-width:90vw; top:190px; left:38vw;">
     <div class="titlebar">
-      <span>Officers</span>
-      <button class="window-close" type="button" aria-label="Close">×</button>
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">1DOLO Rebrand</div>
     </div>
-    <div class="finder" id="finder-1dolo-officers"></div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-rebrand"></div>
+    </div>
+  </div>
+
+  <!-- Brand Guidelines Book window (inside 1DOLO Rebrand) -->
+  <div class="window" id="win-1dolo-rebrand-brand-guidelines" style="width:min(900px,94vw); height:min(640px,78vh); top:100px; left:14vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Brand Guidelines Book</div>
+    </div>
+    <div class="win-body book-body">
+      <iframe title="Brand Guidelines Book" allowfullscreen allow="autoplay; fullscreen; clipboard-write" scrolling="no" data-src="https://heyzine.com/flip-book/21d5fae10b.html"></iframe>
+    </div>
+  </div>
+
+  <!-- Sample Posts folder window (inside 1DOLO Rebrand) -->
+  <div class="window" id="win-1dolo-rebrand-sample-posts" style="width:700px; max-width:90vw; top:170px; left:40vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Sample Posts</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-rebrand-sample-posts"></div>
+    </div>
+  </div>
+
+  <!-- Visual Pegs folder window (inside 1DOLO Rebrand) -->
+  <div class="window" id="win-1dolo-rebrand-visual-pegs" style="width:700px; max-width:90vw; top:230px; left:34vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Visual Pegs</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-rebrand-visual-pegs"></div>
+    </div>
+  </div>
+
+  <!-- Logo Redesigns folder window (inside 1DOLO Rebrand) -->
+  <div class="window" id="win-1dolo-rebrand-logo-redesigns" style="width:700px; max-width:90vw; top:210px; left:42vw;">
+    <div class="titlebar">
+      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
+      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
+      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
+      <div class="tl-title">Logo Redesigns</div>
+    </div>
+    <div class="win-body">
+      <div class="finder-grid" id="finder-1dolo-rebrand-logo-redesigns"></div>
+    </div>
   </div>
 
 
@@ -1445,33 +1480,6 @@
           <button class="ph-lglass round" type="button" aria-label="Sort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button>
           <button class="ph-lglass round" type="button" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Whiteboard window -->
-  <div class="window" id="win-whiteboard">
-    <div class="titlebar">
-      <button class="tl-btn" style="background:var(--coral);" data-action="close" aria-label="Close"></button>
-      <button class="tl-btn" style="background:var(--amber);" data-action="minimize" aria-label="Minimize"></button>
-      <button class="tl-btn" style="background:var(--mint);" data-action="maximize" aria-label="Maximize"></button>
-      <div class="tl-title">Whiteboard</div>
-    </div>
-    <div class="win-body wb-body">
-      <div class="wb-chips" id="wb-chips"></div>
-      <div class="wb-view" id="wb-view"><div class="wb-world" id="wb-world"></div></div>
-      <div class="wb-tools">
-        <button class="wb-tbtn" type="button" id="wb-out" aria-label="Zoom out">&minus;</button>
-        <span class="wb-zoomlabel" id="wb-zoom">100%</span>
-        <button class="wb-tbtn" type="button" id="wb-in" aria-label="Zoom in">+</button>
-        <button class="wb-tbtn fit" type="button" id="wb-fit">Fit all</button>
-      </div>
-      <div class="wb-lb" id="wb-lb">
-        <button class="wb-lb-btn close" type="button" data-lb="close" aria-label="Close">&times;</button>
-        <button class="wb-lb-btn prev" type="button" data-lb="prev" aria-label="Previous">&lsaquo;</button>
-        <img id="wb-lb-img" alt="" draggable="false">
-        <div class="wb-lb-cap" id="wb-lb-cap"></div>
-        <button class="wb-lb-btn next" type="button" data-lb="next" aria-label="Next">&rsaquo;</button>
       </div>
     </div>
   </div>
@@ -1581,7 +1589,7 @@
           <div class="prefs-row"><div><div class="prefs-label">Theme</div><div class="prefs-desc">Change the look of the windows.</div></div><select class="prefs-select" id="pref-theme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
           <div class="prefs-row"><div><div class="prefs-label">Accent color</div><div class="prefs-desc">Used for active controls and little details.</div></div><div class="prefs-colors"><button class="prefs-color active" data-accent="mint" style="background:#7be0ad" aria-label="Mint"></button><button class="prefs-color" data-accent="coral" style="background:#ff6f5e" aria-label="Coral"></button><button class="prefs-color" data-accent="amber" style="background:#ffcf6e" aria-label="Amber"></button><button class="prefs-color" data-accent="lilac" style="background:#8f8bd6" aria-label="Lilac"></button></div></div>
           <div class="prefs-row"><div><div class="prefs-label">Wallpaper</div><div class="prefs-desc">Pick the desktop background.</div></div></div>
-          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
+          <div class="prefs-wallpapers"><button class="prefs-wall active" data-wall="cover" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo.png')" aria-label="Cover photo wallpaper"></button><button class="prefs-wall prefs-wall-mobile" data-wall="covermobile" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo1.png')" aria-label="Mobile cover photo wallpaper"></button><button class="prefs-wall" data-wall="newvegas" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')" aria-label="New Vegas wallpaper"></button><button class="prefs-wall" data-wall="photo" style="background-image:linear-gradient(180deg,rgba(20,16,30,.15),rgba(20,16,30,.45)),url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')" aria-label="Photo wallpaper"></button><button class="prefs-wall solid" data-wall="solid" aria-label="Gradient wallpaper"></button></div>
         </section>
         <section class="prefs-pane" data-pref-pane="desktop">
           <h2 class="prefs-heading">Desktop</h2>
@@ -1661,10 +1669,6 @@
         <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg" alt=""></div>
         <span>1DOLO</span>
       </div>
-      <div class="drawer-app" data-target="win-whiteboard">
-        <div class="drawer-glyph"><svg viewBox="0 0 46 46" width="100%" height="100%" aria-hidden="true"><rect width="46" height="46" fill="#f4f2f7"/><rect x="7.500" y="8.500" width="31" height="24" rx="3" fill="#fff" stroke="#23222b" stroke-width="1.800"/><rect x="11.500" y="12.500" width="10" height="8" rx="1.500" fill="#ff6f5e"/><rect x="24.500" y="12.500" width="10" height="8" rx="1.500" fill="#ffcf6e"/><rect x="11.500" y="23" width="10" height="6" rx="1.500" fill="#7be0ad"/><path d="M16 38l3-5.500M30 38l-3-5.500" stroke="#23222b" stroke-width="1.800" stroke-linecap="round"/></svg></div>
-        <span>Whiteboard</span>
-      </div>
       <div class="drawer-app" data-target="win-preferences">
         <div class="drawer-glyph"><img src="https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1Settings_2025.png" alt="" style="object-fit:contain;"></div>
         <span>Preferences</span>
@@ -1689,7 +1693,7 @@
 <script>
 // Preferences (loaded early so boot screen can use the saved wallpaper)
 const PREF_KEY = 'shane-webos-preferences-v1';
-const PREF_DEFAULTS = { theme:'light', accent:'mint', wall:'newvegas', icons:true, dock:true, shadows:true, motion:true, reduced:false, scale:'1' };
+const PREF_DEFAULTS = { theme:'light', accent:'mint', wall:(window.matchMedia('(max-width:760px)').matches ? 'covermobile' : 'cover'), icons:true, dock:true, shadows:true, motion:true, reduced:false, scale:'1' };
 const prefAccent = {
   mint:{mint:'#7be0ad', coral:'#ff6f5e'},
   coral:{mint:'#ff6f5e', coral:'#ff6f5e'},
@@ -1697,16 +1701,20 @@ const prefAccent = {
   lilac:{mint:'#8f8bd6', coral:'#ff6f9d'}
 };
 const prefWalls = {
+  covermobile:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo1.png')",
+  cover:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/cover%20photo.png')",
   newvegas:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/fall0utnewvegas/refs/heads/main/DSC_4765.jpeg')",
   photo:"linear-gradient(180deg, rgba(20,16,30,.35), rgba(20,16,30,.15) 18%, rgba(20,16,30,.45) 82%, rgba(20,16,30,.6)), url('https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/IMG_8263.jpeg')",
   solid:"linear-gradient(135deg, var(--desktop), var(--desktop-2))"
 };
+// the mobile cover photo only applies on the mobile layout; on desktop it falls back to the desktop cover photo
+function wallKey(k){ return (k === 'covermobile' && !window.matchMedia('(max-width:760px)').matches) ? 'cover' : k; }
 let prefs = {...PREF_DEFAULTS};
 try { prefs = {...PREF_DEFAULTS, ...JSON.parse(localStorage.getItem(PREF_KEY) || '{}')}; } catch(e) {}
 
 // boot sequence
 // match the blurred boot background to whichever wallpaper the user last picked
-document.documentElement.style.setProperty('--boot-bg-image', prefWalls[prefs.wall] || prefWalls.newvegas);
+document.documentElement.style.setProperty('--boot-bg-image', prefWalls[wallKey(prefs.wall)] || prefWalls.cover);
 
 const steps = ["Starting up…","Verifying credentials…","Loading user profile…","Preparing desktop…"];
 let si = 0;
@@ -1734,8 +1742,8 @@ function applyPrefs(){
   const root=document.documentElement, body=document.body, desktop=document.getElementById('desktop');
   const a=prefAccent[prefs.accent] || prefAccent.mint; root.style.setProperty('--mint',a.mint); root.style.setProperty('--coral',a.coral);
   body.classList.toggle('prefs-dark', prefs.theme==='dark');
-  desktop.style.backgroundImage = prefWalls[prefs.wall] || prefWalls.newvegas;
-  document.documentElement.style.setProperty('--boot-bg-image', prefWalls[prefs.wall] || prefWalls.newvegas);
+  desktop.style.backgroundImage = prefWalls[wallKey(prefs.wall)] || prefWalls.cover;
+  document.documentElement.style.setProperty('--boot-bg-image', prefWalls[wallKey(prefs.wall)] || prefWalls.cover);
   document.querySelector('.icons').style.display = prefs.icons ? '' : 'none';
   document.querySelector('.dock').style.display = prefs.dock ? '' : 'none';
   desktop.classList.toggle('no-shadows', !prefs.shadows);
@@ -1745,7 +1753,7 @@ function applyPrefs(){
   const scale=document.getElementById('pref-scale'); if(scale) scale.value=prefs.scale;
   ['icons','dock','shadows','motion','reduced'].forEach(k=>{const el=document.getElementById('pref-'+k); if(el) el.checked=!!prefs[k];});
   document.querySelectorAll('.prefs-color').forEach(b=>b.classList.toggle('active',b.dataset.accent===prefs.accent));
-  document.querySelectorAll('.prefs-wall').forEach(b=>b.classList.toggle('active',b.dataset.wall===prefs.wall));
+  document.querySelectorAll('.prefs-wall').forEach(b=>b.classList.toggle('active',b.dataset.wall===wallKey(prefs.wall)));
 }
 function bindPreferences(){
   document.querySelectorAll('[data-pref-tab]').forEach(tab=>tab.addEventListener('click',()=>{
@@ -1771,7 +1779,7 @@ const cats = [
   {name:"UI/UX", color:"#ffcf6e"},
 ];
 const files = [
-  {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo", photosAlbum:"1DOLO"},
+  {name:"1DOLO", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif", target:"win-1dolo"},
   {name:"Irish Spring", type:"Folder", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%2008335011111111111111111.png", target:"win-irish-springs"},
   {name:"Chewtor Brain Boost Gums", type:"Folder", target:"win-work-chewtor-brain-boost-gums"},
   {name:"Chewtor Cereals", type:"Folder", target:"win-work-chewtor-cereals"},
@@ -1786,18 +1794,25 @@ const files = [
   {name:"Sticker Designs", type:"Folder", target:"win-work-sticker-designs"},
 ];
 const oneDoloFiles = [
-  {name:"Monthly", type:"Folder", target:"win-1dolo-monthly"},
-  {name:"Officers", type:"Folder", target:"win-1dolo-officers"},
+  {name:"Birthdays", type:"Folder", target:"win-1dolo-birthdays", click:true},
+  {name:"1DOLO Rebrand", type:"Folder", target:"win-1dolo-rebrand", click:true},
   {name:"Facebook", type:"App", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/855448992_122229178154506736_1262632322905635391_n.jpg", url:"https://www.facebook.com/profile.php?id=61565202106574"},
 ];
 const finder = document.getElementById('finder');
-files.forEach(f=>{
-  const el = document.createElement('div'); el.className='file';
-  const thumbInner = f.gif
-    ? `<img src="${f.gif}" alt="${f.name}" loading="lazy">`
-    : (f.type === 'Folder' ? `<div class="folder-icon">📁</div>` : (f.type || (cats[f.cat] && cats[f.cat].name) || ''));
-  const bg = f.gif ? 'transparent' : (cats[f.cat] ? cats[f.cat].color : '#c9c0e0');
-  el.innerHTML = `<div class="thumb" style="background:${bg};">${thumbInner}</div><div class="fname">${f.name}</div><div class="ftype">${f.type || (cats[f.cat] && cats[f.cat].name+' file') || ''}</div>`;
+const WORKS_HUES = [350, 28, 160, 262, 200, 330, 48, 140, 300, 12, 185, 240, 90];
+files.forEach((f, i)=>{
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'wb-proj';
+  el.style.setProperty('--zh', WORKS_HUES[i % WORKS_HUES.length]);
+  if(f.gif){
+    const im = document.createElement('div'); im.className = 'wb-proj-img';
+    im.style.backgroundImage = 'url("' + f.gif + '")';
+    el.appendChild(im);
+  }
+  const info = document.createElement('div'); info.className = 'wb-proj-info';
+  const nm = document.createElement('div'); nm.className = 'wb-proj-name'; nm.textContent = f.name;
+  const ct = document.createElement('div'); ct.className = 'wb-proj-count'; ct.textContent = f.type || 'Folder';
+  info.appendChild(nm); info.appendChild(ct); el.appendChild(info);
   if(f.target){
     // items that open a Photos album skip data-target, which the global handler would use to open the folder window too
     if(!f.photosAlbum) el.dataset.target = f.target;
@@ -2011,15 +2026,107 @@ function renderOneDoloFolders(){
       }
     } else {
       el.innerHTML = `<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">${f.name}</div><div class="ftype">Folder</div>`;
-      el.addEventListener('dblclick', ()=>{
-        const win = document.getElementById(f.target);
-        if(win) win.style.display = 'block';
-      });
+      if(f.click){
+        el.dataset.target = f.target;
+        el.addEventListener('click', ()=> focusWindow(f.target));
+      } else {
+        el.addEventListener('dblclick', ()=>{
+          const win = document.getElementById(f.target);
+          if(win) win.style.display = 'block';
+        });
+      }
     }
     finder.appendChild(el);
   });
 }
 renderOneDoloFolders();
+
+// contents shown inside the 1DOLO Rebrand folder window — edit this array to add your own files/folders
+const oneDoloRebrandFiles = [
+  {name:"Logo Redesigns", type:"Folder", target:"win-1dolo-rebrand-logo-redesigns"},
+  {name:"Visual Pegs", type:"Folder", target:"win-1dolo-rebrand-visual-pegs"},
+  {name:"Sample Posts", type:"Folder", target:"win-1dolo-rebrand-sample-posts"},
+  // the book opens in its own window with the flipbook embedded; `gif` is just the thumbnail
+  {name:"Brand Guidelines Book", type:"Book", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/1dolo%20%2726-%2727%20guidelines%20(1080%20x%201440%20px)%20(11).png", target:"win-1dolo-rebrand-brand-guidelines"},
+];
+// fills a folder window with image thumbnails; clicking one opens it in the Photos app's full-screen viewer (prev/next through the folder's images)
+function renderImageFolder(gridId, albumName, files){
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+  if(!files.length){
+    grid.innerHTML = `<div style="grid-column:1/-1; color:var(--dim); font-size:12.5px; padding:8px 4px;">This folder is empty — add items here.</div>`;
+    return;
+  }
+  const photos = files.map(f=>({ src:f.gif, caption:f.name, album:albumName }));
+  files.forEach((f, i)=>{
+    const el = document.createElement('div');
+    el.className = 'file image-file';
+    el.innerHTML = `<div class="thumb" style="background:transparent;"><img src="${f.gif}" alt="${f.name}" loading="lazy"></div><div class="fname">${f.name}</div><div class="ftype">${f.type}</div>`;
+    el.addEventListener('click', ()=>{
+      if(typeof focusWindow === 'function') focusWindow('win-photos');
+      if(window.phViewer) window.phViewer.open(photos, i);
+    });
+    grid.appendChild(el);
+  });
+}
+
+// contents of the Logo Redesigns folder window — 7 images named "logo rebrand 1.png" ... "logo rebrand 7.png"
+const logoRedesignFiles = Array.from({length:7}, (_, i)=>({
+  name:String(i + 1),
+  type:"Image",
+  gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/logo%20rebrand/logo%20rebrand%20" + (i + 1) + ".png"
+}));
+renderImageFolder('finder-1dolo-rebrand-logo-redesigns', 'Logo Redesigns', logoRedesignFiles);
+
+// contents of the Visual Pegs folder window — edit this array to add your own images
+const visualPegFiles = [
+  {name:"1", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/visual%20pegs/visual%20peg%201.png"},
+  {name:"2", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/visual%20pegs/visual%20peg%202.png"},
+  {name:"3", type:"Image", gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/visual%20pegs/visual%20peg%203.png"},
+];
+renderImageFolder('finder-1dolo-rebrand-visual-pegs', 'Visual Pegs', visualPegFiles);
+
+// contents of the Sample Posts folder window — 14 images named "sample post 1.png" ... "sample post 14.png"
+const samplePostFiles = Array.from({length:14}, (_, i)=>({
+  name:String(i + 1),
+  type:"Image",
+  gif:"https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/sample%20posts/sample%20post%20" + (i + 1) + ".png"
+}));
+renderImageFolder('finder-1dolo-rebrand-sample-posts', 'Sample Posts', samplePostFiles);
+
+// the 1DOLO Rebrand image folders also appear as albums in the Photos app (and in its Library view)
+window.REBRAND_ALBUMS = [
+  {name:'Logo Redesigns', target:'win-1dolo-rebrand-logo-redesigns', files:logoRedesignFiles},
+  {name:'Sample Posts', target:'win-1dolo-rebrand-sample-posts', files:samplePostFiles}
+].map(a=>({
+  name:a.name,
+  target:a.target,
+  cover:a.files[0] && a.files[0].gif,
+  photos:a.files.map(f=>({ src:f.gif, caption:f.name }))
+}));
+
+(function(){
+  const grid = document.getElementById('finder-1dolo-rebrand');
+  if(!grid) return;
+  oneDoloRebrandFiles.forEach(f=>{
+    const el = document.createElement('div');
+    el.className = 'file';
+    el.innerHTML = f.gif
+      ? `<div class="thumb" style="background:transparent;"><img src="${f.gif}" alt="${f.name}" loading="lazy"></div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`
+      : `<div class="thumb"><div class="folder-icon">📁</div></div><div class="fname">${f.name}</div><div class="ftype">${f.type || ''}</div>`;
+    if(f.target){
+      el.dataset.target = f.target;
+      el.addEventListener('click', ()=>{
+        // embedded pages (e.g. the flipbook) only start loading the first time their window is opened
+        const w = document.getElementById(f.target);
+        const fr = w && w.querySelector('iframe[data-src]');
+        if(fr){ fr.src = fr.dataset.src; fr.removeAttribute('data-src'); }
+        focusWindow(f.target);
+      });
+    }
+    grid.appendChild(el);
+  });
+})();
 
 
 // draggable windows — clamped so the titlebar (and its buttons) can
@@ -3959,9 +4066,10 @@ if(rmTexts.length){
   // Projects shown as albums. Add a `cover` image to replace the colour gradient, and a `photos` list to fill the album.
   // Each photo is { src:'url', caption:'subtitle shown when the photo is opened' } - a plain url string also works.
   // Leave caption empty and the album name is used as the subtitle.
+  // Optional `area:'name'` groups photos into their own labelled area.
   const ALBUMS = [
     { name:'1DOLO', target:'win-1dolo', cover:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/ezgif-191e0c66057c5b17-ezgif.com-optimize.gif',
-      photos:[{ src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Artboard%201%20copy%203.png', caption:'1' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Artboard%201%20copy%204.png', caption:'2' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Artboard%2012.png', caption:'3' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/palette%20%26%20mockups%20(1fsdfasd).png', caption:'9' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/displace%20putang%20ena%20mo1111.png', caption:'10' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/idolo.png', caption:'11' } ] },
+      photos:[] },
     { name:'Irish Spring', target:'win-irish-springs', cover:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/Screenshot%202025-01-22%2008335011111111111111111.png',
       photos:[{ src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%201.png', caption:'4' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%202.png', caption:'5' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%203.png', caption:'6' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%204.png', caption:'7' }, { src:'https://raw.githubusercontent.com/alimboyaos-alt/webos/refs/heads/main/irish%20spring%205.png', caption:'8' }] },
     { name:'Chewtor Brain Boost Gums', target:'win-work-chewtor-brain-boost-gums' },
@@ -3976,7 +4084,12 @@ if(rmTexts.length){
     { name:'Decks', target:'win-work-decks' },
     { name:'Sticker Designs', target:'win-work-sticker-designs' }
   ];
-  window.PH_ALBUMS = ALBUMS; // the Whiteboard app reads its zones from here
+  // add the 1DOLO Rebrand folders (defined earlier in the page) as albums, right after Irish Spring
+  if(window.REBRAND_ALBUMS && window.REBRAND_ALBUMS.length){
+    ALBUMS.splice.apply(ALBUMS, [2, 0].concat(window.REBRAND_ALBUMS));
+  }
+
+  window.PH_ALBUMS = ALBUMS;
   // every album picture also shows up in the Library view (de-duplicated)
   if(window.phLibrary){
     const seen = {}, all = [];
@@ -4117,227 +4230,6 @@ if(rmTexts.length){
   document.getElementById('ph-lib-btn').addEventListener('click', function(){ setView('collections'); });
   document.getElementById('ph-tab-library').addEventListener('click', function(){ setView('library'); });
   document.getElementById('ph-tab-coll').addEventListener('click', function(){ setView('collections'); });
-})();
-</script>
-
-<script id="whiteboard-app-script">
-(function(){
-  const view = document.getElementById('wb-view');
-  const world = document.getElementById('wb-world');
-  const chips = document.getElementById('wb-chips');
-  if(!view || !world) return;
-
-  // layout metrics (board units)
-  const CARD_W = 150, CARD_H = 168, GAP = 18, COLS = 3, PAD = 26, HEAD = 78;
-  const ZGAP = 72, ZCOLS = 4, MARGIN = 110, EMPTY_H = 110;
-  const ZW = PAD * 2 + COLS * CARD_W + (COLS - 1) * GAP;
-  const HUES = [350, 28, 160, 262, 200, 330, 48, 140, 300, 12, 185, 240, 90];
-  const MIN_Z = 0.12, MAX_Z = 2.5;
-
-  // one zone per work - pictures come from the matching Photos album
-  const norm = function(p){ return typeof p === 'string' ? { src:p } : p; };
-  const zones = (window.PH_ALBUMS || []).map(function(a, i){
-    const items = [], seen = {};
-    function add(src, caption){ if(src && !seen[src]){ seen[src] = 1; items.push({ src:src, caption:caption || '' }); } }
-    add(a.cover, '');
-    (a.photos || []).forEach(function(p){ const n = norm(p); add(n.src, n.caption); });
-    return { name:a.name, target:a.target, items:items, hue:HUES[i % HUES.length] };
-  });
-
-  // place zones in a loose grid; each row is as tall as its tallest zone
-  zones.forEach(function(z){
-    const rows = Math.ceil(z.items.length / COLS);
-    z.w = ZW;
-    z.h = z.items.length ? HEAD + rows * CARD_H + (rows - 1) * GAP + PAD : HEAD + EMPTY_H + PAD;
-  });
-  let cursorY = MARGIN, BW = MARGIN * 2 + Math.min(zones.length, ZCOLS) * ZW + (Math.min(zones.length, ZCOLS) - 1) * ZGAP;
-  for(let r = 0; r * ZCOLS < zones.length; r++){
-    const row = zones.slice(r * ZCOLS, r * ZCOLS + ZCOLS);
-    row.forEach(function(z, c){ z.x = MARGIN + c * (ZW + ZGAP); z.y = cursorY; });
-    cursorY += Math.max.apply(null, row.map(function(z){ return z.h; })) + ZGAP;
-  }
-  const BH = cursorY - ZGAP + MARGIN;
-  world.style.width = BW + 'px'; world.style.height = BH + 'px';
-
-  // lightbox
-  const lb = document.getElementById('wb-lb');
-  const lbImg = document.getElementById('wb-lb-img');
-  const lbCap = document.getElementById('wb-lb-cap');
-  let lbZone = null, lbIdx = 0;
-  function lbShow(i){
-    const n = lbZone.items.length;
-    lbIdx = (i + n) % n;
-    const it = lbZone.items[lbIdx];
-    lbImg.src = it.src;
-    lbCap.textContent = lbZone.name + (it.caption ? ' \u00b7 ' + it.caption : '');
-  }
-  function lbOpen(z, i){ lbZone = z; lb.classList.toggle('is-single', z.items.length < 2); lb.classList.add('is-open'); lbShow(i); }
-  function lbClose(){ lb.classList.remove('is-open'); }
-  lb.addEventListener('click', function(e){
-    const b = e.target.closest('[data-lb]');
-    if(b){
-      if(b.dataset.lb === 'close') lbClose();
-      else if(b.dataset.lb === 'prev') lbShow(lbIdx - 1);
-      else lbShow(lbIdx + 1);
-    } else if(e.target === lb){ lbClose(); }
-  });
-  document.addEventListener('keydown', function(e){
-    if(!lb.classList.contains('is-open')) return;
-    if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); lbClose(); }
-    else if(e.key === 'ArrowRight'){ e.preventDefault(); lbShow(lbIdx + 1); }
-    else if(e.key === 'ArrowLeft'){ e.preventDefault(); lbShow(lbIdx - 1); }
-  }, true);
-
-  // build the zones
-  zones.forEach(function(z, zi){
-    const el = document.createElement('div');
-    el.className = 'wb-zone';
-    el.style.cssText = 'left:' + z.x + 'px;top:' + z.y + 'px;width:' + z.w + 'px;height:' + z.h + 'px;--zh:' + z.hue + ';';
-
-    const head = document.createElement('div');
-    head.className = 'wb-zone-head';
-    const left = document.createElement('div');
-    const title = document.createElement('div'); title.className = 'wb-zone-title'; title.textContent = z.name;
-    const meta = document.createElement('div'); meta.className = 'wb-zone-meta';
-    meta.textContent = z.items.length ? z.items.length + (z.items.length === 1 ? ' item' : ' items') : 'empty';
-    left.appendChild(title); left.appendChild(meta);
-    head.appendChild(left);
-    if(z.target){
-      const open = document.createElement('button');
-      open.type = 'button'; open.className = 'wb-open'; open.textContent = 'Open folder \u2197';
-      open.addEventListener('click', function(){ if(typeof focusWindow === 'function') focusWindow(z.target); });
-      head.appendChild(open);
-    }
-    el.appendChild(head);
-
-    if(!z.items.length){
-      const empty = document.createElement('div');
-      empty.className = 'wb-empty'; empty.textContent = 'Nothing pinned here yet';
-      el.appendChild(empty);
-    }
-    z.items.forEach(function(it, i){
-      const c = document.createElement('div');
-      c.className = 'wb-card';
-      const col = i % COLS, row = Math.floor(i / COLS);
-      const rot = (((i * 37 + zi * 13) % 7) - 3) * 0.9;
-      c.style.cssText = 'left:' + (PAD + col * (CARD_W + GAP)) + 'px;top:' + (HEAD + row * (CARD_H + GAP)) + 'px;--r:' + rot + 'deg;';
-      const im = document.createElement('img');
-      im.src = it.src; im.alt = ''; im.loading = 'lazy'; im.draggable = false;
-      const cap = document.createElement('span'); cap.textContent = it.caption || '';
-      c.appendChild(im); c.appendChild(cap);
-      c.addEventListener('click', function(){ lbOpen(z, i); });
-      el.appendChild(c);
-    });
-    el.addEventListener('dblclick', function(e){
-      if(e.target.closest('.wb-card') || e.target.closest('.wb-open')) return;
-      focusZone(zi);
-    });
-    world.appendChild(el);
-  });
-
-  // pan / zoom state
-  let x = 0, y = 0, z = 1, flyT = null;
-  const zoomLabel = document.getElementById('wb-zoom');
-  function apply(){
-    world.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + z + ')';
-    let step = 28; while(step * z < 14) step *= 2;
-    view.style.backgroundSize = (step * z) + 'px ' + (step * z) + 'px';
-    view.style.backgroundPosition = x + 'px ' + y + 'px';
-    zoomLabel.textContent = Math.round(z * 100) + '%';
-  }
-  function stopFly(){ clearTimeout(flyT); view.classList.remove('is-flying'); }
-  function setView(nx, ny, nz, animate){
-    if(animate){
-      view.classList.add('is-flying');
-      clearTimeout(flyT);
-      flyT = setTimeout(function(){ view.classList.remove('is-flying'); }, 620);
-    } else stopFly();
-    x = nx; y = ny; z = nz; apply();
-  }
-  function fitRect(rx, ry, rw, rh, pad, animate){
-    const vw = view.clientWidth, vh = view.clientHeight;
-    if(!vw || !vh) return;
-    const nz = Math.max(MIN_Z, Math.min((vw - pad * 2) / rw, (vh - pad * 2) / rh, 1.4));
-    setView((vw - rw * nz) / 2 - rx * nz, (vh - rh * nz) / 2 - ry * nz, nz, animate);
-  }
-  function fitAll(animate){ fitRect(0, 0, BW, BH, 12, animate); }
-  function focusZone(i){ const t = zones[i]; if(t) fitRect(t.x, t.y, t.w, t.h, 36, true); }
-  function zoomAt(nz, cx, cy){
-    nz = Math.max(MIN_Z, Math.min(MAX_Z, nz));
-    const r = view.getBoundingClientRect();
-    const px = cx - r.left, py = cy - r.top;
-    x = px - (px - x) * (nz / z);
-    y = py - (py - y) * (nz / z);
-    z = nz; apply();
-  }
-  function zoomCenter(f){
-    stopFly();
-    const r = view.getBoundingClientRect();
-    zoomAt(z * f, r.left + r.width / 2, r.top + r.height / 2);
-  }
-
-  view.addEventListener('wheel', function(e){
-    e.preventDefault(); stopFly();
-    zoomAt(z * Math.exp(-e.deltaY * 0.0015), e.clientX, e.clientY);
-  }, { passive:false });
-
-  // drag the board to pan (a press that barely moves stays a normal click); two fingers pinch-zoom
-  const ptrs = new Map();
-  let pan = null, pinch = null;
-  function dist(){ const p = Array.from(ptrs.values()); return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); }
-  view.addEventListener('pointerdown', function(e){
-    if(e.pointerType === 'mouse' && e.button !== 0) return;
-    stopFly();
-    ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    if(ptrs.size === 2){ pinch = { d:dist(), z:z }; pan = null; }
-    else if(ptrs.size === 1){ pan = { id:e.pointerId, sx:e.clientX, sy:e.clientY, x0:x, y0:y, active:false }; }
-  });
-  view.addEventListener('pointermove', function(e){
-    if(!ptrs.has(e.pointerId)) return;
-    ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    if(pinch && ptrs.size >= 2){
-      const p = Array.from(ptrs.values());
-      zoomAt(pinch.z * dist() / pinch.d, (p[0].x + p[1].x) / 2, (p[0].y + p[1].y) / 2);
-      return;
-    }
-    if(pan && e.pointerId === pan.id){
-      const dx = e.clientX - pan.sx, dy = e.clientY - pan.sy;
-      if(!pan.active && Math.hypot(dx, dy) > 4){
-        pan.active = true;
-        try{ view.setPointerCapture(e.pointerId); }catch(_){}
-        view.classList.add('is-panning');
-      }
-      if(pan.active){ x = pan.x0 + dx; y = pan.y0 + dy; apply(); }
-    }
-  });
-  function release(e){
-    ptrs.delete(e.pointerId);
-    if(ptrs.size < 2) pinch = null;
-    if(pan && pan.id === e.pointerId){ pan = null; view.classList.remove('is-panning'); }
-  }
-  view.addEventListener('pointerup', release);
-  view.addEventListener('pointercancel', release);
-
-  // toolbar + zone chips
-  document.getElementById('wb-in').addEventListener('click', function(){ zoomCenter(1.25); });
-  document.getElementById('wb-out').addEventListener('click', function(){ zoomCenter(1 / 1.25); });
-  document.getElementById('wb-fit').addEventListener('click', function(){ fitAll(true); });
-  function chip(label, hue, fn){
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'wb-chip';
-    if(hue != null){ b.style.setProperty('--zh', hue); const d = document.createElement('i'); b.appendChild(d); }
-    b.appendChild(document.createTextNode(label));
-    b.addEventListener('click', fn);
-    chips.appendChild(b);
-  }
-  chip('All', null, function(){ fitAll(true); });
-  zones.forEach(function(t, i){ chip(t.name, t.hue, function(){ focusZone(i); }); });
-
-  // frame the whole board the first time the window gets a size (it starts hidden)
-  let fitted = false;
-  function firstFit(){ if(!fitted && view.clientWidth > 0 && view.clientHeight > 0){ fitted = true; fitAll(false); } }
-  if(window.ResizeObserver) new ResizeObserver(firstFit).observe(view);
-  firstFit();
 })();
 </script>
 
