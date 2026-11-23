@@ -387,6 +387,11 @@
   .term{ background:var(--chrome); color:var(--ink); font-family:'JetBrains Mono', monospace; font-size:12px; padding:16px; border-radius:0 0 12px 12px; line-height:1.9; transition:background-color .35s ease, color .35s ease;}
   .term .p{ color:var(--term-prompt);}
   .term a{ color:var(--term-link); text-decoration:none;}
+  .term .contact-art{ margin:14px 0 0; font:inherit; font-size:min(9px, calc((100vw - 56px) / 52)); line-height:1.15; white-space:pre; overflow-x:auto; user-select:none;
+    background:#0d1117; color:#e6edf3; border-radius:8px; padding:10px 8px; }
+  .contact-art i{ font-style:normal; }
+  .contact-art .c0{color:#e6edf3} .contact-art .c1{color:#8b949e} .contact-art .c2{color:#7ee787} .contact-art .c3{color:#79c0ff} .contact-art .c4{color:#ffa657}
+  .contact-art .c5{color:#ff7b72} .contact-art .c6{color:#d2a8ff} .contact-art .c7{color:#484f58} .contact-art .c8{color:#30363d} .contact-art .c9{color:#f2cc60}
   .caret{ display:inline-block; width:7px; height:13px; background:var(--caret); vertical-align:middle; animation:blink 1s steps(1) infinite;}
   @keyframes blink{50%{opacity:0;}}
 
@@ -439,6 +444,27 @@
   .wb-proj-info{ position:absolute; left:14px; right:12px; bottom:12px; z-index:1; text-shadow:0 1px 6px rgba(0,0,0,.45); }
   .wb-proj-name{ font-size:16px; font-weight:700; letter-spacing:-.01em; line-height:1.2; }
   .wb-proj-count{ margin-top:3px; font:500 11px 'JetBrains Mono',monospace; opacity:.85; }
+
+  /* Home-screen ASCII cat: a free-floating, draggable widget (sits under windows and the dock) */
+  #home-ascii-widget{ position:fixed; left:0; top:0; z-index:5; padding:6px; border-radius:12px; cursor:grab; touch-action:none;
+    user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; visibility:hidden;
+    --ascii-ink:#fff; filter:drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+  #home-ascii-widget.is-ready{ visibility:visible; }
+  #home-ascii-widget.is-dragging{ cursor:grabbing; z-index:6; filter:drop-shadow(0 10px 18px rgba(0,0,0,.45)); }
+  #home-ascii-widget ascii-art{ display:block; pointer-events:none; }
+  body.app-open #home-ascii-widget{ display:none !important; }
+
+  /* Works folders: mobile-only Back button (goes up one folder) */
+  .tl-back{ display:none; }
+  @media(max-width:760px){
+    .tl-back{ display:inline-flex; align-items:center; gap:1px; flex-shrink:0; height:32px; margin:0 2px 0 -6px; padding:0 10px 0 2px;
+      border:0; background:none; color:#0a84ff; font:600 14px 'Inter',sans-serif; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .tl-back svg{ width:20px; height:20px; display:block; }
+    .tl-back:active{ opacity:.45; }
+    /* folders show only Back; the 3 circles return on the Works home */
+    .window.has-back .tl-btn{ display:none; }
+    .window.has-back .tl-title{ margin-right:52px; }
+  }
 
   /* Works app */
   .win-body.works-body{ padding:0; line-height:1.3; }
@@ -622,6 +648,8 @@
   .lb-icon svg{ width:68%; height:auto; }
   .lb-section{ padding:18px 22px 6px; }
   .lb-section:last-child{ padding-bottom:20px; }
+  .lb-ascii{ display:flex; justify-content:center; padding-top:22px; --ascii-ink:var(--ink); }
+  .lb-ascii ascii-art{ display:block; max-width:100%; pointer-events:none; user-select:none; -webkit-user-select:none; }
   .lb-section-title{ font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); margin-bottom:12px; }
   .lb-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:0; }
   .lb-card{ text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px; cursor:pointer; min-width:0; }
@@ -751,8 +779,8 @@
     }
     .dicon{ width:100%; gap:8px; }
     .dicon .glyph{
-      width:85%; height:auto; aspect-ratio:1/1; max-width:140px;
-      margin:0 auto; border-radius:22.37%; font-size:clamp(17px,6vw,29px);
+      width:60px; height:60px; aspect-ratio:1/1; max-width:none; /* same size as the dock icons */
+      margin:0 auto; border-radius:22.37%; font-size:27px;
     }
     .dicon span{ font-size:clamp(9px,2.6vw,11px); }
 
@@ -866,6 +894,32 @@
   backdrop-filter:none !important;
   -webkit-backdrop-filter:none !important;
   isolation:isolate;
+}
+
+/* ===== macOS-style scrollbars (applied globally) ===== */
+:root{ --sb-thumb:rgba(0,0,0,.4); --sb-thumb-hover:rgba(0,0,0,.6); }
+body.prefs-dark{ --sb-thumb:rgba(255,255,255,.4); --sb-thumb-hover:rgba(255,255,255,.6); }
+/* always-dark surface (contact art block) */
+.term .contact-art{ --sb-thumb:rgba(255,255,255,.4); --sb-thumb-hover:rgba(255,255,255,.6); }
+
+/* WebKit / Blink: thin, overlay-style pill that appears on hover */
+*::-webkit-scrollbar{ width:8px; height:8px; }
+*::-webkit-scrollbar-track{ background:transparent; }
+*::-webkit-scrollbar-corner{ background:transparent; }
+*::-webkit-scrollbar-thumb{
+  background-color:transparent;      /* hidden by default */
+  border-radius:9999px;              /* pill shape */
+  border:2px solid transparent;      /* padding around the thumb */
+  background-clip:content-box;
+}
+*:hover::-webkit-scrollbar-thumb{ background-color:var(--sb-thumb); }
+*::-webkit-scrollbar-thumb:hover{ background-color:var(--sb-thumb-hover); }
+
+/* Standard (Firefox etc.). Scoped so Chrome keeps using the ::-webkit-scrollbar
+   rules above, since scrollbar-width/color would otherwise override them. */
+@supports not selector(::-webkit-scrollbar){
+  *{ scrollbar-width:thin; scrollbar-color:transparent transparent; }
+  *:hover{ scrollbar-color:var(--sb-thumb) transparent; }
 }
 
 </style>
@@ -1564,6 +1618,7 @@
       <div>m: <a href="mailto:alimboyaos@gmail.com">alimboyaos@gmail.com</a></div>
       <div>i: <a href="https://instagram.com/punctuation.use" target="_blank" rel="noopener">@punctuation.use</a></div>
       <div>t: <a href="tel:+639617139669">+63 961 7139 669</a></div>
+      <pre class="contact-art" id="contact-inbox" aria-label="Animated email inbox"></pre>
     </div>
   </div>
 
@@ -1631,6 +1686,9 @@
         <div class="lb-grid" id="lb-grid-recent">
           <div class="lb-error">Loading…</div>
         </div>
+      </div>
+      <div class="lb-section lb-ascii" id="lb-ascii">
+        <ascii-art piece="end-credits-roll" look="dots"></ascii-art>
       </div>
     </div>
   </div>
@@ -1706,6 +1764,12 @@
   </div>
 
   <!-- Launchpad-style app drawer, opened from the "Apps" menu-bar item -->
+  <!-- Home-screen ASCII cat (draggable) -->
+  <script type="module" src="https://www.ascii-magic.com/ascii/ascii.js"></script>
+  <div id="home-ascii-widget" aria-label="Sleeping cat">
+    <ascii-art piece="sleeping-cat" look="dots"></ascii-art>
+  </div>
+
   <div id="app-drawer" aria-hidden="true">
     <div class="drawer-search"><input type="text" id="drawer-search-input" placeholder="Search" autocomplete="off" spellcheck="false"></div>
     <div class="drawer-grid" id="drawer-grid">
@@ -2165,6 +2229,7 @@ renderImageFolder('finder-1dolo-rebrand-sample-posts', 'Sample Posts', samplePos
 // the 1DOLO Rebrand image folders also appear as albums in the Photos app (and in its Library view)
 window.REBRAND_ALBUMS = [
   {name:'Logo Redesigns', target:'win-1dolo-rebrand-logo-redesigns', files:logoRedesignFiles},
+  {name:'Visual Pegs', target:'win-1dolo-rebrand-visual-pegs', files:visualPegFiles},
   {name:'Sample Posts', target:'win-1dolo-rebrand-sample-posts', files:samplePostFiles}
 ].map(a=>({
   name:a.name,
@@ -4366,6 +4431,312 @@ document.querySelectorAll('[data-url]').forEach(function(el){
     if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); }
   });
 });
+</script>
+
+<script id="works-back-nav">
+// Works folders: keep a history so the mobile Back button goes up ONE folder
+// instead of making people close the app and start over.
+(function(){
+  if(typeof focusWindow !== 'function') return;
+  const isWorksWin = id => id === 'win-work' || id === 'win-1dolo' || id === 'win-irish-springs' ||
+                           id.indexOf('win-work-') === 0 || id.indexOf('win-1dolo-') === 0;
+  const stack = [];
+  let goingBack = false;
+
+  function openWorksWindowId(){
+    const w = Array.from(document.querySelectorAll('.window')).find(w =>
+      isWorksWin(w.id) && w.dataset.closed !== '1' && getComputedStyle(w).display !== 'none');
+    return w ? w.id : null;
+  }
+
+  const baseFocus = focusWindow;
+  window.focusWindow = focusWindow = function(id){
+    if(isMobileViewport() && !goingBack){
+      if(!isWorksWin(id) || id === 'win-work'){
+        stack.length = 0;                       // left Works, or went back to its root
+      } else {
+        const cur = openWorksWindowId();
+        if(!cur) stack.length = 0;              // entered a folder from outside Works
+        else if(cur !== id && stack[stack.length - 1] !== cur) stack.push(cur);
+      }
+    }
+    return baseFocus.apply(this, arguments);
+  };
+
+  function goBack(win){
+    let prev = stack.pop();
+    if(!prev || prev === win.id) prev = 'win-work';   // nothing in history: fall back to the Works home
+    goingBack = true;
+    try { focusWindow(prev); } finally { goingBack = false; }
+  }
+
+  const chevron = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  document.querySelectorAll('.window').forEach(win => {
+    if(!isWorksWin(win.id) || win.id === 'win-work') return;   // the Works home has nowhere to go back to
+    const bar = win.querySelector('.titlebar');
+    if(!bar) return;
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'tl-back'; btn.setAttribute('aria-label', 'Back');
+    btn.innerHTML = chevron + 'Back';
+    btn.addEventListener('pointerdown', e => e.stopPropagation());   // don't start a window drag
+    btn.addEventListener('click', e => { e.stopPropagation(); goBack(win); });
+    bar.insertBefore(btn, bar.firstChild);
+    win.classList.add('has-back');
+  });
+
+  // closing a Works window with the X ends the trip, so reset the history
+  document.querySelectorAll('.window .tl-btn[data-action="close"]').forEach(b => {
+    if(isWorksWin(b.closest('.window').id)) b.addEventListener('click', () => { stack.length = 0; });
+  });
+})();
+</script>
+
+<script id="contact-inbox-script">
+// Contact Me: animated "inbox-list" ASCII scene (new mail slides in at the top).
+(function(){
+  const out = document.getElementById('contact-inbox');
+  const win = document.getElementById('win-contact');
+  if(!out || !win) return;
+
+  // ---- minimal stand-in for the kit: a character grid with per-cell palette colours ----
+  const esc = c => c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c;
+  class Grid {
+    constructor(w, h){ this.w = w; this.h = h; this.ch = new Array(w * h); this.co = new Array(w * h); this.clear(); }
+    clear(){ this.ch.fill(' '); this.co.fill('0'); }
+    set(x, y, c, col){
+      x = Math.round(x); y = Math.round(y);
+      if(x < 0 || y < 0 || x >= this.w || y >= this.h) return;
+      this.ch[y * this.w + x] = c; this.co[y * this.w + x] = col == null ? '0' : col;
+    }
+    text(x, y, s, col){ for(let i = 0; i < s.length; i++) this.set(x + i, y, s[i], col); }
+    hline(x1, x2, y, c, col){ for(let x = x1; x <= x2; x++) this.set(x, y, c, col); }
+    vline(x, y1, y2, c, col){ for(let y = y1; y <= y2; y++) this.set(x, y, c, col); }
+    fill(x, y, w, h, c, col){ for(let j = 0; j < h; j++) for(let i = 0; i < w; i++) this.set(x + i, y + j, c == null ? ' ' : c, col); }
+    box(x, y, w, h, style, col){
+      const S = { round:['╭','╮','╰','╯','─','│'], single:['┌','┐','└','┘','─','│'], double:['╔','╗','╚','╝','═','║'] }[style] || ['┌','┐','└','┘','─','│'];
+      this.hline(x + 1, x + w - 2, y, S[4], col); this.hline(x + 1, x + w - 2, y + h - 1, S[4], col);
+      this.vline(x, y + 1, y + h - 2, S[5], col); this.vline(x + w - 1, y + 1, y + h - 2, S[5], col);
+      this.set(x, y, S[0], col); this.set(x + w - 1, y, S[1], col); this.set(x, y + h - 1, S[2], col); this.set(x + w - 1, y + h - 1, S[3], col);
+    }
+    frame(){ // rows of same-coloured runs, as HTML
+      let html = '';
+      for(let y = 0; y < this.h; y++){
+        let run = '', cur = null;
+        for(let x = 0; x < this.w; x++){
+          const i = y * this.w + x, col = this.ch[i] === ' ' ? cur : this.co[i];
+          if(col !== cur && cur !== null && col !== null){ html += '<i class="c' + cur + '">' + run + '</i>'; run = ''; }
+          if(col !== null) cur = col;
+          run += esc(this.ch[i]);
+        }
+        html += (cur !== null ? '<i class="c' + cur + '">' + run + '</i>' : run) + (y < this.h - 1 ? '\n' : '');
+      }
+      return html;
+    }
+  }
+
+  // ---- inbox-list scene ----
+  const meta = { cols: 84, rows: 24, fps: 24 };
+  const MAIL = [
+    ["Maya Chen", "Q4 roadmap review", "Pulled the notes together, the big open question is billing v2", "4"],
+    ["Billing", "Your invoice INV-2291 is ready", "Amount due $480.00, payment scheduled for Nov 1", "1"],
+    ["Omar Haddad", "Re: staging outage", "Root cause was the connection pool, fix is in review", "5"],
+    ["Design Weekly", "12 tiny details that make UI feel fast", "Optimistic updates, skeletons and the art of waiting", "6"],
+    ["Lena Park", "Offsite on the 24th?", "Thinking somewhere near the lake, cabins for 14 people", "2"],
+    ["CI Bot", "Build #4821 passed on main", "All 312 checks passed in 6m 41s", "2"],
+    ["Ana Ruiz", "Contract draft v3", "Made the edits to section 4, ready for your signature", "3"],
+    ["Security", "New sign-in from Lisbon", "Chrome on macOS, if this was you no action needed", "5"],
+    ["Dev Patel", "Lunch tomorrow?", "There's a new ramen place on 5th, my treat", "4"],
+    ["Calendar", "Reminder: 1:1 with Maya at 3pm", "Agenda: hiring plan, launch retro, career goals", "3"],
+    ["Support", "Ticket #8812 resolved", "The customer confirmed the export now works", "2"],
+    ["Kai Sato", "Photos from the launch", "Uploaded 84 photos to the shared album", "6"],
+  ];
+  const STEP = 2.4;
+  const fit = (s, w) => (s.length <= w ? s : s.slice(0, w - 2).trimEnd() + "..");
+  const ease = (v) => { v = Math.max(0, Math.min(1, v)); return 1 - Math.pow(1 - v, 3); };
+  const h = (n) => { let x = Math.imul(n ^ 0x5bd1e995, 2654435761) >>> 0; return (x ^ (x >>> 15)) / 4294967296 % 1; };
+
+  function create(){
+    const g = new Grid(meta.cols, meta.rows);
+    const W = meta.cols, H = meta.rows;
+    return (t) => {
+      g.clear();
+      const k = Math.floor(t / STEP), f = (t % STEP);
+      const e = ease(f / 0.5);
+      g.box(0, 0, W, H, "round", "7");
+      const unread = 9 + (k % 5);
+      g.text(2, 1, "Inbox", "0"); g.text(8, 1, `${unread} unread`, "3");
+      g.text(W - 34, 1, "[", "8"); g.text(W - 32, 1, "Search mail", "7"); g.text(W - 6, 1, "/", "7"); g.text(W - 4, 1, "]", "8");
+      g.text(2, 3, "Primary", "0"); g.hline(2, 8, 4, "━", "3");
+      g.text(12, 3, "Updates  3", "1"); g.text(25, 3, "Promotions", "1");
+      g.hline(1, W - 2, 4, "─", "8"); g.hline(2, 8, 4, "━", "3");
+      const rowsVis = Math.floor((H - 6) / 2);
+      const ct = (x, y, str, c) => { for (let i = 0; i < str.length; i++) if (x + i >= 1 && x + i <= W - 2) g.set(x + i, y, str[i], c); };
+      for (let j = rowsVis; j >= 0; j--) { // older rows first, the fresh row lands on top
+        const n = k - j; // mail serial
+        const m = MAIL[((n % MAIL.length) + MAIL.length) % MAIL.length];
+        // existing rows sit one slot lower after the new one arrives
+        const slot = j === 0 ? 0 : j - 1 + e;
+        const y = Math.round(5 + slot * 2);
+        if (y > H - 3) continue;
+        const fresh = j === 0;
+        const dx = fresh ? Math.round((1 - e) * W) : 0;
+        if (fresh && e <= 0) continue;
+        const isUnread = j < 3 || h(n) > 0.55;
+        const x = 2 + dx;
+        g.fill(1, y, W - 2, 2, " ");
+        if (fresh && f < 1.2) ct(x - 1, y, "░".repeat(W), "8"), ct(x - 1, y + 1, "░".repeat(W), "8");
+        ct(x, y, isUnread ? "●" : " ", "3");
+        ct(x + 2, y, h(n * 3) > 0.7 ? "■" : "□", h(n * 3) > 0.7 ? "9" : "7");
+        ct(x + 4, y, m[0], isUnread ? "0" : "1");
+        ct(x + 20, y, fit(m[1], W - 36), isUnread ? "0" : "1");
+        const mins = 9 * 60 + 41 + n * 3;
+        const tm = `${String(Math.floor(mins / 60) % 12 || 12)}:${String(mins % 60).padStart(2, "0")} ${Math.floor(mins / 60) % 24 >= 12 ? "pm" : "am"}`;
+        ct(W - 3 - tm.length + dx, y, tm, fresh ? "3" : "1");
+        ct(x + 18, y, "▌", m[3]);
+        ct(x + 20, y + 1, fit(m[2], W - 28), "7");
+      }
+      g.vline(W - 1, 1, H - 2, "│", "7"); // sliding rows tuck under the frame
+      return g.frame();
+    };
+  }
+
+  const draw = create();
+  let last = '';
+  function paint(t){ const html = draw(t); if(html !== last){ out.innerHTML = html; last = html; } }
+  paint(1.0); // a still frame shows right away
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const t0 = performance.now();
+  // only animate while the Contact Me window is actually on screen
+  setInterval(() => {
+    if(document.hidden || win.dataset.closed === '1' || win.dataset.minimized === '1' || win.style.display === 'none') return;
+    paint((performance.now() - t0) / 1000);
+  }, 1000 / meta.fps);
+})();
+</script>
+
+<script id="home-ascii-widget-script">
+// Draggable ASCII cat on the home screen. Works with mouse and touch; the spot is remembered.
+(function(){
+  const box = document.getElementById('home-ascii-widget');
+  if(!box) return;
+  const art = box.querySelector('ascii-art');
+  const KEY = 'webos.asciiWidgetPos';
+  const isMobile = () => window.matchMedia('(max-width:760px)').matches;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) art.setAttribute('still', '');
+
+  // allowed area: below the menubar, above the dock, inside the screen
+  function bounds(){
+    const w = box.offsetWidth, h = box.offsetHeight;
+    const top = isMobile() ? 50 : 40;
+    const dock = document.querySelector('.dock');
+    let bottom = window.innerHeight - 8;
+    if(dock && getComputedStyle(dock).display !== 'none'){
+      const dr = dock.getBoundingClientRect();
+      if(dr.height) bottom = Math.min(bottom, dr.top - 8);
+    }
+    return { minX:6, maxX:Math.max(6, window.innerWidth - w - 6), minY:top, maxY:Math.max(top, bottom - h) };
+  }
+  const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+  function place(x, y){
+    const b = bounds();
+    box.style.left = clamp(x, b.minX, b.maxX) + 'px';
+    box.style.top  = clamp(y, b.minY, b.maxY) + 'px';
+  }
+  // positions are stored as fractions of the free area, so they survive resizes and rotation
+  function save(){
+    const b = bounds();
+    try { localStorage.setItem(KEY, JSON.stringify({
+      fx:(parseFloat(box.style.left) - b.minX) / Math.max(1, b.maxX - b.minX),
+      fy:(parseFloat(box.style.top)  - b.minY) / Math.max(1, b.maxY - b.minY)
+    })); } catch(e){}
+  }
+  function restore(){
+    const b = bounds();
+    let pos = null;
+    try { pos = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
+    if(pos && Number.isFinite(pos.fx) && Number.isFinite(pos.fy)){
+      place(b.minX + pos.fx * (b.maxX - b.minX), b.minY + pos.fy * (b.maxY - b.minY));
+    } else {
+      place(b.maxX, b.maxY);          // default: bottom-right, just above the dock
+    }
+  }
+
+  // once the <ascii-art> element has rendered: shrink it if it is wider than the screen allows, then show it
+  function ready(){
+    const maxW = isMobile() ? Math.min(300, window.innerWidth * 0.8) : 360;
+    const w = art.offsetWidth;
+    if(w > maxW && !box.dataset.fitted){
+      box.dataset.fitted = '1';
+      art.setAttribute('size', String(Math.max(3, 12 * maxW / w)));   // re-renders, so measure again next frame
+      requestAnimationFrame(ready);
+      return;
+    }
+    restore();
+    box.classList.add('is-ready');
+  }
+  function whenRendered(tries){
+    if(art.offsetWidth > 0 && art.offsetHeight > 0) return ready();
+    if(tries > 0) setTimeout(() => whenRendered(tries - 1), 100);   // stays hidden if the piece never loads
+  }
+  if(window.customElements) customElements.whenDefined('ascii-art').then(() => whenRendered(60));
+
+  // ---- dragging ----
+  let drag = null;
+  box.addEventListener('pointerdown', (e) => {
+    if(e.button !== undefined && e.button !== 0) return;
+    const r = box.getBoundingClientRect();
+    drag = { id:e.pointerId, dx:e.clientX - r.left, dy:e.clientY - r.top };
+    box.classList.add('is-dragging');
+    try { box.setPointerCapture(e.pointerId); } catch(err){}
+    e.preventDefault();
+  });
+  box.addEventListener('pointermove', (e) => {
+    if(!drag || e.pointerId !== drag.id) return;
+    place(e.clientX - drag.dx, e.clientY - drag.dy);
+  });
+  function end(e){
+    if(!drag || (e && e.pointerId !== drag.id)) return;
+    drag = null;
+    box.classList.remove('is-dragging');
+    save();
+  }
+  box.addEventListener('pointerup', end);
+  box.addEventListener('pointercancel', end);
+  box.addEventListener('lostpointercapture', end);
+
+  window.addEventListener('resize', () => { if(box.classList.contains('is-ready')) restore(); });
+})();
+</script>
+
+<script id="film-ascii-script">
+// Film app: scale the end credits roll to the window's width (and keep it fitted as the window is resized).
+(function(){
+  const holder = document.getElementById('lb-ascii');
+  if(!holder) return;
+  const art = holder.querySelector('ascii-art');
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) art.setAttribute('still', '');
+  let busy = false;
+  function fit(){
+    const pre = art.shadowRoot && art.shadowRoot.querySelector('pre');
+    if(!pre || busy) return;
+    const cs = getComputedStyle(holder);
+    const avail = holder.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const natural = pre.scrollWidth;                       // 0 while the Film window is closed
+    if(avail <= 0 || natural <= 0) return;
+    const cur = parseFloat(art.getAttribute('size')) || 12;
+    const next = Math.min(14, Math.max(3, cur * avail / natural));
+    if(Math.abs(next - cur) < 0.25) return;
+    busy = true;
+    art.setAttribute('size', next.toFixed(2));             // re-renders; the observer below settles it
+    setTimeout(() => { busy = false; fit(); }, 120);
+  }
+  if(window.ResizeObserver){
+    const ro = new ResizeObserver(fit);
+    ro.observe(holder); ro.observe(art);
+  }
+  if(window.customElements) customElements.whenDefined('ascii-art').then(() => setTimeout(fit, 200));
+})();
 </script>
 
 </body>
